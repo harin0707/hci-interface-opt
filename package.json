@@ -1,5 +1,5 @@
 {
-  "name": "hci",
+  "name": "hci-interface-opt",
   "version": "0.1.0",
   "private": true,
   "scripts": {
