@@ -1,23 +1,26 @@
 import { useRouter } from 'next/router';
 export async function getStaticPaths() {
-    const ids = ['1', '2', '3']; // 동적 경로로 사용할 번호
-    const paths = ids.map((id) => ({
-        params: { id },
-        }));
-    
-        return {
-        paths,
-        fallback: false, // 정의되지 않은 경로는 404 반환
-        };
-    }
-    
-    export async function getStaticProps({ params }) {
-        return {
-        props: {
-            id: params.id,
-        },
-        }
-    }
+    // 동적 경로를 지정합니다.
+    const paths = [
+    { params: { id: '1' } },
+    { params: { id: '2' } },
+    { params: { id: '3' } },
+    ];
+
+    return {
+    paths,
+    fallback: false, // paths에 없는 경로는 404 반환
+    };
+}
+
+export async function getStaticProps({ params }) {
+    // params.id를 사용해 필요한 데이터를 가져옵니다.
+    return {
+    props: {
+        id: params.id, // 동적 경로의 id 값 전달
+    },
+    };
+}
 
 
 export default function Condition1() {
