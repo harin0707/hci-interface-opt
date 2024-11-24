@@ -31,7 +31,7 @@ export default function Condition2() {
     const [mode, setMode] = useState("drag"); 
     
     const taskId = 1;
-    const conditionId = 1;
+    const conditionId = 2;
 
     // taskId가 1이고 conditionId가 1인 데이터 필터링
     const conditionData =
@@ -215,20 +215,31 @@ const handleDragEnd = () => {
                     onTouchStart={handleDragStart}
                     onTouchMove={handleDragMove}
                     onTouchEnd={handleDragEnd}>
-            <div> [조건 2] 확대/축소 버튼과 자유로운 드래그 - Task Num: 1</div>
+
+            <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
+            <div>  Task1 [조건 2] 확대/축소 버튼과 자유로운 드래그</div>
+            
+            
             <InfoContainer>
+                <div id="info" style={{ fontWeight: "bold" }}> Task: A구역에서 스타벅스를 찾아주세요 </div>
                 <div id="info">실험자: {experimentId || "정보 없음"}</div>
                 <div id="info">총 클릭 횟수: {clickCount}</div>
                 <div id="info">소요 시간: {elapsedTime}초</div>
             </InfoContainer>
-            <Button onClick={handleStartTimer} disabled={isTimerRunning}>
-                {isTimerRunning ? "실험 진행 중..." : "실험 시작"}
-            </Button>
 
-            <ZoomContainer>
-                <ZoomButton onClick={handleZoomOut}>-</ZoomButton>
-                <ZoomButton onClick={handleZoomIn}>+</ZoomButton>
-            </ZoomContainer>
+            <Nav>
+                <Button onClick={handleStartTimer} disabled={isTimerRunning}>
+                    {isTimerRunning ? "실험 진행 중..." : "실험 시작"}
+                </Button>
+                <ZoomContainer>
+                    <ZoomButton onClick={handleZoomOut}>+</ZoomButton>
+                    <ZoomButton onClick={handleZoomIn}>-</ZoomButton>
+                </ZoomContainer>
+            </Nav>
+            
+            
+
+            
             
             <MapContainer style={{
                     transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
@@ -296,14 +307,25 @@ const Button = styled.button`
     color: white;
     border: none;
     border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 20px;
+
 
     &:disabled {
         background-color: #ccc;
         cursor: not-allowed;
     }
+
 `;
+
+const Btn = styled.button`
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: black;
+        color: white;
+        border: none;
+        padding: 5px;
+        border-radius: 5px;
+`
 
 
 const MapContainer = styled.div`
@@ -401,9 +423,8 @@ const MB = styled.div`
 const ZoomContainer = styled.div`
     display: flex;
     justify-content: baseline;
-    gap: 10px;
-    margin: 10px 0 0 0;
     z-index: 100;
+    gap: 10px;
 `;
 
 const ZoomButton = styled.button`
@@ -413,9 +434,15 @@ const ZoomButton = styled.button`
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    
 
     &:hover {
         background-color: #005bb5;
     }
 `;
+
+const Nav = styled.div`
+    display: flex;
+    gap: 20px;
+`
 

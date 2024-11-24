@@ -28,7 +28,7 @@ export default function Condition1() {
     const [mode, setMode] = useState("zoom"); // 모드 상태 (기본은 "zoom")
     
     const taskId = 1;
-    const conditionId = 1;
+    const conditionId = 3;
 
     // taskId가 1이고 conditionId가 1인 데이터 필터링
     const conditionData =
@@ -117,7 +117,7 @@ export default function Condition1() {
                         : task
                 )
             );
-            router.push("/task1/c2"); // /task1/c2로 라우팅
+            router.push("/result"); 
         }
     };
 
@@ -209,12 +209,19 @@ export default function Condition1() {
             onTouchStart={handleDragStart}
             onTouchMove={handleDragMove}
             onTouchEnd={handleDragEnd}>
+
+            <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
             <div>[조건 3] 확대 모드/드래그 모드 구분 - Task Num: 1</div>
+
+            
             <InfoContainer>
+                <div id="info" style={{ fontWeight: "bold" }}> Task: A구역에서 스타벅스를 찾아주세요 </div>
                 <div id="info">실험자: {experimentId || "정보 없음"}</div>
                 <div id="info">총 클릭 횟수: {clickCount}</div>
                 <div id="info">소요 시간: {elapsedTime}초</div>
             </InfoContainer>
+
+            <Nav>
             <Button onClick={handleStartTimer} disabled={isTimerRunning}>
                 {isTimerRunning ? "실험 진행 중..." : "실험 시작"}
             </Button>
@@ -233,6 +240,8 @@ export default function Condition1() {
                     드래그 모드
                 </ModeButton>
             </ModeContainer>
+
+            </Nav>
 
             <MapContainer
                 style={{
@@ -412,4 +421,20 @@ const MB = styled.div`
     cursor: pointer;
     height: 50px;
 `;
+
+const Btn = styled.button`
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: black;
+        color: white;
+        border: none;
+        padding: 5px;
+        border-radius: 5px;
+`
+
+const Nav = styled.div`
+    display: flex;
+    gap: 20px;
+`
 

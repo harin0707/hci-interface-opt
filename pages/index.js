@@ -41,8 +41,9 @@ export default function Home() {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 20px 0;
     justify-content: center;
+    height: 100vh;
+    gap: 20px;
 
     `;
 
@@ -71,5 +72,6 @@ export default function Home() {
     `
 
     const Button = styled.button`
+    width: 70px;
     
     `

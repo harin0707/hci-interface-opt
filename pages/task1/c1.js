@@ -20,6 +20,7 @@ export default function Condition1() {
     const [elapsedTime, setElapsedTime] = useState(0); // 소요 시간 상태
     const [clickCount, setClickCount] = useState(0); // 클릭 횟수 상태
     const [isTimerRunning, setIsTimerRunning] = useState(false); // 타이머 상태
+    
     const taskId = 1;
     const conditionId = 1;
 
@@ -121,10 +122,13 @@ export default function Condition1() {
     return (
         <Container>
             <div> [조건 1] 자유로운 확대와 드래그 - Task Num: 1</div>
+            <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
+
             <InfoContainer>
+                <div id="info" style={{ fontWeight: "bold" }}> Task1: A구역에서 스타벅스를 찾아주세요 </div>
                 <div id="info">실험자: {experimentId || "정보 없음"}</div>
                 <div id="info">총 클릭 횟수: {clickCount}</div>
-                <div id="info"> 소요 시간: {elapsedTime}초</div>
+                <div id="info">소요 시간: {elapsedTime}초</div>
             </InfoContainer>
             <Button onClick={handleStartTimer} disabled={isTimerRunning}>
                 {isTimerRunning ? "실험 진행 중..." : "실험 시작"}
@@ -291,6 +295,23 @@ const MB = styled.div`
     cursor: pointer;
     height: 50px;
 `;
+
+const Btn = styled.button`
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: black;
+        color: white;
+        border: none;
+        padding: 5px;
+        border-radius: 5px;
+`
+
+const Nav = styled.div`
+    display: flex;
+    gap: 20px;
+`
+
 
 
 
