@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { experimentIdState, taskState } from "../../atoms/atoms.js";
-import MapSection from "../component/MapSection.js";
-import { mapData } from "../mapData.js";
+// import MapSection from "../component/MapSection.js";
 
 export async function getStaticPaths() {
     const paths = [
@@ -141,13 +140,13 @@ export default function Condition1() {
             <Button onClick={handleStartTimer} disabled={isTimerRunning}>
                 {isTimerRunning ? "실험 진행 중..." : "시작"}
             </Button>
-            {mapData.map((section) => (
+            {/* {mapData.map((section) => (
                 <MapSection
                     key={section.section}
                     section={section}
                     onStoreClick={handleStoreClick}
                 />
-            ))}
+            ))} */}
         </Container>
     );
 }

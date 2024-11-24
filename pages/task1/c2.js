@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { experimentIdState, taskState } from "../../atoms/atoms.js";
-import MapSection from "../component/MapSection.js";
-import { mapData } from "../mapData.js";
 import { storeDataA } from "../../data/storedataA.js";
 
 
