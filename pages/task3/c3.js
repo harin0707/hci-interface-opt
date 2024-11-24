@@ -381,7 +381,7 @@ const ModeContainer = styled.div`
 const ModeButton = styled.button`
     padding: 10px 20px;
     border: none;
-    background-color: ${({ isActive }) => (isActive ? "black" : "#ccc")};
+    background-color: ${({ isActive }) => (isActive ? "#ccc": "black")};
     color: white;
     border-radius: 5px;
     cursor: pointer;

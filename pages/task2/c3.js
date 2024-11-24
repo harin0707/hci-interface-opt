@@ -146,7 +146,7 @@ export default function Condition3() {
                         : task
                 )
             );
-            router.push("/result"); 
+            router.push("/task3/c1"); 
         }
     };
 
@@ -264,14 +264,14 @@ export default function Condition3() {
             </Button>
 
             <ModeContainer>
+                <ModeButton 
+                    isActive={mode === "touch"} onClick={() => setMode("touch")}>터치 모드
+                </ModeButton>
                 <ModeButton
                     isActive={mode === "zoom"} onClick={() => setMode("zoom")}> 확대/축소 모드
                 </ModeButton>
                 <ModeButton 
                     isActive={mode === "drag"}onClick={() => setMode("drag")}>드래그 모드
-                </ModeButton>
-                <ModeButton 
-                    isActive={mode === "touch"} onClick={() => setMode("touch")}>터치 모드
                 </ModeButton>
                 
                 </ModeContainer>
@@ -381,7 +381,7 @@ const ModeContainer = styled.div`
 const ModeButton = styled.button`
     padding: 10px 20px;
     border: none;
-    background-color: ${({ isActive }) => (isActive ? "black" : "#ccc")};
+    background-color: ${({ isActive }) => (isActive ? "#ccc": "black")};
     color: white;
     border-radius: 5px;
     cursor: pointer;

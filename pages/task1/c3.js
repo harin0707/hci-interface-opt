@@ -248,7 +248,7 @@ export default function Condition3() {
             >
 
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
-            <div style={{ fontWeight: "bold" }}>Task2 [조건 3] 확대 모드/드래그 모드 구분 </div>
+            <div style={{ fontWeight: "bold" }}>Task1 [조건 3] 확대 모드/드래그 모드 구분 </div>
 
             
             <InfoContainer>
@@ -264,15 +264,16 @@ export default function Condition3() {
             </Button>
 
             <ModeContainer>
+                 <ModeButton 
+                    isActive={mode === "touch"} onClick={() => setMode("touch")}>터치 모드
+                </ModeButton>
                 <ModeButton
                     isActive={mode === "zoom"} onClick={() => setMode("zoom")}> 확대/축소 모드
                 </ModeButton>
                 <ModeButton 
                     isActive={mode === "drag"}onClick={() => setMode("drag")}>드래그 모드
                 </ModeButton>
-                <ModeButton 
-                    isActive={mode === "touch"} onClick={() => setMode("touch")}>터치 모드
-                </ModeButton>
+                
                 
                 </ModeContainer>
 
@@ -381,7 +382,7 @@ const ModeContainer = styled.div`
 const ModeButton = styled.button`
     padding: 10px 20px;
     border: none;
-    background-color: ${({ isActive }) => (isActive ? "black" : "#ccc")};
+    background-color: ${({ isActive }) => (isActive ? "#ccc": "black")};
     color: white;
     border-radius: 5px;
     cursor: pointer;
