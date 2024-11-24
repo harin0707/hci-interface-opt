@@ -115,7 +115,7 @@ export default function Condition2() {
                         : task
                 )
             );
-            router.push("/task1/c2"); // /task1/c2로 라우팅
+            router.push("/task1/c3");
         }
     };
 
@@ -335,13 +335,8 @@ const MA = styled.div`
 `;
 
 const ZoomContainer = styled.div`
-    /* position: absolute; */
-    /* top: 10px;
-    right: 20px; */
     display: flex;
     justify-content: baseline;
-
-    /* flex-direction: column; */
     gap: 10px;
     margin: 10px 0 0 0;
     z-index: 100;
