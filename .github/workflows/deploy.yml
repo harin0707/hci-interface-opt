@@ -20,6 +20,8 @@ jobs:
 
     - name: Install dependencies
       run: npm install
+      env:
+        npm_config_platform: linux  # 환경 변수 추가
 
     - name: Build and Export
       run: npm run build
