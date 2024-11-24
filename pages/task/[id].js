@@ -2,12 +2,35 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue, useRecoilState } from 'recoil';
-import { experimentIdState, taskState } from '../atoms/atoms.js';
+import { experimentIdState, taskState } from '../../atoms/atoms.js'
 
-
+    export async function getStaticPaths() {
+        // 사전에 생성할 경로 정의
+        const paths = [
+        { params: { id: 'task1-c1' } },
+        { params: { id: 'task2-c1' } },
+        { params: { id: 'task3-c1' } },
+        ];
+    
+        return {
+        paths,
+        fallback: false, // paths에 정의되지 않은 경로는 404 반환
+        };
+    }
+    
+    export async function getStaticProps({ params }) {
+        // 정적 페이지로 전달할 데이터 정의
+        const { id } = params;
+        return {
+        props: {
+            id,
+        },
+        };
+    }
 export default function Condition1() {
     const router = useRouter();
     const { id } = router.query; // URL 파라미터 추출
+    
 
     //Recoil 상태 가져오기
     const experimentId = useRecoilValue(experimentIdState);
