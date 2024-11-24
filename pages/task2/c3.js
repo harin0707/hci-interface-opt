@@ -27,7 +27,7 @@ export default function Condition3() {
     const [startPos, setStartPos] = useState({ x: 0, y: 0 }); // 드래그 시작 위치
     const [mode, setMode] = useState("touch"); // 모드 상태 (기본은 "zoom")
     
-    const taskId = 1;
+    const taskId = 2;
     const conditionId = 3;
 
     // taskId가 1이고 conditionId가 1인 데이터 필터링
@@ -146,7 +146,7 @@ export default function Condition3() {
                         : task
                 )
             );
-            router.push("/task3/c1"); 
+            router.push("/result"); 
         }
     };
 
@@ -252,7 +252,7 @@ export default function Condition3() {
 
             
             <InfoContainer>
-                <div id="info" style={{ fontWeight: "bold" }}> Task: A구역에서 스타벅스를 찾아주세요 </div>
+                <div id="info" style={{ fontWeight: "bold" }}> Task: ?+?구역에서 ?를 찾아주세요 </div>
                 <div id="info">실험자: {experimentId || "정보 없음"}</div>
                 <div id="info">총 클릭 횟수: {clickCount}</div>
                 <div id="info">소요 시간: {elapsedTime}초</div>
@@ -349,12 +349,12 @@ export default function Condition3() {
                         transform: `rotate(-20deg)`,
                         
                     }}>{storeDataF.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
-                            width:store.width,
-                            height:store.height,
-                            transform: `rotate(${store.rotation}deg)`,
-                            fontSize: store.size,
-                            color: store.color,
-                            backgroundColor: store.bg,
+                         width:store.width,
+                         height:store.height,
+                         transform: `rotate(${store.rotation}deg)`,
+                         fontSize: store.size,
+                         color: store.color,
+                         backgroundColor: store.bg,
                         }} disabled={mode !== "touch"}>{store.name}</MA>))}</M4Con>
                     </M2Con>
                 </M1ConD>

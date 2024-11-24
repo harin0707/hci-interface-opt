@@ -27,7 +27,7 @@ export default function Condition3() {
     const [startPos, setStartPos] = useState({ x: 0, y: 0 }); // 드래그 시작 위치
     const [mode, setMode] = useState("touch"); // 모드 상태 (기본은 "zoom")
     
-    const taskId = 1;
+    const taskId = 3;
     const conditionId = 3;
 
     // taskId가 1이고 conditionId가 1인 데이터 필터링
@@ -146,7 +146,7 @@ export default function Condition3() {
                         : task
                 )
             );
-            router.push("/task3/c1"); 
+            router.push("/result"); 
         }
     };
 
@@ -248,7 +248,7 @@ export default function Condition3() {
             >
 
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
-            <div style={{ fontWeight: "bold" }}>Task2 [조건 3] 확대 모드/드래그 모드 구분 </div>
+            <div style={{ fontWeight: "bold" }}>Task3  [조건 3] 확대 모드/드래그 모드 구분 </div>
 
             
             <InfoContainer>
@@ -349,12 +349,12 @@ export default function Condition3() {
                         transform: `rotate(-20deg)`,
                         
                     }}>{storeDataF.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
-                            width:store.width,
-                            height:store.height,
-                            transform: `rotate(${store.rotation}deg)`,
-                            fontSize: store.size,
-                            color: store.color,
-                            backgroundColor: store.bg,
+                         width:store.width,
+                         height:store.height,
+                         transform: `rotate(${store.rotation}deg)`,
+                         fontSize: store.size,
+                         color: store.color,
+                         backgroundColor: store.bg,
                         }} disabled={mode !== "touch"}>{store.name}</MA>))}</M4Con>
                     </M2Con>
                 </M1ConD>
