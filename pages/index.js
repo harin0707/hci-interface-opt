@@ -43,6 +43,7 @@ export default function Home() {
     flex-direction: column;
     align-items: center;
     margin: 20px 0;
+
     `;
 
     const Title = styled.h3`
