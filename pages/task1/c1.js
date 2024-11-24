@@ -143,6 +143,9 @@ export default function Condition1() {
                         width:store.width,
                         height:store.height,
                         transform: `rotate(${store.rotation}deg)`,
+                        fontSize: store.size,
+                        color: store.color,
+                        backgroundColor: store.bg,
                     }}>{store.name}</MA>))}
                     </M2Con>
 
@@ -154,6 +157,9 @@ export default function Condition1() {
                             width:store.width,
                             height:store.height,
                             transform: `rotate(${store.rotation}deg)`,
+                            fontSize: store.size,
+                            color: store.color,
+                            backgroundColor: store.bg,
                         }}>{store.name}</MB>))}
                         </M3Con>
                         <M3Con id="3" style={{
@@ -163,6 +169,9 @@ export default function Condition1() {
                             width:store.width,
                             height:store.height,
                             transform: `rotate(${store.rotation}deg)`,
+                            fontSize: store.size,
+                            color: store.color,
+                            backgroundColor: store.bg,
                         }}>{store.name}</MA>))}
                         </M3Con>
                     </M2Con>
@@ -174,6 +183,7 @@ export default function Condition1() {
                         width:store.width,
                         height:store.height,
                         transform: `rotate(${store.rotation}deg)`,
+                        
                         }}>{store.name}</MA>))}
                     </M2Con>
                     <M2Con id="5" > 
@@ -188,6 +198,9 @@ export default function Condition1() {
                             width:store.width,
                             height:store.height,
                             transform: `rotate(${store.rotation}deg)`,
+                            fontSize: store.size,
+                            color: store.color,
+                            backgroundColor: store.bg,
 
                         }}>{store.name}</MA>))}</M4Con>
                         <M4Con id="6" isColumn="column" style={{
@@ -200,6 +213,9 @@ export default function Condition1() {
                             width:store.width,
                             height:store.height,
                             transform: `rotate(${store.rotation}deg)`,
+                            fontSize: store.size,
+                            color: store.color,
+                            backgroundColor: store.bg,
 
                         }}>{store.name}</MA>))}
                         </M4Con>

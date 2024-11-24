@@ -1,4 +1,5 @@
 export const storeDataD = [
+    {id:"D", name:"D", color: "yellow", size: 40, bg: "#FFD2B2"},
     { id: "D-1", name: "샤넬뷰티", width: 28, height: 35, rotation: 3 },
     { id: "D-2", name: "디올뷰티", width: 26, height: 30, rotation: 2 },
     { id: "D-3", name: "맥", width: 24, height: 25, rotation: 4 },

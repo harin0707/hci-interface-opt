@@ -1,4 +1,5 @@
 export const storeDataA = [
+    {id:"A", name:"A", color: "red", size: 40, bg: "#FFD2B2"},
     { id: "A-1", name: "스타벅스", width: 24, height: 32, rotation: 3 },
     { id: "A-2", name: "투썸플레이스", width: 26, height: 30, rotation: -5 },
     { id: "A-3", name: "이디야커피", width: 22, height: 28, rotation: 6 },

@@ -242,16 +242,13 @@ export default function Condition3() {
             onMouseMove={handleDragMove}
             onMouseUp={handleDragEnd}
             onMouseLeave={handleDragEnd}
-            // onTouchStart={handleDragStart}
-            // onTouchMove={handleDragMove}
-            // onTouchEnd={handleDragEnd}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
             >
 
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
-            <div>Task1 [조건 3] 확대 모드/드래그 모드 구분 </div>
+            <div style={{ fontWeight: "bold" }}>Task1 [조건 3] 확대 모드/드래그 모드 구분 </div>
 
             
             <InfoContainer>
@@ -286,27 +283,78 @@ export default function Condition3() {
                     transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
                 }}>
                 <M1Con isColumn="column"> 
-                    <M2Con id="3"> 
+                    <M2Con id="3" style={{
+                        borderRight: "solid 15px #CFBFBA",
+                    }}> 
                     {storeDataA.map((store) => (
                     <MA onClick={() => handleStoreClick(store.id)} 
-                    key={store.id} style={{}} disabled={mode !== "touch"}
+                    key={store.id} style={
+                        {width:store.width,
+                        height:store.height,
+                        transform: `rotate(${store.rotation}deg)`,
+                        fontSize: store.size,
+                        color: store.color,
+                        backgroundColor: store.bg,}} disabled={mode !== "touch"}
                     >{store.name}</MA>))}
                     </M2Con>
                     <M2Con id="7"> 
-                        <M3Con id="7">{storeDataB.map((store) => (<MB onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                        <M3Con id="7" style={{
+                        borderBottom: "solid 5px #CFBFBA",
+                    }} >{storeDataB.map((store) => (<MB onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                            width:store.width,
+                            height:store.height,
+                            transform: `rotate(${store.rotation}deg)`,
+                            fontSize: store.size,
+                            color: store.color,
+                            backgroundColor: store.bg,
                         }} disabled={mode !== "touch"}>{store.name}</MB>))}</M3Con>
-                        <M3Con id="3">{storeDataC.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                        <M3Con id="3" style={{
+                        borderTop: "solid 10px #CFBFBA",
+                    }}>{storeDataC.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                                width:store.width,
+                                height:store.height,
+                                transform: `rotate(${store.rotation}deg)`,
+                                fontSize: store.size,
+                                color: store.color,
+                                backgroundColor: store.bg,
                         }} disabled={mode !== "touch"}>{store.name}</MA>))}</M3Con>
                     </M2Con>
                 </M1Con>
 
                 <M1ConD>
                     <M2Con id="5" > {storeDataD.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                         width:store.width,
+                         height:store.height,
+                         transform: `rotate(${store.rotation}deg)`,
+                         fontSize: store.size,
+                         color: store.color,
+                         backgroundColor: store.bg,
                         }} disabled={mode !== "touch"}>{store.name}</MA>))}  </M2Con>
                     <M2Con id="5"> 
-                        <M4Con id="4">{storeDataE.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                        <M4Con id="4" style={{
+                            transform: `rotate 0deg)`,
+                            borderTop: "solid 10px #CFBFBA",
+                            borderRight: "solid 10px #CFBFBA",
+                        }} >{storeDataE.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                         width:store.width,
+                         height:store.height,
+                         transform: `rotate(${store.rotation}deg)`,
+                         fontSize: store.size,
+                         color: store.color,
+                         backgroundColor: store.bg,
                         }} disabled={mode !== "touch"}>{store.name}</MA>))}</M4Con>
-                        <M4Con id="6" isColumn="column">{storeDataF.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                        <M4Con id="6" isColumn="column" style={{
+                        borderTop: "solid 10px #CFBFBA",
+                        borderLeft: "solid 10px #CFBFBA",
+                        transform: `rotate(-20deg)`,
+                        
+                    }}>{storeDataF.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                         width:store.width,
+                         height:store.height,
+                         transform: `rotate(${store.rotation}deg)`,
+                         fontSize: store.size,
+                         color: store.color,
+                         backgroundColor: store.bg,
                         }} disabled={mode !== "touch"}>{store.name}</MA>))}</M4Con>
                     </M2Con>
                 </M1ConD>
@@ -389,7 +437,6 @@ const M1Con = styled.div`
 const M2Con = styled.div`
     flex-direction: ${({ isColumn }) => (isColumn === "column" ? "row" : "column")};
     flex-grow: ${({ id }) => id || 1}; /* ID를 기반으로 flex-grow 설정 */
-    border: 1px solid black;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -410,13 +457,12 @@ const M1ConD = styled.div`
 
 const M3Con = styled.div`
     flex-grow: ${({ id }) => id || 1}; /* ID를 기반으로 flex-grow 설정 */
-    border: 1px solid black;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     flex-wrap: wrap;
-    padding: 50px 0 ;
+    padding: 30px 0 ;
 
     cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
     pointer-events: ${({ disabled }) => (disabled ? "none" : "auto")};
@@ -424,11 +470,10 @@ const M3Con = styled.div`
 
 const M4Con = styled.div`
     flex-grow: ${({ id }) => id || 1}; /* ID를 기반으로 flex-grow 설정 */
-    border: 1px solid black;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    padding: 50px 5px;
+    padding: 40px;
     cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
     pointer-events: ${({ disabled }) => (disabled ? "none" : "auto")};
 
@@ -436,15 +481,15 @@ const M4Con = styled.div`
 
 
 const MA = styled.div`
-    background-color: lightgreen;
-    border: 1px solid black;
+    background-color: #F5F5F5;
     display: flex;
     align-items: center;
     justify-content: center;
     color: black;
     font-weight: bold;
-    font-size: 0.5rem;
+    font-size: 0.3rem;
     margin: 1px;
+    z-index: 10;
 
     padding: 1px;
     cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
@@ -452,19 +497,19 @@ const MA = styled.div`
 `;
 
 const MB = styled.div`
-    background-color: lightgreen;
-    border: 1px solid black;
+    background-color: #F5F5F5;
     display: flex;
     align-items: center;
     justify-content: center;
     color: black;
     font-weight: bold;
-    font-size: 0.5rem;
+    font-size: 0.3rem;
     margin: 1px;
 
     padding: 1px;
     cursor: pointer;
     height: 50px;
+    z-index: 100;
 `;
 
 const Btn = styled.button`
