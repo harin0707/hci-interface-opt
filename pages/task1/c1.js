@@ -137,6 +137,9 @@ export default function Condition1() {
                 <M1Con isColumn="column"> 
                     <M2Con id="3"> 
                     {storeDataA.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                        width:store.width,
+                        height:store.height,
+                        transform: `rotate(${store.rotation}deg)`,
                     }}>{store.name}</MA>))}
                     </M2Con>
 
@@ -144,13 +147,15 @@ export default function Condition1() {
                         <M3Con id="7"> 
                         {storeDataB.map((store) => (<MB onClick={() => handleStoreClick(store.id)} key={store.id} style={{
                             width:store.width,
-                            height:store.height
+                            height:store.height,
+                            transform: `rotate(${store.rotation}deg)`,
                         }}>{store.name}</MB>))}
                         </M3Con>
                         <M3Con id="3">
                         {storeDataC.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
                             width:store.width,
-                            height:store.height
+                            height:store.height,
+                            transform: `rotate(${store.rotation}deg)`,
                         }}>{store.name}</MA>))}
                         </M3Con>
                     </M2Con>
@@ -159,13 +164,24 @@ export default function Condition1() {
                 <M1ConD>
                     <M2Con id="5"  >
                     {storeDataD.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                        width:store.width,
+                        height:store.height,
+                        transform: `rotate(${store.rotation}deg)`,
                         }}>{store.name}</MA>))}
                     </M2Con>
                     <M2Con id="5" > 
                         <M4Con id="4"> {storeDataE.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                            width:store.width,
+                            height:store.height,
+                            transform: `rotate(${store.rotation}deg)`,
+
                         }}>{store.name}</MA>))}</M4Con>
                         <M4Con id="6" isColumn="column">
                         {storeDataF.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                            width:store.width,
+                            height:store.height,
+                            transform: `rotate(${store.rotation}deg)`,
+
                         }}>{store.name}</MA>))}
                         </M4Con>
                     </M2Con>
@@ -247,24 +263,27 @@ const M2Con = styled.div`
 `;
 
 const M3Con = styled.div`
-    flex-grow: ${({ id }) => id || 1}; /* ID를 기반으로 flex-grow 설정 */
+    flex-grow: ${({ id }) => id || 1}; 
     border: 1px solid black;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
     flex-wrap: wrap;
-    padding: 50px 0 ;
+    padding: 30px 0 ;
+
+    background-color: green;
 `;
 
 
 const M4Con = styled.div`
-    flex-grow: ${({ id }) => id || 1}; /* ID를 기반으로 flex-grow 설정 */
+    flex-grow: ${({ id }) => id || 1}; 
     border: 1px solid black;
     display: flex;
     justify-content: center;
+    align-items: center;
     flex-wrap: wrap;
-    padding: 50px 5px;
+    padding: 40px;
+
 
 `;
 
@@ -279,7 +298,7 @@ const MA = styled.div`
     justify-content: center;
     color: black;
     font-weight: bold;
-    font-size: 0.5rem;
+    font-size: 0.3rem;
     margin: 1px;
 
     padding: 1px;
@@ -296,12 +315,11 @@ const MB = styled.div`
     justify-content: center;
     color: black;
     font-weight: bold;
-    font-size: 0.5rem;
+    font-size: 0.3rem;
     margin: 1px;
 
     padding: 1px;
     cursor: pointer;
-    height: 50px;
 `;
 
 const Btn = styled.button`
