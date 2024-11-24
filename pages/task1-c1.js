@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
-import { experimentIdState } from '../atoms.js';
+import { experimentIdState } from './atoms.js';
 
 
 export default function Condition1() {
