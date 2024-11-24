@@ -153,37 +153,7 @@ export default function Condition2() {
         );
     };
 
-    // 터치 시작 이벤트 핸들러
-    const handleTouchStart = (e) => {
-        if (mode === "zoom" && e.touches.length === 2) {
-            // 두 손가락 터치일 때만 거리 계산
-            const distance = getTouchDistance(e.touches);
-            setTouchStartDistance(distance);
-        }
-    };
 
-    // 터치 이동 이벤트 핸들러
-    const handleTouchMove = (e) => {
-        if (mode === "zoom" && e.touches.length === 2 && touchStartDistance) {
-            const currentDistance = getTouchDistance(e.touches);
-            const scaleChange = currentDistance / touchStartDistance;
-
-            setScale((prevScale) => {
-                const newScale = Math.min(Math.max(prevScale * scaleChange, 0.5), 3); // 제한: 0.5~3
-                return newScale;
-            });
-
-            // 현재 거리를 다음 기준 거리로 설정
-            setTouchStartDistance(currentDistance);
-        }
-    };
-
-    // 터치 끝 이벤트 핸들러
-    const handleTouchEnd = () => {
-        if (mode === "zoom") {
-            setTouchStartDistance(null); // 초기화
-        }
-    };
 
 // 드래그 시작 이벤트 핸들러
 const handleDragStart = (e) => {
@@ -219,7 +189,7 @@ const handleDragEnd = () => {
 
 
      // 확대 버튼 핸들러
-     const handleZoomIn = () => {
+    const handleZoomIn = () => {
         setIsZooming(true);
         setScale((prevScale) => Math.min(prevScale + 0.2, 3));
         setTimeout(() => setIsZooming(false), 300); // 확대 후 상태 복원
