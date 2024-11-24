@@ -32,6 +32,7 @@ export default function Home() {
             <Button onClick={() => router.push('/task2/c1')}>Task2</Button>
             <Button onClick={() => router.push('/task3/c1')}>Task3</Button>
         </BtnContainer>
+            <Btn onClick={() => router.push('/prac')}>연습하기</Btn>
         </Container>
         </>
     )
@@ -72,6 +73,26 @@ export default function Home() {
     `
 
     const Button = styled.button`
-    width: 70px;
-    
-    `
+        padding: 10px 20px;
+        background-color: black;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 70px;
+        margin: 0 5px;
+
+    `;
+
+const Btn = styled.button`
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    width: 240px;
+    margin: 5px;
+
+`;
