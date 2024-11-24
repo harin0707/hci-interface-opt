@@ -1,4 +1,4 @@
-import styles from "../../styles/MapSection.module.css";
+import styles from "../styles/MapSection.module.css";
 
 
 export default function MapSection({ section, onStoreClick }) {

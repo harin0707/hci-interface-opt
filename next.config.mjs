@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    swcMinify: false, // SWC 압축 비활성화
+    reactStrictMode: true, // 필요한 다른 옵션만 유지
 };
 
 export default nextConfig;
+
