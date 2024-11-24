@@ -4,7 +4,11 @@ import styled from "styled-components";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { experimentIdState, taskState } from "../../atoms/atoms.js";
 import { storeDataA } from "../../data/storedataA.js";
-
+import { storeDataB } from "../../data/storedataB.js";
+import { storeDataC } from "../../data/storedataC.js";
+import { storeDataD } from "../../data/storedataD.js";
+import { storeDataE } from "../../data/storedataE.js";
+import { storeDataF } from "../../data/storedataF.js";
 
 export default function Condition1() {
     const router = useRouter();
@@ -129,22 +133,35 @@ export default function Condition1() {
                 <M1Con isColumn="column"> 
                     <M2Con id="3"> 
                     {storeDataA.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
-                    width: store.width,
-                    height: store.height,
                     }}>{store.name}</MA>))}
                     </M2Con>
+
                     <M2Con id="7"> 
-                        <M3Con id="7">B</M3Con>
-                        <M3Con id="3">C</M3Con>
+                        <M3Con id="7"> 
+                        {storeDataB.map((store) => (<MB onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                        }}>{store.name}</MB>))}
+                        </M3Con>
+                        <M3Con id="3">
+                        {storeDataC.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                        }}>{store.name}</MA>))}
+                        </M3Con>
                     </M2Con>
                 </M1Con>
-                <M1Con>
-                    <M2Con id="4" > D </M2Con>
-                    <M2Con id="6" isColumn="column"> 
-                        <M4Con id="3">E</M4Con>
-                        <M4Con id="7">F</M4Con>
+
+                <M1ConD>
+                    <M2Con id="5"  >
+                    {storeDataD.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                        }}>{store.name}</MA>))}
                     </M2Con>
-                </M1Con>
+                    <M2Con id="5" > 
+                        <M4Con id="4"> {storeDataE.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                        }}>{store.name}</MA>))}</M4Con>
+                        <M4Con id="6" isColumn="column">
+                        {storeDataF.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                        }}>{store.name}</MA>))}
+                        </M4Con>
+                    </M2Con>
+                </M1ConD>
             </MapContainer>
         </Container>
     );
@@ -187,8 +204,8 @@ const MapContainer = styled.div`
 padding: 5px;
 display: flex;
 background-color: red;
-width: 100vw;
-height: 73vh;
+width: 80vw;
+height: 70vh;
 
 `
 
@@ -200,6 +217,18 @@ const M1Con = styled.div`
     width: 100vw;
 `;
 
+
+const M1ConD = styled.div`
+    display: flex;
+    flex-direction: ${({ isColumn }) => (isColumn === "column" ? "row" : "column")}; /* id에 따라 방향 변경 */
+    border: 2px solid green;
+    padding: 5px;
+    width: 100vw;
+    flex-wrap: wrap;
+`;
+
+
+
 const M2Con = styled.div`
     flex-direction: ${({ isColumn }) => (isColumn === "column" ? "row" : "column")};
     flex-grow: ${({ id }) => id || 1}; /* ID를 기반으로 flex-grow 설정 */
@@ -210,6 +239,7 @@ const M2Con = styled.div`
     justify-content: center;
     flex-wrap: wrap;
 
+
 `;
 
 const M3Con = styled.div`
@@ -217,20 +247,22 @@ const M3Con = styled.div`
     background-color: yellow;
     border: 2px solid black;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     width: 100%;
-
+    flex-wrap: wrap;
+    padding: 50px 0 ;
 `;
+
 
 const M4Con = styled.div`
     flex-grow: ${({ id }) => id || 1}; /* ID를 기반으로 flex-grow 설정 */
     background-color: yellow;
     border: 2px solid black;
     display: flex;
-    align-items: center;
     justify-content: center;
-    height: 100%;
+    flex-wrap: wrap;
+    padding: 50px 10px;
 
 `;
 
@@ -246,8 +278,26 @@ const MA = styled.div`
     font-size: 0.5rem;
     margin: 1px;
 
-    padding: 5px;
+    padding: 1px;
     cursor: pointer;
 `;
+
+const MB = styled.div`
+    background-color: lightgreen;
+    border: 2px solid black;
+    display: flex;
+    /* flex-direction: row; */
+    align-items: center;
+    justify-content: center;
+    color: black;
+    font-weight: bold;
+    font-size: 0.5rem;
+    margin: 1px;
+
+    padding: 1px;
+    cursor: pointer;
+    height: 50px;
+`;
+
 
 
