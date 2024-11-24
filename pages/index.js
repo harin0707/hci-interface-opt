@@ -1,5 +1,5 @@
 import { useRecoilState } from 'recoil';
-import { experimentIdState } from './atoms';
+import { experimentIdState } from './atoms.js';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 

@@ -3,28 +3,6 @@ import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import { experimentIdState } from '../atoms.js';
 
-export async function getStaticPaths() {
-    // 동적 경로를 지정합니다.
-    const paths = [
-    { params: { id: '1' } },
-    { params: { id: '2' } },
-    { params: { id: '3' } },
-    ];
-
-    return {
-    paths,
-    fallback: false, // paths에 없는 경로는 404 반환
-    };
-}
-
-export async function getStaticProps({ params }) {
-    // params.id를 사용해 필요한 데이터를 가져옵니다.
-    return {
-    props: {
-        id: params.id, // 동적 경로의 id 값 전달
-    },
-    };
-}
 
 export default function Condition1() {
     const router = useRouter();
@@ -39,7 +17,7 @@ export default function Condition1() {
     return (
 
         <Container>
-            <div>Condition1 Page 기존 방식-  Task Num: {id}</div>
+            <div>Condition1 Page 기존 방식-  Task Num: 1</div>
             <div> 실험자: {experimentId || '정보 없음'}</div>
 
         </Container>
