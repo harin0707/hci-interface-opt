@@ -24,11 +24,14 @@ export default function Condition2() {
     
 
     const [scale, setScale] = useState(1); // 확대/축소 배율
+    const [isZooming, setIsZooming] = useState(false); // 확대/축소 버튼 사용 상태
+
     const [position, setPosition] = useState({ x: 0, y: 0 }); // 지도 이동 위치
     const [dragging, setDragging] = useState(false); // 드래그 상태
     const [startPos, setStartPos] = useState({ x: 0, y: 0 }); // 드래그 시작 위치
 
     const [mode, setMode] = useState("drag"); 
+
     
     const taskId = 1;
     const conditionId = 2;
@@ -41,6 +44,20 @@ export default function Condition2() {
             totalClicks: 0,
             timeSpent: 0,
         };
+    // 확대/축소 제한 핸들러 추가
+    useEffect(() => {
+        const preventPinchZoom = (e) => {
+            if (e.touches.length > 1) {
+                // 두 손가락 터치를 방지
+                e.preventDefault();
+            }
+        };
+        document.addEventListener("touchmove", preventPinchZoom, { passive: false });
+
+        return () => {
+            document.removeEventListener("touchmove", preventPinchZoom);
+        };
+    }, []);
 
     // 전역 클릭 이벤트 추가
     useEffect(() => {
@@ -201,8 +218,19 @@ const handleDragEnd = () => {
 
 
 
-    const handleZoomIn = () => setScale((prevScale) => Math.min(prevScale + 0.2, 3));
-    const handleZoomOut = () => setScale((prevScale) => Math.max(prevScale - 0.2, 0.5));
+     // 확대 버튼 핸들러
+     const handleZoomIn = () => {
+        setIsZooming(true);
+        setScale((prevScale) => Math.min(prevScale + 0.2, 3));
+        setTimeout(() => setIsZooming(false), 300); // 확대 후 상태 복원
+    };
+
+    // 축소 버튼 핸들러
+    const handleZoomOut = () => {
+        setIsZooming(true);
+        setScale((prevScale) => Math.max(prevScale - 0.2, 0.5));
+        setTimeout(() => setIsZooming(false), 300); // 축소 후 상태 복원
+    };
 
 
 
@@ -232,8 +260,8 @@ const handleDragEnd = () => {
                     {isTimerRunning ? "실험 진행 중..." : "실험 시작"}
                 </Button>
                 <ZoomContainer>
-                    <ZoomButton onClick={handleZoomOut}>+</ZoomButton>
-                    <ZoomButton onClick={handleZoomIn}>-</ZoomButton>
+                    <ZoomButton onClick={handleZoomIn}  disabled={isZooming}>+</ZoomButton>
+                    <ZoomButton onClick={handleZoomOut} disabled={isZooming}>-</ZoomButton>
                 </ZoomContainer>
             </Nav>
             
