@@ -195,13 +195,6 @@ export default function Condition1() {
             setDragging(false);
         };
     
-        const handleZoomIn = () => {
-            if (mode === "zoom") setScale((prevScale) => Math.min(prevScale + 0.2, 3));
-        };
-        const handleZoomOut = () => {
-            if (mode === "zoom") setScale((prevScale) => Math.max(prevScale - 0.2, 0.5));
-        };
-    
 
 
 
@@ -241,14 +234,6 @@ export default function Condition1() {
                     드래그 모드
                 </ModeButton>
             </ModeContainer>
-            {/* <ZoomContainer>
-                <ZoomButton onClick={handleZoomOut} disabled={mode !== "zoom"}>
-                    -
-                </ZoomButton>
-                <ZoomButton onClick={handleZoomIn} disabled={mode !== "zoom"}>
-                    +
-                </ZoomButton>
-            </ZoomContainer> */}
 
             <MapContainer
                 style={{

@@ -24,6 +24,8 @@ export default function Condition2() {
     const [position, setPosition] = useState({ x: 0, y: 0 }); // 지도 이동 위치
     const [dragging, setDragging] = useState(false); // 드래그 상태
     const [startPos, setStartPos] = useState({ x: 0, y: 0 }); // 드래그 시작 위치
+
+    const [mode, setMode] = useState("drag"); 
     
     const taskId = 1;
     const conditionId = 1;
@@ -119,23 +121,64 @@ export default function Condition2() {
         }
     };
 
+    // 두 손가락 터치 관련 상태
+    const [touchStartDistance, setTouchStartDistance] = useState(null);
+
+    // 두 손가락 거리 계산
+    const getTouchDistance = (touches) => {
+        const [touch1, touch2] = touches;
+        return Math.sqrt(
+            Math.pow(touch2.clientX - touch1.clientX, 2) +
+            Math.pow(touch2.clientY - touch1.clientY, 2)
+        );
+    };
+
+    // 터치 시작 이벤트 핸들러
+    const handleTouchStart = (e) => {
+        if (mode === "zoom" && e.touches.length === 2) {
+            // 두 손가락 터치일 때만 거리 계산
+            const distance = getTouchDistance(e.touches);
+            setTouchStartDistance(distance);
+        }
+    };
+
+    // 터치 이동 이벤트 핸들러
+    const handleTouchMove = (e) => {
+        if (mode === "zoom" && e.touches.length === 2 && touchStartDistance) {
+            const currentDistance = getTouchDistance(e.touches);
+            const scaleChange = currentDistance / touchStartDistance;
+
+            setScale((prevScale) => {
+                const newScale = Math.min(Math.max(prevScale * scaleChange, 0.5), 3); // 제한: 0.5~3
+                return newScale;
+            });
+
+            // 현재 거리를 다음 기준 거리로 설정
+            setTouchStartDistance(currentDistance);
+        }
+    };
+
+    // 터치 끝 이벤트 핸들러
+    const handleTouchEnd = () => {
+        if (mode === "zoom") {
+            setTouchStartDistance(null); // 초기화
+        }
+    };
+
 // 드래그 시작 이벤트 핸들러
 const handleDragStart = (e) => {
-    e.preventDefault(); // 기본 이벤트 차단
-    e.stopPropagation(); // 이벤트 전파 차단
+    if (mode !== "drag") return;
+    e.preventDefault();
     setDragging(true);
     setStartPos({
-        x: e.clientX || e.touches[0]?.clientX, // 마우스 또는 터치
+        x: e.clientX || e.touches[0]?.clientX,
         y: e.clientY || e.touches[0]?.clientY,
     });
 };
 
 // 드래그 이동 이벤트 핸들러
 const handleDragMove = (e) => {
-    if (!dragging) return;
-
-    e.preventDefault(); // 기본 동작 차단
-    e.stopPropagation(); // 이벤트 전파 차단
+    if (!dragging || mode !== "drag") return;
 
     const currentX = e.clientX || e.touches[0]?.clientX;
     const currentY = e.clientY || e.touches[0]?.clientY;
@@ -143,20 +186,17 @@ const handleDragMove = (e) => {
     const newX = position.x + (currentX - startPos.x);
     const newY = position.y + (currentY - startPos.y);
 
-    // 경계 설정
-    const boundaryX = Math.min(Math.max(newX, -500), 500);
-    const boundaryY = Math.min(Math.max(newY, -500), 500);
-
-    setPosition({ x: boundaryX, y: boundaryY });
+    setPosition({ x: newX, y: newY });
     setStartPos({ x: currentX, y: currentY });
 };
 
 // 드래그 끝 이벤트 핸들러
-const handleDragEnd = (e) => {
-    e.preventDefault(); // 기본 동작 차단
-    e.stopPropagation(); // 이벤트 전파 차단
+const handleDragEnd = () => {
+    if (mode !== "drag") return;
     setDragging(false);
 };
+
+
 
     const handleZoomIn = () => setScale((prevScale) => Math.min(prevScale + 0.2, 3));
     const handleZoomOut = () => setScale((prevScale) => Math.max(prevScale - 0.2, 0.5));
@@ -186,7 +226,9 @@ const handleDragEnd = (e) => {
                 {isTimerRunning ? "실험 진행 중..." : "시작"}
             </Button>
             
-            <MapContainer style={{ transform: `scale(${scale})` }}>
+            <MapContainer style={{
+                    transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+                }}>
                 <M1Con isColumn="column"> 
                     <M2Con id="3"> 
                     {storeDataA.map((store) => (
@@ -221,17 +263,12 @@ const Container = styled.div`
     align-items: center;
     margin: 20px 0;
 
-    overflow: hidden;
-    position: relative;
+    cursor: grab;
 
-cursor: grab;
+        &:active {
+            cursor: grabbing;
+        }
 
-    &:active {
-        cursor: grabbing;
-    }
-transform-origin: center;
-
-pointer-events: auto;
 `;
 
 const InfoContainer = styled.div`
@@ -259,7 +296,7 @@ const Button = styled.button`
     }
 `;
 
-//
+
 const MapContainer = styled.div`
 padding: 5px;
 display: flex;
@@ -269,7 +306,7 @@ height: 73vh;
 
 display: flex;
 transform-origin: center;
-
+overflow: hidden;
 pointer-events: auto;
 
 `
