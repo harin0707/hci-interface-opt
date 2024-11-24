@@ -121,7 +121,7 @@ export default function Condition1() {
 
     return (
         <Container>
-            <div> Task1 [조건 1] 자유로운 확대와 드래그</div>
+            <div style={{ fontWeight: "bold" }}> Task1 [조건 1] 자유로운 확대와 드래그</div>
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
 
             <InfoContainer>
@@ -135,7 +135,10 @@ export default function Condition1() {
             </Button>
             <MapContainer>
                 <M1Con isColumn="column"> 
-                    <M2Con id="3"> 
+                    <M2Con id="3"
+                    style={{
+                        borderRight: "solid 15px #CFBFBA",
+                    }}>
                     {storeDataA.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
                         width:store.width,
                         height:store.height,
@@ -144,14 +147,18 @@ export default function Condition1() {
                     </M2Con>
 
                     <M2Con id="7"> 
-                        <M3Con id="7"> 
+                        <M3Con id="7" style={{
+                        borderBottom: "solid 5px #CFBFBA",
+                    }}> 
                         {storeDataB.map((store) => (<MB onClick={() => handleStoreClick(store.id)} key={store.id} style={{
                             width:store.width,
                             height:store.height,
                             transform: `rotate(${store.rotation}deg)`,
                         }}>{store.name}</MB>))}
                         </M3Con>
-                        <M3Con id="3">
+                        <M3Con id="3" style={{
+                        borderTop: "solid 10px #CFBFBA",
+                    }}>
                         {storeDataC.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
                             width:store.width,
                             height:store.height,
@@ -170,13 +177,25 @@ export default function Condition1() {
                         }}>{store.name}</MA>))}
                     </M2Con>
                     <M2Con id="5" > 
-                        <M4Con id="4"> {storeDataE.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                        <M4Con id="4"
+                        style={{
+                            transform: `rotate 0deg)`,
+                            borderTop: "solid 10px #CFBFBA",
+                            borderRight: "solid 10px #CFBFBA",
+                        }} 
+                        
+                        > {storeDataE.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
                             width:store.width,
                             height:store.height,
                             transform: `rotate(${store.rotation}deg)`,
 
                         }}>{store.name}</MA>))}</M4Con>
-                        <M4Con id="6" isColumn="column">
+                        <M4Con id="6" isColumn="column" style={{
+                        borderTop: "solid 10px #CFBFBA",
+                        borderLeft: "solid 10px #CFBFBA",
+                        transform: `rotate(-20deg)`,
+                        
+                    }} >
                         {storeDataF.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
                             width:store.width,
                             height:store.height,
@@ -253,31 +272,26 @@ const M1ConD = styled.div`
 const M2Con = styled.div`
     flex-direction: ${({ isColumn }) => (isColumn === "column" ? "row" : "column")};
     flex-grow: ${({ id }) => id || 1}; /* ID를 기반으로 flex-grow 설정 */
-    border: 1px solid black;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-
-
 `;
 
 const M3Con = styled.div`
     flex-grow: ${({ id }) => id || 1}; 
-    border: 1px solid black;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     padding: 30px 0 ;
 
-    background-color: green;
+
 `;
 
 
 const M4Con = styled.div`
     flex-grow: ${({ id }) => id || 1}; 
-    border: 1px solid black;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -291,8 +305,6 @@ const M4Con = styled.div`
 const MA = styled.div`
     background-color: #F5F5F5;
     border-radius: 3px;
-
-    border: 1px solid black;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -303,13 +315,12 @@ const MA = styled.div`
 
     padding: 1px;
     cursor: pointer;
+    z-index: 10;
 `;
 
 const MB = styled.div`
     background-color: #F5F5F5;
     border-radius: 3px;
-
-    border: 1px solid black;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -320,6 +331,8 @@ const MB = styled.div`
 
     padding: 1px;
     cursor: pointer;
+
+    z-index: 100;
 `;
 
 const Btn = styled.button`
