@@ -2,12 +2,13 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRecoilValue, useRecoilState } from "recoil";
-import { storeDataA } from "../../data/storedataA.js";
-import { storeDataB } from "../../data/storedataB.js";
-import { storeDataC } from "../../data/storedataC.js";
-import { storeDataD } from "../../data/storedataD.js";
-import { storeDataE } from "../../data/storedataE.js";
-import { storeDataF } from "../../data/storedataF.js";
+import { experimentIdState, taskState } from "../atoms/atoms.js";
+import { storeDataA } from "../data/storedataA.js";
+import { storeDataB } from "../data/storedataB.js";
+import { storeDataC } from "../data/storedataC.js";
+import { storeDataD } from "../data/storedataD.js";
+import { storeDataE } from "../data/storedataE.js";
+import { storeDataF } from "../data/storedataF.js";
 
 export default function Prac() {
     const router = useRouter();
