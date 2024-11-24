@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { experimentIdState, taskState } from '../atoms/atoms.js';
 
 
@@ -10,14 +11,54 @@ export default function Condition1() {
 
     //Recoil 상태 가져오기
     const experimentId = useRecoilValue(experimentIdState);
-    const tasks = useRecoilValue(taskState);
+    const [tasks, setTasks] = useRecoilState(taskState);
+
+
+    const [elapsedTime, setElapsedTime] = useState(0); // 소요 시간 상태
+    const [clickCount, setClickCount] = useState(0); // 클릭 횟수 상태
+    const taskId = 1; // 예시로 Task ID를 1로 설정
+    const conditionId = 1; // 예시로 Condition ID를 1로 설정
 
      // taskId가 1이고 conditionId가 1인 데이터 필터링
     const conditionData = tasks
     .find((task) => task.taskId === 1) // taskId가 1인 Task 찾기
     ?.conditions.find((condition) => condition.conditionId === 1); // conditionId가 1인 조건 찾기
         
+     // 소요 시간 증가
+    useEffect(() => {
+        const timer = setInterval(() => {
+        setElapsedTime((prev) => prev + 1);
+        }, 1000);
 
+        return () => clearInterval(timer); // 컴포넌트 언마운트 시 타이머 정리
+    }, []);
+
+    // Recoil 상태에 실시간 데이터 업데이트
+    useEffect(() => {
+        setTasks((prevTasks) =>
+        prevTasks.map((task) =>
+            task.taskId === taskId
+            ? {
+                ...task,
+                conditions: task.conditions.map((condition) =>
+                    condition.conditionId === conditionId
+                    ? {
+                        ...condition,
+                        totalClicks: clickCount,
+                        timeSpent: elapsedTime,
+                        }
+                    : condition
+                ),
+                }
+            : task
+        )
+        );
+    }, [elapsedTime, clickCount, setTasks]);
+
+    // 클릭 횟수 증가 함수
+    const handleButtonClick = () => {
+        setClickCount((prev) => prev + 1);
+    };
     return (
 
         <Container>
@@ -32,13 +73,6 @@ export default function Condition1() {
             
 
         </Container>
-
-        
-
-
-
-
-
     )
 
 }
