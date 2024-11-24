@@ -17,7 +17,6 @@ export default function Home() {
 
         <>
         <Container>
-        <h1>Welcome to the Home Page</h1>
         <Title>실험자 번호를 입력하세요</Title>
         <InputContainer>
         <Input
@@ -43,6 +42,7 @@ export default function Home() {
     flex-direction: column;
     align-items: center;
     margin: 20px 0;
+    justify-content: center;
 
     `;
 

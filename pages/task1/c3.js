@@ -4,7 +4,11 @@ import styled from "styled-components";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { experimentIdState, taskState } from "../../atoms/atoms.js";
 import { storeDataA } from "../../data/storedataA.js";
-
+import { storeDataB } from "../../data/storedataB.js";
+import { storeDataC } from "../../data/storedataC.js";
+import { storeDataD } from "../../data/storedataD.js";
+import { storeDataE } from "../../data/storedataE.js";
+import { storeDataF } from "../../data/storedataF.js";
 
 export default function Condition1() {
     const router = useRouter();
@@ -205,17 +209,14 @@ export default function Condition1() {
             onTouchStart={handleDragStart}
             onTouchMove={handleDragMove}
             onTouchEnd={handleDragEnd}>
-            <div>Condition3 모드 구분 방식 - Task Num: 1</div>
-
-            
-
+            <div>[조건 3] 확대 모드/드래그 모드 구분 - Task Num: 1</div>
             <InfoContainer>
                 <div id="info">실험자: {experimentId || "정보 없음"}</div>
                 <div id="info">총 클릭 횟수: {clickCount}</div>
                 <div id="info">소요 시간: {elapsedTime}초</div>
             </InfoContainer>
             <Button onClick={handleStartTimer} disabled={isTimerRunning}>
-                {isTimerRunning ? "실험 진행 중..." : "시작"}
+                {isTimerRunning ? "실험 진행 중..." : "실험 시작"}
             </Button>
 
             <ModeContainer>
@@ -241,23 +242,27 @@ export default function Condition1() {
                     <M2Con id="3"> 
                     {storeDataA.map((store) => (
                     <MA onClick={() => handleStoreClick(store.id)} 
-                    key={store.id} style={{
-                    width: store.width,
-                    height: store.height,
-                    }}>{store.name}</MA>))}
+                    key={store.id} style={{}}
+                    >{store.name}</MA>))}
                     </M2Con>
                     <M2Con id="7"> 
-                        <M3Con id="7">B</M3Con>
-                        <M3Con id="3">C</M3Con>
+                        <M3Con id="7">{storeDataB.map((store) => (<MB onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                        }}>{store.name}</MB>))}</M3Con>
+                        <M3Con id="3">{storeDataC.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                        }}>{store.name}</MA>))}</M3Con>
                     </M2Con>
                 </M1Con>
-                <M1Con>
-                    <M2Con id="4" > D </M2Con>
-                    <M2Con id="6" isColumn="column"> 
-                        <M4Con id="3">E</M4Con>
-                        <M4Con id="7">F</M4Con>
+
+                <M1ConD>
+                    <M2Con id="5" > {storeDataD.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                        }}>{store.name}</MA>))}  </M2Con>
+                    <M2Con id="5"> 
+                        <M4Con id="4">{storeDataE.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                        }}>{store.name}</MA>))}</M4Con>
+                        <M4Con id="6" isColumn="column">{storeDataF.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                        }}>{store.name}</MA>))}</M4Con>
                     </M2Con>
-                </M1Con>
+                </M1ConD>
             </MapContainer>
 
         </Container>
@@ -281,7 +286,7 @@ const ModeContainer = styled.div`
 const ModeButton = styled.button`
     padding: 10px 20px;
     border: none;
-    background-color: ${({ isActive }) => (isActive ? "#0073e6" : "#ccc")};
+    background-color: ${({ isActive }) => (isActive ? "black" : "#ccc")};
     color: white;
     border-radius: 5px;
     cursor: pointer;
@@ -291,24 +296,6 @@ const ModeButton = styled.button`
     }
 `;
 
-const ZoomContainer = styled.div`
-    display: flex;
-    gap: 10px;
-    margin: 10px 0;
-`;
-
-const ZoomButton = styled.button`
-    padding: 10px 20px;
-    background-color: #0073e6;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    &:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-    }
-`;
 
 const InfoContainer = styled.div`
     display: flex;
@@ -322,7 +309,7 @@ const InfoContainer = styled.div`
 
 const Button = styled.button`
     padding: 10px 20px;
-    background-color: #0073e6;
+    background-color: black;
     color: white;
     border: none;
     border-radius: 5px;
@@ -335,21 +322,19 @@ const Button = styled.button`
     }
 `;
 
-//
 const MapContainer = styled.div`
-padding: 5px;
+padding: 1px;
 display: flex;
-background-color: red;
-width: 100vw;
-height: 73vh;
-transform-origin: center;
+width: 80vw;
+height: 70vh;
 
+transform-origin: center;
+pointer-events: auto;
 `
 
 const M1Con = styled.div`
     display: flex;
     flex-direction: ${({ isColumn }) => (isColumn === "column" ? "row" : "column")}; /* id에 따라 방향 변경 */
-    border: 2px solid green;
     padding: 5px;
     width: 100vw;
 `;
@@ -357,8 +342,7 @@ const M1Con = styled.div`
 const M2Con = styled.div`
     flex-direction: ${({ isColumn }) => (isColumn === "column" ? "row" : "column")};
     flex-grow: ${({ id }) => id || 1}; /* ID를 기반으로 flex-grow 설정 */
-    background-color: yellow;
-    border: 2px solid black;
+    border: 1px solid black;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -366,32 +350,39 @@ const M2Con = styled.div`
 
 `;
 
+const M1ConD = styled.div`
+    display: flex;
+    flex-direction: ${({ isColumn }) => (isColumn === "column" ? "row" : "column")}; /* id에 따라 방향 변경 */
+    padding: 5px;
+    width: 100vw;
+    flex-wrap: wrap;
+`;
+
 const M3Con = styled.div`
     flex-grow: ${({ id }) => id || 1}; /* ID를 기반으로 flex-grow 설정 */
-    background-color: yellow;
-    border: 2px solid black;
+    border: 1px solid black;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     width: 100%;
-
+    flex-wrap: wrap;
+    padding: 50px 0 ;
 `;
 
 const M4Con = styled.div`
     flex-grow: ${({ id }) => id || 1}; /* ID를 기반으로 flex-grow 설정 */
-    background-color: yellow;
-    border: 2px solid black;
+    border: 1px solid black;
     display: flex;
-    align-items: center;
     justify-content: center;
-    height: 100%;
+    flex-wrap: wrap;
+    padding: 50px 5px;
 
 `;
 
 
 const MA = styled.div`
     background-color: lightgreen;
-    border: 2px solid black;
+    border: 1px solid black;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -400,8 +391,25 @@ const MA = styled.div`
     font-size: 0.5rem;
     margin: 1px;
 
-    padding: 5px;
+    padding: 1px;
     cursor: pointer;
+
+    pointer-events: auto;
 `;
 
+const MB = styled.div`
+    background-color: lightgreen;
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    font-weight: bold;
+    font-size: 0.5rem;
+    margin: 1px;
+
+    padding: 1px;
+    cursor: pointer;
+    height: 50px;
+`;
 
