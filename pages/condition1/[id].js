@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
-import { experimentIdState } from '../atoms.js';
+import { experimentIdState } from '../../atoms/atoms.js';
 
 export async function getStaticPaths() {
     // 동적 경로를 지정합니다.

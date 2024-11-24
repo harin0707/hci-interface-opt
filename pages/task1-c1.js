@@ -1,15 +1,12 @@
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
-import { experimentIdState } from './atoms.js';
+import { experimentIdState } from '../atoms/atoms.js';
 
 
 export default function Condition1() {
     const router = useRouter();
     const { id } = router.query; // URL 파라미터 추출
-    if (router.isFallback) {
-        return <div>Loading...</div>;
-    }
 
     const experimentId = useRecoilValue(experimentIdState);
     
