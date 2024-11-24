@@ -29,9 +29,9 @@ export default function Home() {
         </InputContainer>
 
         <BtnContainer>
-            <Button onClick={() => router.push('/task/task1-c1')}>Task1</Button>
-            <Button onClick={() => router.push('/task/task2-c1')}>Task2</Button>
-            <Button onClick={() => router.push('/task/task3-c1')}>Task3</Button>
+            <Button onClick={() => router.push('/task1/c1')}>Task1</Button>
+            <Button onClick={() => router.push('/task2/c1')}>Task2</Button>
+            <Button onClick={() => router.push('/task3/c1')}>Task3</Button>
         </BtnContainer>
         </Container>
         </>

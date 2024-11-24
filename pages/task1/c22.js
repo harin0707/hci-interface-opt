@@ -7,29 +7,8 @@ import MapSection from "../component/MapSection.js";
 import { mapData } from "../mapData.js";
 import { storeDataA } from "../../data/storedataA.js";
 
-export async function getStaticPaths() {
-    const paths = [
-        { params: { id: "task1-c1" } },
-        { params: { id: "task2-c1" } },
-        { params: { id: "task3-c1" } },
-    ];
 
-    return {
-        paths,
-        fallback: false, // paths에 정의되지 않은 경로는 404 반환
-    };
-}
-
-export async function getStaticProps({ params }) {
-    const { id } = params;
-    return {
-        props: {
-            id,
-        },
-    };
-}
-
-export default function Condition1() {
+export default function Condition2() {
     const router = useRouter();
     const { id } = router.query;
 
@@ -39,6 +18,13 @@ export default function Condition1() {
     const [elapsedTime, setElapsedTime] = useState(0); // 소요 시간 상태
     const [clickCount, setClickCount] = useState(0); // 클릭 횟수 상태
     const [isTimerRunning, setIsTimerRunning] = useState(false); // 타이머 상태
+    
+
+    const [scale, setScale] = useState(1); // 확대/축소 배율
+    const [position, setPosition] = useState({ x: 0, y: 0 }); // 지도 이동 위치
+    const [dragging, setDragging] = useState(false); // 드래그 상태
+    const [startPos, setStartPos] = useState({ x: 0, y: 0 }); // 드래그 시작 위치
+    
     const taskId = 1;
     const conditionId = 1;
 
@@ -104,6 +90,7 @@ export default function Condition1() {
         setElapsedTime(0); // 시간 초기화
     };
 
+
     // 맞게 클릭했을 때 동작
     const handleStoreClick = (storeId) => {
         if (storeId === "A-1") {
@@ -117,25 +104,63 @@ export default function Condition1() {
                                 conditions: task.conditions.map((condition) =>
                                     condition.conditionId === conditionId
                                         ? {
-                                                ...condition,
-                                                totalClicks: clickCount + 1,
-                                                timeSpent: elapsedTime,
-                                                correctClick: true,
-                                            }
+                                            ...condition,
+                                            totalClicks: clickCount + 1,
+                                            timeSpent: elapsedTime,
+                                            correctClick: true,
+                                        }
                                         : condition
                                 ),
                             }
                         : task
                 )
             );
+            router.push("/task1/c2"); // /task1/c2로 라우팅
         }
     };
+
+    // 드래그 시작 이벤트 핸들러
+    const handleDragStart = (e) => {
+        e.preventDefault();
+        setDragging(true);
+        setStartPos({
+            x: e.clientX || e.touches[0].clientX, // 마우스 or 터치
+            y: e.clientY || e.touches[0].clientY,
+        });
+    };
+
+    // 드래그 이동 이벤트 핸들러
+    const handleDragMove = (e) => {
+        if (!dragging) return;
+    
+        const currentX = e.clientX || e.touches[0].clientX;
+        const currentY = e.clientY || e.touches[0].clientY;
+    
+        const newX = position.x + (currentX - startPos.x);
+        const newY = position.y + (currentY - startPos.y);
+    
+        // 경계 설정 (임의로 -500 ~ 500 설정)
+        const boundaryX = Math.min(Math.max(newX, -500), 500);
+        const boundaryY = Math.min(Math.max(newY, -500), 500);
+    
+        setPosition({ x: boundaryX, y: boundaryY });
+        setStartPos({ x: currentX, y: currentY });
+    };
+
+    // 드래그 끝 이벤트 핸들러
+    const handleDragEnd = () => {
+        setDragging(false);
+    };
+
+
+    const handleZoomIn = () => setScale((prevScale) => Math.min(prevScale + 0.2, 3));
+    const handleZoomOut = () => setScale((prevScale) => Math.max(prevScale - 0.2, 0.));
 
 
 
     return (
         <Container>
-            <div>Condition1 Page 기존 방식 - Task Num: 1</div>
+            <div>Condition2 확대/축소 버튼 - Task Num: 1</div>
             <InfoContainer>
                 <div id="info">실험자: {experimentId || "정보 없음"}</div>
                 <div id="info">총 클릭 횟수: {clickCount}</div>
@@ -144,13 +169,28 @@ export default function Condition1() {
             <Button onClick={handleStartTimer} disabled={isTimerRunning}>
                 {isTimerRunning ? "실험 진행 중..." : "시작"}
             </Button>
-            <MapContainer>
+            <ZoomContainer>
+                <ZoomButton onClick={handleZoomOut}>-</ZoomButton>
+                <ZoomButton onClick={handleZoomIn}>+</ZoomButton>
+            </ZoomContainer>
+            <MapContainer style={{ transform: `scale(${scale})` }}>
                 <M1Con isColumn="column"> 
                     <M2Con id="3"> 
-                    {storeDataA.map((store) => (<MA key={store.id} style={{
-                    width: store.width,
-                    height: store.height,
-                    }}>{store.name}</MA>))}
+                    {storeDataA.map((store) => (
+                    <MA onClick={() => handleStoreClick(store.id)} 
+                    key={store.id} 
+                    style={{
+                        width: store.width,
+                        height: store.height,
+                    }}
+                    onMouseDown={handleDragStart}
+                    onMouseMove={handleDragMove}
+                    onMouseUp={handleDragEnd}
+                    onMouseLeave={handleDragEnd}
+                    onTouchStart={handleDragStart}
+                    onTouchMove={handleDragMove}
+                    onTouchEnd={handleDragEnd}
+                    >{store.name}</MA>))}
                     </M2Con>
                     <M2Con id="7"> 
                         <M3Con id="7">B</M3Con>
@@ -165,13 +205,6 @@ export default function Condition1() {
                     </M2Con>
                 </M1Con>
             </MapContainer>
-            {/* {mapData.map((section) => (
-                <MapSection
-                    key={section.section}
-                    section={section}
-                    onStoreClick={handleStoreClick}
-                />
-            ))} */}
         </Container>
     );
 }
@@ -215,6 +248,12 @@ display: flex;
 background-color: red;
 width: 100vw;
 height: 73vh;
+
+cursor: grab;
+
+    &:active {
+        cursor: grabbing;
+    }
 
 `
 
@@ -273,6 +312,29 @@ const MA = styled.div`
     margin: 1px;
 
     padding: 5px;
+    cursor: pointer;
 `;
 
+const ZoomContainer = styled.div`
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 100;
+`;
+
+const ZoomButton = styled.button`
+    padding: 10px 20px;
+    background-color: #0073e6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #005bb5;
+    }
+`;
 
