@@ -20,7 +20,7 @@ export default function Condition1() {
     const [elapsedTime, setElapsedTime] = useState(0); // 소요 시간 상태
     const [clickCount, setClickCount] = useState(0); // 클릭 횟수 상태
     const [isTimerRunning, setIsTimerRunning] = useState(false); // 타이머 상태
-    
+
     const taskId = 1;
     const conditionId = 1;
 
@@ -121,7 +121,7 @@ export default function Condition1() {
 
     return (
         <Container>
-            <div> [조건 1] 자유로운 확대와 드래그 - Task Num: 1</div>
+            <div> Task1 [조건 1] 자유로운 확대와 드래그</div>
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
 
             <InfoContainer>
@@ -143,10 +143,14 @@ export default function Condition1() {
                     <M2Con id="7"> 
                         <M3Con id="7"> 
                         {storeDataB.map((store) => (<MB onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                            width:store.width,
+                            height:store.height
                         }}>{store.name}</MB>))}
                         </M3Con>
                         <M3Con id="3">
                         {storeDataC.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
+                            width:store.width,
+                            height:store.height
                         }}>{store.name}</MA>))}
                         </M3Con>
                     </M2Con>
@@ -266,7 +270,9 @@ const M4Con = styled.div`
 
 
 const MA = styled.div`
-    background-color: lightgreen;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+
     border: 1px solid black;
     display: flex;
     align-items: center;
@@ -281,7 +287,9 @@ const MA = styled.div`
 `;
 
 const MB = styled.div`
-    background-color: lightgreen;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+
     border: 1px solid black;
     display: flex;
     align-items: center;

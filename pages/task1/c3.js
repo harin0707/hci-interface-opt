@@ -39,6 +39,35 @@ export default function Condition3() {
             timeSpent: 0,
         };
 
+        useEffect(() => {
+            const preventPinchZoom = (e) => {
+                if (e.touches.length > 1) {
+                    e.preventDefault(); // 두 손가락 터치 방지
+                }
+            };
+    
+            const allowPinchZoom = (e) => {
+                // 두 손가락 확대/축소 동작 허용
+                if (e.touches.length > 1) {
+                    e.stopPropagation();
+                }
+            };
+    
+            if (mode === "touch" || mode === "drag") {
+                // 터치나 드래그 모드일 때 두 손가락 방지
+                document.addEventListener("touchmove", preventPinchZoom, { passive: false });
+            } else if (mode === "zoom") {
+                // 줌 모드일 때 두 손가락 확대/축소 허용
+                document.addEventListener("touchmove", allowPinchZoom, { passive: false });
+            }
+    
+            // 클린업 함수
+            return () => {
+                document.removeEventListener("touchmove", preventPinchZoom);
+                document.removeEventListener("touchmove", allowPinchZoom);
+            };
+        }, [mode]); // mode가 변경될 때마다 실행
+
     // 전역 클릭 이벤트 추가
     useEffect(() => {
         const handleGlobalClick = () => {
