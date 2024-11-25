@@ -124,7 +124,7 @@ export default function Condition3() {
 
     // 맞게 클릭했을 때 동작
     const handleStoreClick = (storeId) => {
-        if (mode === "touch" & storeId === "A-1") {
+        if (mode === "touch" & storeId === "E-24") {
             alert(`정답입니다!\n총 클릭 횟수: ${clickCount + 1}\n소요 시간: ${elapsedTime}초`);
             setIsTimerRunning(false); // 타이머 중단
             setTasks((prevTasks) =>
@@ -252,7 +252,7 @@ export default function Condition3() {
 
             
             <InfoContainer>
-                <div id="info" style={{ fontWeight: "bold" }}> Task: ?+?구역에서 ?를 찾아주세요 </div>
+                <div id="info" style={{ fontWeight: "bold" }}> Task2: E구역에서 헤라를 찾아주세요 </div>
                 <div id="info">실험자: {experimentId || "정보 없음"}</div>
                 <div id="info">총 클릭 횟수: {clickCount}</div>
                 <div id="info">소요 시간: {elapsedTime}초</div>
