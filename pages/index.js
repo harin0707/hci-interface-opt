@@ -32,7 +32,13 @@ export default function Home() {
             <Button onClick={() => router.push('/task2/c1')}>Task2</Button>
             <Button onClick={() => router.push('/task3/c1')}>Task3</Button>
         </BtnContainer>
-            <Btn onClick={() => router.push('/prac')}>연습하기</Btn>
+
+        <div> 연습해보기 </div>
+        <BtnContainer>
+            <Button onClick={() => router.push('/prac/c1')}>조건1</Button>
+            <Button onClick={() => router.push('/prac/c2')}>조건2</Button>
+            <Button onClick={() => router.push('/prac/c3')}>조건3</Button>
+        </BtnContainer>
         </Container>
         </>
     )
@@ -79,7 +85,7 @@ export default function Home() {
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        width: 70px;
+        width: 90px;
         margin: 0 5px;
 
     `;

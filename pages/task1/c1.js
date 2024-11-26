@@ -128,7 +128,7 @@ export default function Condition1() {
 
     return (
         <Container>
-            <div style={{ fontWeight: "bold" }}> Task1 [조건 1] 자유로운 확대와 드래그</div>
+            <div style={{ fontWeight: "bold" }}> [조건 1] 자유로운 확대와 드래그</div>
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
 
             <InfoContainer>

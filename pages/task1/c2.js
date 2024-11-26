@@ -219,7 +219,7 @@ const handleDragEnd = () => {
                     onTouchEnd={handleDragEnd}>
 
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
-            <div style={{ fontWeight: "bold" }}>  Task1 [조건 2] 확대/축소 버튼과 자유로운 드래그</div>
+            <div style={{ fontWeight: "bold" }}> [조건 2] 확대/축소 버튼과 자유로운 드래그</div>
             
             
             <InfoContainer>

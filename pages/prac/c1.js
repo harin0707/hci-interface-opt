@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useRecoilValue, useRecoilState } from "recoil";
 import { experimentIdState, taskState } from "../../atoms/atoms.js";
 import { storeDataA } from "../../data/storedataA.js";
 import { storeDataB } from "../../data/storedataB.js";
@@ -14,32 +13,19 @@ export default function Condition1() {
     const router = useRouter();
     const { id } = router.query;
 
-    const experimentId = useRecoilValue(experimentIdState);
-    const [tasks, setTasks] = useRecoilState(taskState);
-
     const [elapsedTime, setElapsedTime] = useState(0); // 소요 시간 상태
     const [clickCount, setClickCount] = useState(0); // 클릭 횟수 상태
     const [isTimerRunning, setIsTimerRunning] = useState(false); // 타이머 상태
 
-    const [currentTargetIndex, setCurrentTargetIndex] = useState(0); // 현재 탐색 중인 매장 인덱스
-
-    const taskId = 2;
+    const taskId = 1;
     const conditionId = 1;
-    // 전역 변수로 관리할 매장 정보
-    const targetStores = [
-        { name: "스타벅스", id: "A-1" }, // 첫 번째 매장
-        { name: "ABC 마트", id: "B-1" }, // 두 번째 매장
-    ];
-    
 
-    // taskId가 1이고 conditionId가 1인 데이터 필터링
-    const conditionData =
-        tasks
-            ?.find((task) => task.taskId === taskId)
-            ?.conditions.find((condition) => condition.conditionId === conditionId) || {
-            totalClicks: 0,
-            timeSpent: 0,
-        };
+    // 전역적으로 관리할 매장 정보를 선언
+    const targetStore = {
+        name: "스타벅스", // 찾아야 하는 매장 이름
+        id: "A-1", // 찾아야 하는 매장 ID
+    };
+    
 
     // 전역 클릭 이벤트 추가
     useEffect(() => {
@@ -66,27 +52,6 @@ export default function Condition1() {
         return () => clearInterval(timer); // 타이머 정리
     }, [isTimerRunning]);
 
-    // Recoil 상태에 실시간 데이터 업데이트
-        useEffect(() => {
-            setTasks((prevTasks) =>
-                prevTasks.map((task) =>
-                    task.taskId === taskId
-                        ? {
-                            ...task,
-                            conditions: task.conditions.map((condition) =>
-                                condition.conditionId === conditionId
-                                    ? {
-                                            ...condition,
-                                            totalClicks: clickCount,
-                                            timeSpent: elapsedTime,
-                                        }
-                                    : condition
-                            ),
-                        }
-                        : task
-                )
-            );
-        }, [elapsedTime, clickCount, setTasks]);
 
     // 타이머 시작 핸들러
     const handleStartTimer = () => {
@@ -97,36 +62,13 @@ export default function Condition1() {
 
     // 맞게 클릭했을 때 동작
     const handleStoreClick = (storeId) => {
-        if (storeId === targetStores[currentTargetIndex].id) {
-            if (currentTargetIndex === targetStores.length - 1) {
+        if (storeId === targetStore.id) {
             alert(`정답입니다!\n총 클릭 횟수: ${clickCount + 1}\n소요 시간: ${elapsedTime}초`);
             setIsTimerRunning(false); // 타이머 중단
-            setTasks((prevTasks) =>
-                prevTasks.map((task) =>
-                    task.taskId === taskId
-                        ? {
-                                ...task,
-                                conditions: task.conditions.map((condition) =>
-                                    condition.conditionId === conditionId
-                                        ? {
-                                            ...condition,
-                                            totalClicks: clickCount + 1,
-                                            timeSpent: elapsedTime,
-                                            correctClick: true,
-                                        }
-                                        : condition
-                                ),
-                            }
-                        : task
-                )
-            );
-            router.push("/task2/c2"); 
-        } else {
-            // 다음 매장으로 진행
-            setCurrentTargetIndex((prevIndex) => prevIndex + 1);
+            router.push("/"); // 
         }
-    }}
-    // 순서에 맞지 않는 매장은 무시
+    };
+
     
 
 
@@ -137,11 +79,7 @@ export default function Condition1() {
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
 
             <InfoContainer>
-                <div id="info" style={{ fontWeight: "bold" }}> 
-                Task2: {`${targetStores[currentTargetIndex].id[0]}구역에서 ${targetStores[currentTargetIndex].name}를 찾아주세요`}
-                </div>
-                <div id="info">탐색 매장 수: 2</div>
-                <div id="info">실험자: {experimentId || "정보 없음"}</div>
+                <div id="info" style={{ fontWeight: "bold" }}> {`연습용 ${targetStore.id[0]}구역에서 ${targetStore.name}를 찾아주세요`} </div>
                 <div id="info">총 클릭 횟수: {clickCount}</div>
                 <div id="info">소요 시간: {elapsedTime}초</div>
             </InfoContainer>

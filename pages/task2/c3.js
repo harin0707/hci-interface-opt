@@ -26,9 +26,17 @@ export default function Condition3() {
     const [dragging, setDragging] = useState(false); // 드래그 상태
     const [startPos, setStartPos] = useState({ x: 0, y: 0 }); // 드래그 시작 위치
     const [mode, setMode] = useState("touch"); // 모드 상태 (기본은 "zoom")
+
+    const [currentTargetIndex, setCurrentTargetIndex] = useState(0); // 현재 탐색 중인 매장 인덱스
+
     
     const taskId = 2;
-    const conditionId = 3;
+    const conditionId = 2;
+    // 전역 변수로 관리할 매장 정보
+    const targetStores = [
+        { name: "스타벅스", id: "A-1" }, // 첫 번째 매장
+        { name: "ABC 마트", id: "B-1" }, // 두 번째 매장
+    ];
 
     // taskId가 1이고 conditionId가 1인 데이터 필터링
     const conditionData =
@@ -124,7 +132,8 @@ export default function Condition3() {
 
     // 맞게 클릭했을 때 동작
     const handleStoreClick = (storeId) => {
-        if (mode === "touch" & storeId === "E-24") {
+        if (mode === "touch" & storeId === targetStores[currentTargetIndex].id) {
+            if (mode === "touch" & currentTargetIndex === targetStores.length - 1) {
             alert(`정답입니다!\n총 클릭 횟수: ${clickCount + 1}\n소요 시간: ${elapsedTime}초`);
             setIsTimerRunning(false); // 타이머 중단
             setTasks((prevTasks) =>
@@ -147,8 +156,12 @@ export default function Condition3() {
                 )
             );
             router.push("/task3/c1"); 
+        } else {
+            // 다음 매장으로 진행
+            setCurrentTargetIndex((prevIndex) => prevIndex + 1);
         }
-    };
+    }}
+    // 순서에 맞지 않는 매장은 무시
 
 
        // 두 손가락 터치 관련 상태
@@ -248,11 +261,14 @@ export default function Condition3() {
             >
 
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
-            <div style={{ fontWeight: "bold" }}>Task2 [조건 3] 확대 모드/드래그 모드 구분 </div>
+            <div style={{ fontWeight: "bold" }}> [조건 3] 확대 모드/드래그 모드 구분 </div>
 
             
             <InfoContainer>
-                <div id="info" style={{ fontWeight: "bold" }}> Task2: E구역에서 헤라를 찾아주세요 </div>
+                <div id="info" style={{ fontWeight: "bold" }}> 
+                Task2: {`${targetStores[currentTargetIndex].id[0]}구역에서 ${targetStores[currentTargetIndex].name}를 찾아주세요`}
+                </div>
+                <div id="info">탐색 매장 수: 2</div>
                 <div id="info">실험자: {experimentId || "정보 없음"}</div>
                 <div id="info">총 클릭 횟수: {clickCount}</div>
                 <div id="info">소요 시간: {elapsedTime}초</div>
