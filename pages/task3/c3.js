@@ -122,11 +122,45 @@ export default function Condition3() {
             );
         }, [elapsedTime, clickCount, setTasks]);
 
-    // 타이머 시작 핸들러
+        // 타이머 시작 핸들러
     const handleStartTimer = () => {
         setIsTimerRunning(true); // 타이머 시작
         setElapsedTime(0); // 시간 초기화
     };
+
+   // 드래그 시작 이벤트 핸들러
+   const handleDragStart = (e) => {
+    if (mode !== "drag") return;
+    e.preventDefault();
+    setDragging(true);
+    setStartPos({
+        x: e.clientX || e.touches[0]?.clientX,
+        y: e.clientY || e.touches[0]?.clientY,
+    });
+};
+
+// 드래그 이동 이벤트 핸들러
+const handleDragMove = (e) => {
+    if (!dragging || mode !== "drag") return;
+
+    const currentX = e.clientX || e.touches[0]?.clientX;
+    const currentY = e.clientY || e.touches[0]?.clientY;
+
+    const newX = position.x + (currentX - startPos.x);
+    const newY = position.y + (currentY - startPos.y);
+
+    setPosition({ x: newX, y: newY });
+    setStartPos({ x: currentX, y: currentY });
+};
+
+
+
+// 드래그 끝 이벤트 핸들러
+const handleDragEnd = () => {
+    if (mode !== "drag") return;
+    setDragging(false);
+};
+
 
 
     // 맞게 클릭했을 때 동작
@@ -166,34 +200,38 @@ export default function Condition3() {
        // 두 손가락 터치 관련 상태
         const [touchStartDistance, setTouchStartDistance] = useState(null);
 
-        // 두 손가락 거리 계산
-        const getTouchDistance = (touches) => {
-            const [touch1, touch2] = touches;
-            return Math.sqrt(
-                Math.pow(touch2.clientX - touch1.clientX, 2) +
-                Math.pow(touch2.clientY - touch1.clientY, 2)
-            );
-        };
-    
-        // 터치 시작 핸들러
+        // 터치와 확대/축소 처리 핸들러 **수정된 부분**
+    const getTouchDistance = (touches) => {
+        const [touch1, touch2] = touches;
+        return Math.sqrt(
+            Math.pow(touch2.clientX - touch1.clientX, 2) +
+            Math.pow(touch2.clientY - touch1.clientY, 2)
+        );
+    };
+
     const handleTouchStart = (e) => {
         if (mode === "zoom" && e.touches.length === 2) {
+            // 확대/축소 동작 시작
             const distance = getTouchDistance(e.touches);
+            setDragging(false); // 드래그 초기화
+            setStartPos({ x: 0, y: 0 });
             setTouchStartDistance(distance);
-        } else if (mode === "drag" && e.touches.length === 1) {
+        } else if (mode === "zoom" && e.touches.length === 1) {
+            // 드래그 동작 시작
             setDragging(true);
             setStartPos({ x: e.touches[0].clientX, y: e.touches[0].clientY });
         }
     };
 
-    // 터치 이동 핸들러
     const handleTouchMove = (e) => {
         if (mode === "zoom" && e.touches.length === 2 && touchStartDistance) {
+            // 확대/축소 계산
             const currentDistance = getTouchDistance(e.touches);
             const scaleChange = currentDistance / touchStartDistance;
-            setScale((prevScale) => Math.min(Math.max(prevScale * scaleChange, 0.5), 3));
-            setTouchStartDistance(currentDistance);
-        } else if (mode === "drag" && dragging && e.touches.length === 1) {
+            setScale((prevScale) => Math.min(Math.max(prevScale * scaleChange, 0.5), 3)); // 확대/축소 제한
+            setTouchStartDistance(currentDistance); // 거리 갱신
+        } else if (mode === "zoom" && dragging && e.touches.length === 1) {
+            // 드래그 계산
             const currentX = e.touches[0].clientX;
             const currentY = e.touches[0].clientY;
             setPosition((prevPos) => ({
@@ -204,47 +242,12 @@ export default function Condition3() {
         }
     };
 
-    // 터치 끝 핸들러
     const handleTouchEnd = () => {
         if (mode === "zoom") {
-            setTouchStartDistance(null);
-        } else if (mode === "drag") {
-            setDragging(false);
+            setDragging(false); // 드래그 종료
         }
     };
 
-    
-        // 드래그 시작 이벤트 핸들러
-        const handleDragStart = (e) => {
-            if (mode !== "drag") return;
-            e.preventDefault();
-            setDragging(true);
-            setStartPos({
-                x: e.clientX || e.touches[0]?.clientX,
-                y: e.clientY || e.touches[0]?.clientY,
-            });
-        };
-    
-        // 드래그 이동 이벤트 핸들러
-        const handleDragMove = (e) => {
-            if (!dragging || mode !== "drag") return;
-    
-            const currentX = e.clientX || e.touches[0]?.clientX;
-            const currentY = e.clientY || e.touches[0]?.clientY;
-    
-            const newX = position.x + (currentX - startPos.x);
-            const newY = position.y + (currentY - startPos.y);
-    
-            setPosition({ x: newX, y: newY });
-            setStartPos({ x: currentX, y: currentY });
-        };
-    
-        // 드래그 끝 이벤트 핸들러
-        const handleDragEnd = () => {
-            if (mode !== "drag") return;
-            setDragging(false);
-        };
-    
 
 
 
@@ -260,7 +263,7 @@ export default function Condition3() {
             >
 
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
-            <div style={{ fontWeight: "bold" }}> [조건 3] 확대 모드/드래그 모드 구분 </div>
+            <div style={{ fontWeight: "bold" }}> [조건 3] 터치/비터치 모드 구분 </div>
 
             
             <InfoContainer>
@@ -279,14 +282,11 @@ export default function Condition3() {
             </Button>
 
             <ModeContainer>
-                <ModeButton
-                    isActive={mode === "zoom"} onClick={() => setMode("zoom")}> 확대/축소 모드
-                </ModeButton>
-                <ModeButton 
-                    isActive={mode === "drag"}onClick={() => setMode("drag")}>드래그 모드
-                </ModeButton>
                 <ModeButton 
                     isActive={mode === "touch"} onClick={() => setMode("touch")}>터치 모드
+                </ModeButton>
+                <ModeButton 
+                    isActive={mode === "drag"}onClick={() => setMode("drag")}>확대 / 드래그 모드
                 </ModeButton>
                 
                 </ModeContainer>
