@@ -27,14 +27,47 @@ export default function Condition2() {
     const [isZooming, setIsZooming] = useState(false); // 확대/축소 버튼 사용 상태
 
     const [position, setPosition] = useState({ x: 0, y: 0 }); // 지도 이동 위치
-    const [dragging, setDragging] = useState(false); // 드래그 상태
-    const [startPos, setStartPos] = useState({ x: 0, y: 0 }); // 드래그 시작 위치
+    const [isMoving, setIsMoving] = useState(false); // 버튼 지속 상태
+    const [moveDirection, setMoveDirection] = useState(null); // 이동 방향
 
-    const [mode, setMode] = useState("drag"); 
+    const handleMoveStart = (direction) => {
+        setMoveDirection(direction);
+        setIsMoving(true);
+    };
+
+    const handleMoveStop = () => {
+        setIsMoving(false);
+        setMoveDirection(null);
+    };
+
+    useEffect(() => {
+        if (!isMoving || !moveDirection) return;
+
+        const moveMap = () => {
+            setPosition((prev) => {
+                const moveDistance = 5; // 이동 거리
+                switch (moveDirection) {
+                    case "up":
+                        return { ...prev, y: prev.y - moveDistance };
+                    case "down":
+                        return { ...prev, y: prev.y + moveDistance };
+                    case "left":
+                        return { ...prev, x: prev.x - moveDistance };
+                    case "right":
+                        return { ...prev, x: prev.x + moveDistance };
+                    default:
+                        return prev;
+                }
+            });
+        };
+
+        const interval = setInterval(moveMap, 50); // 이동 속도 조정
+        return () => clearInterval(interval);
+    }, [isMoving, moveDirection]);
+
 
     const [currentTargetIndex, setCurrentTargetIndex] = useState(0); // 현재 탐색 중인 매장 인덱스
 
-    
     const taskId = 2;
     const conditionId = 2;
     // 전역 변수로 관리할 매장 정보
@@ -43,14 +76,6 @@ export default function Condition2() {
         { name: "ABC 마트", id: "B-1" }, // 두 번째 매장
     ];
 
-    // taskId가 1이고 conditionId가 1인 데이터 필터링
-    const conditionData =
-        tasks
-            ?.find((task) => task.taskId === taskId)
-            ?.conditions.find((condition) => condition.conditionId === conditionId) || {
-            totalClicks: 0,
-            timeSpent: 0,
-        };
     // 확대/축소 제한 핸들러 추가
     useEffect(() => {
         const preventPinchZoom = (e) => {
@@ -153,53 +178,7 @@ export default function Condition2() {
     }}
     // 순서에 맞지 않는 매장은 무시
 
-    // 두 손가락 터치 관련 상태
-    const [touchStartDistance, setTouchStartDistance] = useState(null);
-
-    // 두 손가락 거리 계산
-    const getTouchDistance = (touches) => {
-        const [touch1, touch2] = touches;
-        return Math.sqrt(
-            Math.pow(touch2.clientX - touch1.clientX, 2) +
-            Math.pow(touch2.clientY - touch1.clientY, 2)
-        );
-    };
-
-
-
-// 드래그 시작 이벤트 핸들러
-const handleDragStart = (e) => {
-    if (mode !== "drag") return;
-    e.preventDefault();
-    setDragging(true);
-    setStartPos({
-        x: e.clientX || e.touches[0]?.clientX,
-        y: e.clientY || e.touches[0]?.clientY,
-    });
-};
-
-// 드래그 이동 이벤트 핸들러
-const handleDragMove = (e) => {
-    if (!dragging || mode !== "drag") return;
-
-    const currentX = e.clientX || e.touches[0]?.clientX;
-    const currentY = e.clientY || e.touches[0]?.clientY;
-
-    const newX = position.x + (currentX - startPos.x);
-    const newY = position.y + (currentY - startPos.y);
-
-    setPosition({ x: newX, y: newY });
-    setStartPos({ x: currentX, y: currentY });
-};
-
-// 드래그 끝 이벤트 핸들러
-const handleDragEnd = () => {
-    if (mode !== "drag") return;
-    setDragging(false);
-};
-
-
-
+    
      // 확대 버튼 핸들러
     const handleZoomIn = () => {
         setIsZooming(true);
@@ -217,14 +196,7 @@ const handleDragEnd = () => {
 
 
     return (
-        <Container
-                    onMouseDown={handleDragStart}
-                    onMouseMove={handleDragMove}
-                    onMouseUp={handleDragEnd}
-                    onMouseLeave={handleDragEnd}
-                    onTouchStart={handleDragStart}
-                    onTouchMove={handleDragMove}
-                    onTouchEnd={handleDragEnd}>
+        <Container>
 
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
             <div style={{ fontWeight: "bold" }}> [조건 2] 확대/축소 버튼과 자유로운 드래그</div>
@@ -248,6 +220,42 @@ const handleDragEnd = () => {
                     <ZoomButton onClick={handleZoomIn}  disabled={isZooming}>+</ZoomButton>
                     <ZoomButton onClick={handleZoomOut} disabled={isZooming}>-</ZoomButton>
                 </ZoomContainer>
+
+                <ArrorContainer>
+                <ArrowButton
+                    onMouseDown={() => handleMoveStart("up")}
+                    onMouseUp={handleMoveStop}
+                    onMouseLeave={handleMoveStop}
+                >
+                    ↑
+                </ArrowButton>
+
+                <div>
+                    <ArrowButton
+                        onMouseDown={() => handleMoveStart("left")}
+                        onMouseUp={handleMoveStop}
+                        onMouseLeave={handleMoveStop}
+                    >
+                        ←
+                    </ArrowButton>
+                    <ArrowButton
+                        onMouseDown={() => handleMoveStart("right")}
+                        onMouseUp={handleMoveStop}
+                        onMouseLeave={handleMoveStop}
+                    >
+                        →
+                    </ArrowButton>
+                </div>
+
+                <ArrowButton
+                    onMouseDown={() => handleMoveStart("down")}
+                    onMouseUp={handleMoveStop}
+                    onMouseLeave={handleMoveStop}
+                >
+                    ↓
+                </ArrowButton>
+
+                </ArrorContainer>
             </Nav>
             
             
@@ -377,6 +385,8 @@ const Button = styled.button`
     color: white;
     border: none;
     border-radius: 5px;
+
+    height: 30px;
 
 
     &:disabled {
@@ -511,5 +521,34 @@ const ZoomButton = styled.button`
 const Nav = styled.div`
     display: flex;
     gap: 20px;
+    align-items: center;
 `
+
+const ArrorContainer = styled.div`
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-direction: column;
+    z-index: 100;
+    gap: 0;
+`;
+
+
+const ArrowButton = styled.button`
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #005bb5;
+    }
+
+    &:active {
+        background-color: #003f7f;
+    }
+`;
+
 
