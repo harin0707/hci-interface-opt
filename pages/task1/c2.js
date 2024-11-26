@@ -95,9 +95,11 @@ export default function Condition2() {
         };
 
         document.addEventListener("click", handleGlobalClick);
+        document.addEventListener("touch", handleGlobalClick);
 
         return () => {
-            document.removeEventListener("click", handleGlobalClick);
+        document.addEventListener("click", handleGlobalClick);
+        document.removeEventListener("touch", handleGlobalClick);c
         };
     }, []);
 
