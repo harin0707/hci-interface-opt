@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState,useCallback } from "react";
 import styled from "styled-components";
 import { storeDataA } from "../../data/storedataA.js";
 import { storeDataB } from "../../data/storedataB.js";
@@ -15,12 +15,17 @@ export default function Condition3() {
     const [elapsedTime, setElapsedTime] = useState(0); // 소요 시간 상태
     const [clickCount, setClickCount] = useState(0); // 클릭 횟수 상태
     const [isTimerRunning, setIsTimerRunning] = useState(false); // 타이머 상태
-    
+    const [isInteractionEnabled, setIsInteractionEnabled] = useState(true);
+
     const [scale, setScale] = useState(1); // 확대/축소 배율
     const [position, setPosition] = useState({ x: 0, y: 0 }); // 지도 이동 위치
     const [dragging, setDragging] = useState(false); // 드래그 상태
     const [startPos, setStartPos] = useState({ x: 0, y: 0 }); // 드래그 시작 위치
     const [mode, setMode] = useState("touch"); // 모드 상태 (기본은 "zoom")
+
+    const INTERACTION_DELAY = 1000; // 1초
+    const ZOOM_DELAY = 800;        // 0.8초
+    const DRAG_DELAY = 500;
     
     const taskId = 1;
     const conditionId = 3;
@@ -61,6 +66,21 @@ export default function Condition3() {
     // 전역 클릭 이벤트 추가
     useEffect(() => {
         const handleGlobalClick = () => {
+            if (isInteractionEnabled) {
+                setClickCount((prev) => prev + 1);
+                setIsInteractionEnabled(false);
+                setTimeout(() => {
+                    setIsInteractionEnabled(true);
+                }, INTERACTION_DELAY);
+            }
+        };
+    
+        document.addEventListener("click", handleGlobalClick);
+        return () => document.removeEventListener("click", handleGlobalClick);
+    }, [isInteractionEnabled]);
+    /*
+    useEffect(() => {
+        const handleGlobalClick = () => {
             setClickCount((prev) => prev + 1);
         };
 
@@ -69,7 +89,7 @@ export default function Condition3() {
         return () => {
             document.removeEventListener("click", handleGlobalClick);
         };
-    }, []);
+    }, []); */
 
     // 타이머 시작 및 중단 관리
     useEffect(() => {
@@ -82,37 +102,125 @@ export default function Condition3() {
 
         return () => clearInterval(timer); // 타이머 정리
     }, [isTimerRunning]);
+
     
-
-
-
-    // 맞게 클릭했을 때 동작
-    const handleStoreClick = (storeId) => {
-        if (mode === "touch" & storeId === targetStore.id) {
-            alert(`정답입니다!\n총 클릭 횟수: ${clickCount + 1}\n소요 시간: ${elapsedTime}초`);
-            setIsTimerRunning(false); // 타이머 중단
-            router.push("/"); 
-        }
-    };
-
     // 타이머 시작 핸들러
     const handleStartTimer = () => {
         setIsTimerRunning(true); // 타이머 시작
         setElapsedTime(0); // 시간 초기화
     };
 
-    // 드래그 시작 이벤트 핸들러
-        const handleDragStart = (e) => {
+
+    // 맞게 클릭했을 때 동작
+    const handleStoreClick = useCallback((storeId) => {
+        if (mode === "touch" && storeId === targetStore.id) {
+            alert(`정답입니다!\n총 클릭 횟수: ${clickCount + 1}\n소요 시간: ${elapsedTime}초`);
+            setIsTimerRunning(false);
+            router.push("/");
+        }
+        setIsInteractionEnabled(false);
+        setTimeout(() => {
+            setIsInteractionEnabled(true);
+        }, INTERACTION_DELAY);
+    }, [mode, clickCount, elapsedTime, router, targetStore.id]);
+    
+
+
+       // 두 손가락 터치 관련 상태
+        const [touchStartDistance, setTouchStartDistance] = useState(null);
+
+        // 두 손가락 거리 계산
+        const getTouchDistance = (touches) => {
+            const [touch1, touch2] = touches;
+            return Math.sqrt(
+                Math.pow(touch2.clientX - touch1.clientX, 2) +
+                Math.pow(touch2.clientY - touch1.clientY, 2)
+            );
+        };
+    
+        // 터치 시작 핸들러
+        const handleTouchStart = useCallback((e) => {
+            if (mode === "zoom" && e.touches.length === 2) {
+                const distance = getTouchDistance(e.touches);
+                setTouchStartDistance(distance);
+            } else if (mode === "drag" && e.touches.length === 1) {
+                setDragging(true);
+                setStartPos({ x: e.touches[0].clientX, y: e.touches[0].clientY });
+            }
+        }, [mode]);
+
+    // 터치 이동 핸들러
+
+    
+const handleTouchMove = useCallback((e) => {
+    if (!isInteractionEnabled) return;
+
+    if (mode === "zoom" && e.touches.length === 2 && touchStartDistance) {
+        const currentDistance = getTouchDistance(e.touches);
+        const scaleChange = currentDistance / touchStartDistance;
+        setScale((prevScale) => Math.min(Math.max(prevScale * scaleChange, 0.5), 3));
+        setTouchStartDistance(currentDistance);
+        
+        setIsInteractionEnabled(false);
+        setTimeout(() => {
+            setIsInteractionEnabled(true);
+        }, ZOOM_DELAY);
+    } else if (mode === "drag" && dragging && e.touches.length === 1) {
+        const currentX = e.touches[0].clientX;
+        const currentY = e.touches[0].clientY;
+        setPosition((prevPos) => ({
+            x: prevPos.x + (currentX - startPos.x),
+            y: prevPos.y + (currentY - startPos.y),
+        }));
+        setStartPos({ x: currentX, y: currentY });
+        
+        setIsInteractionEnabled(false);
+        setTimeout(() => {
+            setIsInteractionEnabled(true);
+        }, DRAG_DELAY);
+    }
+}, [mode, isInteractionEnabled, touchStartDistance, dragging, startPos]);
+
+    /*
+    const handleTouchMove = (e) => {
+        if (mode === "zoom" && e.touches.length === 2 && touchStartDistance) {
+            const currentDistance = getTouchDistance(e.touches);
+            const scaleChange = currentDistance / touchStartDistance;
+            setScale((prevScale) => Math.min(Math.max(prevScale * scaleChange, 0.5), 3));
+            setTouchStartDistance(currentDistance);
+        } else if (mode === "drag" && dragging && e.touches.length === 1) {
+            const currentX = e.touches[0].clientX;
+            const currentY = e.touches[0].clientY;
+            setPosition((prevPos) => ({
+                x: prevPos.x + (currentX - startPos.x),
+                y: prevPos.y + (currentY - startPos.y),
+            }));
+            setStartPos({ x: currentX, y: currentY });
+        }
+    }; */
+
+    // 터치 끝 핸들러
+    const handleTouchEnd = () => {
+        if (mode === "zoom") {
+            setTouchStartDistance(null);
+        } else if (mode === "drag") {
+            setDragging(false);
+        }
+    };
+
+    
+        // 드래그 시작 이벤트 핸들러
+        const handleDragStart = useCallback((e) => {
             if (mode !== "drag") return;
             e.preventDefault();
             setDragging(true);
             setStartPos({
-                x: e.clientX || e.touches[0]?.clientX,
-                y: e.clientY || e.touches[0]?.clientY,
+                x: e.clientX || e.touches?.[0]?.clientX,
+                y: e.clientY || e.touches?.[0]?.clientY,
             });
-        };
+        }, [mode]);
     
-         // 드래그 이동 이벤트 핸들러
+        // 드래그 이동 이벤트 핸들러
 
         const handleDragMove = useCallback((e) => {
             if (!dragging || mode !== "drag" || !isInteractionEnabled) return;
@@ -132,75 +240,27 @@ export default function Condition3() {
             }, DRAG_DELAY);
         }, [dragging, mode, isInteractionEnabled, position, startPos]);
 
-        
+        /*
+        const handleDragMove = (e) => {
+            if (!dragging || mode !== "drag") return;
     
+            const currentX = e.clientX || e.touches[0]?.clientX;
+            const currentY = e.clientY || e.touches[0]?.clientY;
+    
+            const newX = position.x + (currentX - startPos.x);
+            const newY = position.y + (currentY - startPos.y);
+    
+            setPosition({ x: newX, y: newY });
+            setStartPos({ x: currentX, y: currentY });
+        }; */
+
+
         // 드래그 끝 이벤트 핸들러
-        const handleDragEnd = () => {
+        const handleDragEnd = useCallback(() => {
             if (mode !== "drag") return;
             setDragging(false);
-        };
-
-       // 두 손가락 터치 관련 상태
-        const [touchStartDistance, setTouchStartDistance] = useState(null);
-
-        // 터치와 확대/축소 처리 핸들러 **수정된 부분**
-        const getTouchDistance = (touches) => {
-            const [touch1, touch2] = touches;
-            return Math.sqrt(
-                Math.pow(touch2.clientX - touch1.clientX, 2) +
-                Math.pow(touch2.clientY - touch1.clientY, 2)
-            );
-        };
-
-        const handleTouchStart = (e) => {
-            if (mode === "zoom" && e.touches.length === 2) {
-                // 확대/축소 동작 시작
-                const distance = getTouchDistance(e.touches);
-                setDragging(false); // 드래그 초기화
-                setStartPos({ x: 0, y: 0 });
-                setTouchStartDistance(distance);
-            } else if (mode === "zoom" && e.touches.length === 1) {
-                // 드래그 동작 시작
-                setDragging(true);
-                setStartPos({ x: e.touches[0].clientX, y: e.touches[0].clientY });
-            }
-        };
-
-        const handleTouchMove = useCallback((e) => {
-            if (!isInteractionEnabled) return;
-        
-            if (mode === "zoom" && e.touches.length === 2 && touchStartDistance) {
-                const currentDistance = getTouchDistance(e.touches);
-                const scaleChange = currentDistance / touchStartDistance;
-                setScale((prevScale) => Math.min(Math.max(prevScale * scaleChange, 0.5), 3));
-                setTouchStartDistance(currentDistance);
-                
-                setIsInteractionEnabled(false);
-                setTimeout(() => {
-                    setIsInteractionEnabled(true);
-                }, ZOOM_DELAY);
-            } else if (mode === "drag" && dragging && e.touches.length === 1) {
-                const currentX = e.touches[0].clientX;
-                const currentY = e.touches[0].clientY;
-                setPosition((prevPos) => ({
-                    x: prevPos.x + (currentX - startPos.x),
-                    y: prevPos.y + (currentY - startPos.y),
-                }));
-                setStartPos({ x: currentX, y: currentY });
-                
-                setIsInteractionEnabled(false);
-                setTimeout(() => {
-                    setIsInteractionEnabled(true);
-                }, DRAG_DELAY);
-            }
-        }, [mode, isInteractionEnabled, touchStartDistance, dragging, startPos]);
-
-        const handleTouchEnd = () => {
-            if (mode === "zoom") {
-                setDragging(false); // 드래그 종료
-            }
-        };
-
+        }, [mode]);
+    
 
 
 
@@ -216,7 +276,7 @@ export default function Condition3() {
             >
 
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
-            <div style={{ fontWeight: "bold" }}> [조건 3] 터치 모드 / 비터치 모드 구분 </div>
+            <div style={{ fontWeight: "bold" }}> [조건 3] 확대 모드/드래그 모드 구분 </div>
 
             
             <InfoContainer>
@@ -233,6 +293,9 @@ export default function Condition3() {
             <ModeContainer>
                 <ModeButton 
                     isActive={mode === "touch"} onClick={() => setMode("touch")}>터치 모드
+                </ModeButton>
+                <ModeButton
+                    isActive={mode === "zoom"} onClick={() => setMode("zoom")}> 확대/축소 모드
                 </ModeButton>
                 <ModeButton 
                     isActive={mode === "drag"}onClick={() => setMode("drag")}>드래그 모드
