@@ -38,7 +38,9 @@ export default function Home() {
             <Button onClick={() => router.push('/prac/c1')}>조건1</Button>
             <Button onClick={() => router.push('/prac/c2')}>조건2</Button>
             <Button onClick={() => router.push('/prac/c3')}>조건3</Button>
-            <Button onClick={() => router.push('/touch/c3')}>터치 반응</Button>
+            <Button onClick={() => router.push('/touch/c1')}>터치 1</Button>
+            <Button onClick={() => router.push('/touch/c2')}>터치 2</Button>
+            <Button onClick={() => router.push('/touch/c3')}>터치 3</Button>
         </BtnContainer>
         </Container>
         </>
