@@ -502,7 +502,7 @@ const MA = styled.div`
     justify-content: center;
     color: black;
     font-weight: bold;
-    font-size: 0.3rem;
+    font-size: 0.2rem;
     margin: 1px;
     z-index: 10;
 
@@ -518,7 +518,7 @@ const MB = styled.div`
     justify-content: center;
     color: black;
     font-weight: bold;
-    font-size: 0.3rem;
+    font-size: 0.2rem;
     margin: 1px;
 
     padding: 1px;

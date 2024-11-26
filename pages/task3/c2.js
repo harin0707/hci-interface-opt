@@ -219,7 +219,7 @@ export default function Condition2() {
         <Container>
 
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
-            <div style={{ fontWeight: "bold" }}> [조건 2] 확대/축소 버튼과 자유로운 드래그</div>
+            <div style={{ fontWeight: "bold" }}> [조건 2] 확대/축소, 드래그 버튼 구현</div>
             
             
             <InfoContainer>
@@ -246,6 +246,8 @@ export default function Condition2() {
                     onMouseDown={() => handleMoveStart("up")}
                     onMouseUp={handleMoveStop}
                     onMouseLeave={handleMoveStop}
+                    onTouchStart={() => handleMoveStart("up")}
+                        onTouchEnd={handleMoveStop}
                 >
                     ↑
                 </ArrowButton>
@@ -255,6 +257,8 @@ export default function Condition2() {
                         onMouseDown={() => handleMoveStart("left")}
                         onMouseUp={handleMoveStop}
                         onMouseLeave={handleMoveStop}
+                        onTouchStart={() => handleMoveStart("left")}
+                        onTouchEnd={handleMoveStop}
                     >
                         ←
                     </ArrowButton>
@@ -262,6 +266,8 @@ export default function Condition2() {
                         onMouseDown={() => handleMoveStart("right")}
                         onMouseUp={handleMoveStop}
                         onMouseLeave={handleMoveStop}
+                        onTouchStart={() => handleMoveStart("right")}
+                        onTouchEnd={handleMoveStop}
                     >
                         →
                     </ArrowButton>
@@ -271,6 +277,8 @@ export default function Condition2() {
                     onMouseDown={() => handleMoveStart("down")}
                     onMouseUp={handleMoveStop}
                     onMouseLeave={handleMoveStop}
+                    onTouchStart={() => handleMoveStart("down")}
+                    onTouchEnd={handleMoveStop}
                 >
                     ↓
                 </ArrowButton>
@@ -490,7 +498,7 @@ const MA = styled.div`
     justify-content: center;
     color: black;
     font-weight: bold;
-    font-size: 0.3rem;
+    font-size: 0.2rem;
     margin: 1px;
 
     padding: 1px;
@@ -507,7 +515,7 @@ const MB = styled.div`
     justify-content: center;
     color: black;
     font-weight: bold;
-    font-size: 0.3rem;
+    font-size: 0.2rem;
     margin: 1px;
 
     padding: 1px;

@@ -198,6 +198,9 @@ export default function Condition1() {
                         width:store.width,
                         height:store.height,
                         transform: `rotate(${store.rotation}deg)`,
+                        fontSize: store.size,
+                        color: store.color,
+                        backgroundColor: store.bg,
                         
                         }}>{store.name}</MA>))}
                     </M2Con>
@@ -341,7 +344,7 @@ const MA = styled.div`
     justify-content: center;
     color: black;
     font-weight: bold;
-    font-size: 0.3rem;
+    font-size: 0.2rem;
     margin: 1px;
 
     padding: 1px;
@@ -357,7 +360,7 @@ const MB = styled.div`
     justify-content: center;
     color: black;
     font-weight: bold;
-    font-size: 0.3rem;
+    font-size: 0.2rem;
     margin: 1px;
 
     padding: 1px;
