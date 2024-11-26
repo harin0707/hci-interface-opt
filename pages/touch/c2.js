@@ -101,7 +101,7 @@ export default function Condition2() {
     
         setIsInteractionEnabled(false);
         setTimeout(() => setIsInteractionEnabled(true), INTERACTION_DELAY);
-    }, [clickCount, elapsedTime, isInteractionEnabled, targetStore.id],router); // router 추가
+    }, [clickCount, elapsedTime, isInteractionEnabled, targetStore.id]); // router 추가
 
     // 두 손가락 터치 관련 상태
     const [touchStartDistance, setTouchStartDistance] = useState(null);
