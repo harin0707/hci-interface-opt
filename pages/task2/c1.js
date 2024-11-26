@@ -21,6 +21,9 @@ export default function Condition1() {
     const [clickCount, setClickCount] = useState(0); // 클릭 횟수 상태
     const [isTimerRunning, setIsTimerRunning] = useState(false); // 타이머 상태
 
+    const [isFirstZoneCorrect, setIsFirstZoneCorrect] = useState(false); // 첫 번째 구역 클릭 상태
+
+
     const taskId = 2;
     const conditionId = 1;
 
@@ -89,29 +92,33 @@ export default function Condition1() {
 
     // 맞게 클릭했을 때 동작
     const handleStoreClick = (storeId) => {
-        if (storeId === "E-24") {
+        if (!isFirstZoneCorrect && storeId === "A-1") {
+            // 첫 번째 구역 클릭 완료
+            setIsFirstZoneCorrect(true);
+        } else if (isFirstZoneCorrect && storeId === "B-1") {
+            // 두 번째 구역 클릭 완료
             alert(`정답입니다!\n총 클릭 횟수: ${clickCount + 1}\n소요 시간: ${elapsedTime}초`);
             setIsTimerRunning(false); // 타이머 중단
             setTasks((prevTasks) =>
                 prevTasks.map((task) =>
                     task.taskId === taskId
-                        ? {
+                            ? {
                                 ...task,
                                 conditions: task.conditions.map((condition) =>
                                     condition.conditionId === conditionId
                                         ? {
-                                            ...condition,
-                                            totalClicks: clickCount + 1,
-                                            timeSpent: elapsedTime,
-                                            correctClick: true,
-                                        }
+                                                ...condition,
+                                                totalClicks: clickCount + 1,
+                                                timeSpent: elapsedTime,
+                                                correctClick: true,
+                                            }
                                         : condition
                                 ),
                             }
                         : task
                 )
             );
-            router.push("/task2/c2"); // /task2/c2로 라우팅
+            router.push("/task2/c2"); // /task1/c2로 라우팅
         }
     };
 
@@ -125,7 +132,7 @@ export default function Condition1() {
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
 
             <InfoContainer>
-                <div id="info" style={{ fontWeight: "bold" }}> Task2: E 구역에서 헤라를 찾아주세요 </div>
+                <div id="info" style={{ fontWeight: "bold" }}> Task2: A 구역에서 스타벅스를 찾고, B 구역에서 ABC 마트를 찾아주세요 </div>
                 <div id="info">실험자: {experimentId || "정보 없음"}</div>
                 <div id="info">총 클릭 횟수: {clickCount}</div>
                 <div id="info">소요 시간: {elapsedTime}초</div>

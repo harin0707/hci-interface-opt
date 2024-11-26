@@ -29,6 +29,10 @@ export default function Condition3() {
     
     const taskId = 1;
     const conditionId = 3;
+    const targetStore = {
+        name: "스타벅스", // 찾아야 하는 매장 이름
+        id: "A-1", // 찾아야 하는 매장 ID
+    };
 
     // taskId가 1이고 conditionId가 1인 데이터 필터링
     const conditionData =
@@ -124,7 +128,7 @@ export default function Condition3() {
 
     // 맞게 클릭했을 때 동작
     const handleStoreClick = (storeId) => {
-        if (mode === "touch" & storeId === "A-1") {
+        if (mode === "touch" & storeId === targetStore.id) {
             alert(`정답입니다!\n총 클릭 횟수: ${clickCount + 1}\n소요 시간: ${elapsedTime}초`);
             setIsTimerRunning(false); // 타이머 중단
             setTasks((prevTasks) =>
@@ -146,7 +150,7 @@ export default function Condition3() {
                         : task
                 )
             );
-            router.push("/task3/c1"); 
+            router.push("/task2/c1"); 
         }
     };
 
@@ -252,7 +256,7 @@ export default function Condition3() {
 
             
             <InfoContainer>
-                <div id="info" style={{ fontWeight: "bold" }}> Task: A구역에서 스타벅스를 찾아주세요 </div>
+                <div id="info" style={{ fontWeight: "bold" }}> {`Task1 ${targetStore.id[0]}구역에서 ${targetStore.name}를 찾아주세요`} </div>
                 <div id="info">실험자: {experimentId || "정보 없음"}</div>
                 <div id="info">총 클릭 횟수: {clickCount}</div>
                 <div id="info">소요 시간: {elapsedTime}초</div>
@@ -264,7 +268,7 @@ export default function Condition3() {
             </Button>
 
             <ModeContainer>
-                 <ModeButton 
+                <ModeButton 
                     isActive={mode === "touch"} onClick={() => setMode("touch")}>터치 모드
                 </ModeButton>
                 <ModeButton
