@@ -53,14 +53,6 @@ export default function Condition2() {
         { name: "ABC 마트", id: "B-1" }, // 두 번째 매장
     ];
 
-    // taskId가 1이고 conditionId가 1인 데이터 필터링
-    const conditionData =
-        tasks
-            ?.find((task) => task.taskId === taskId)
-            ?.conditions.find((condition) => condition.conditionId === conditionId) || {
-            totalClicks: 0,
-            timeSpent: 0,
-        };
 
         const handleInteraction = () => {
             const currentTime = Date.now();
@@ -261,7 +253,7 @@ const handleDragEnd = () => {
 
 
      // 확대 버튼 핸들러
-     const handleZoomIn = () => {
+    const handleZoomIn = () => {
         if (!handleInteraction()) return;
         
         setIsZooming(true);

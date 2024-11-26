@@ -30,6 +30,18 @@ export default function Condition2() {
     const [isMoving, setIsMoving] = useState(false); // 버튼 지속 상태
     const [moveDirection, setMoveDirection] = useState(null); // 이동 방향
 
+
+    const [lastInteractionTime, setLastInteractionTime] = useState(0);
+    const [touchCount, setTouchCount] = useState(0);
+    const [isInteractionAllowed, setIsInteractionAllowed] = useState(true);
+
+    const [isProcessingClick, setIsProcessingClick] = useState(false);
+    const [isInteractionEnabled, setIsInteractionEnabled] = useState(true);
+    const MAX_INTERACTIONS = 2; // 최대 연속 터치 횟수
+    const INTERACTION_RESET_TIME = 2000; // 터치 카운트 리셋 시간 (3초)
+    const CLICK_DELAY = 2000; // 클릭 지연 시간 (0.5초)
+    const INTERACTION_COOLDOWN = 2000; 
+
     const handleMoveStart = (direction) => {
         setMoveDirection(direction);
         setIsMoving(true);
@@ -38,6 +50,36 @@ export default function Condition2() {
     const handleMoveStop = () => {
         setIsMoving(false);
         setMoveDirection(null);
+    };
+
+    const handleInteraction = () => {
+        const currentTime = Date.now();
+        
+        if (!isInteractionAllowed) {
+            return false;
+        }
+
+        if (currentTime - lastInteractionTime < INTERACTION_COOLDOWN) {
+            return false;
+        }
+
+        if (touchCount >= MAX_INTERACTIONS) {
+            setIsInteractionAllowed(false);
+            setTimeout(() => {
+                setIsInteractionAllowed(true);
+                setTouchCount(0);
+            }, INTERACTION_RESET_TIME);
+            return false;
+        }
+
+        setLastInteractionTime(currentTime);
+        setTouchCount(prev => prev + 1);
+
+        setTimeout(() => {
+            setTouchCount(prev => Math.max(0, prev - 1));
+        }, INTERACTION_RESET_TIME);
+
+        return true;
     };
 
     useEffect(() => {
@@ -67,7 +109,7 @@ export default function Condition2() {
             });
         };
 
-        const interval = setInterval(moveMap, 50); // 이동 속도 조정
+    const interval = setInterval(moveMap, 50); // 이동 속도 조정
         return () => clearInterval(interval);
     }, [isMoving, moveDirection]);
 
@@ -96,16 +138,20 @@ export default function Condition2() {
 
     // 전역 클릭 이벤트 추가
     useEffect(() => {
-        const handleGlobalClick = () => {
-            setClickCount((prev) => prev + 1);
+        const handleGlobalInteraction = () => {
+            if (handleInteraction()) {
+                setTimeout(() => {
+                    setClickCount((prev) => prev + 1);
+                }, CLICK_DELAY);
+            }
         };
 
-        document.addEventListener("click", handleGlobalClick);
-        document.addEventListener("touch", handleGlobalClick);
+        document.addEventListener("click", handleGlobalInteraction);
+        document.addEventListener("touchstart", handleGlobalInteraction);
 
         return () => {
-        document.addEventListener("click", handleGlobalClick);
-        document.addEventListener("touch", handleGlobalClick);
+        document.addEventListener("click", handleGlobalInteraction);
+        document.addEventListener("touchstart", handleGlobalInteraction);
         };
     }, []);
 
@@ -147,14 +193,22 @@ export default function Condition2() {
     const handleStartTimer = () => {
         setIsTimerRunning(true); // 타이머 시작
         setElapsedTime(0); // 시간 초기화
+        setLastInteractionTime(Date.now());
     };
 
 
     // 맞게 클릭했을 때 동작
     const handleStoreClick = (storeId) => {
+        if (!handleInteraction()) {
+            return;
+        }
         if (storeId === targetStore.id) {
+            setIsProcessingClick(true);
+
+            setTimeout(()=>{
             alert(`정답입니다!\n총 클릭 횟수: ${clickCount + 1}\n소요 시간: ${elapsedTime}초`);
             setIsTimerRunning(false); // 타이머 중단
+
             setTasks((prevTasks) =>
                 prevTasks.map((task) =>
                     task.taskId === taskId
@@ -175,22 +229,44 @@ export default function Condition2() {
                 )
             );
             router.push("/task1/c3");
+        setIsProcessingClick(false);
+        }, CLICK_DELAY);
         }
     };
 
 
      // 확대 버튼 핸들러
     const handleZoomIn = () => {
+        // setIsZooming(true);
+        // setScale((prevScale) => Math.min(prevScale + 0.2, 3));
+        // setTimeout(() => setIsZooming(false), 300); 
+        // 확대 후 상태 복원
+
+        if (!handleInteraction()) return;
+
         setIsZooming(true);
+        setTimeout(() => {
         setScale((prevScale) => Math.min(prevScale + 0.2, 3));
-        setTimeout(() => setIsZooming(false), 300); // 확대 후 상태 복원
+        setIsZooming(false);
+        }, CLICK_DELAY);
+
+
     };
 
     // 축소 버튼 핸들러
     const handleZoomOut = () => {
+        // setIsZooming(true);
+        // setScale((prevScale) => Math.max(prevScale - 0.2, 0.5));
+        // setTimeout(() => setIsZooming(false), 300); 
+        // 축소 후 상태 복원
+
+        if (!handleInteraction()) return;
+        
         setIsZooming(true);
-        setScale((prevScale) => Math.max(prevScale - 0.2, 0.5));
-        setTimeout(() => setIsZooming(false), 300); // 축소 후 상태 복원
+        setTimeout(() => {
+            setScale((prevScale) => Math.max(prevScale - 0.2, 0.5));
+            setIsZooming(false);
+        }, CLICK_DELAY);
     };
 
 
@@ -427,6 +503,8 @@ height: 70vh;
 
 transform-origin: center;
 pointer-events: auto;
+
+touch-action: manipulation;
 `
 
 const M1Con = styled.div`
