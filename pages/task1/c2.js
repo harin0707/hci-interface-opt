@@ -41,6 +41,12 @@ export default function Condition2() {
     };
 
     useEffect(() => {
+        // 페이지가 렌더링될 때 scale과 position 초기화
+        setScale(1); // 배율 초기화
+        setPosition({ x: 0, y: 0 }); // 위치 초기화
+    }, []);
+
+    useEffect(() => {
         if (!isMoving || !moveDirection) return;
 
         const moveMap = () => {
@@ -99,7 +105,7 @@ export default function Condition2() {
 
         return () => {
         document.addEventListener("click", handleGlobalClick);
-        document.removeEventListener("touch", handleGlobalClick);c
+        document.addEventListener("touch", handleGlobalClick);
         };
     }, []);
 
@@ -190,7 +196,9 @@ export default function Condition2() {
 
 
     return (
-        <Container>
+        <Container
+        
+        >
 
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
             <div style={{ fontWeight: "bold" }}> [조건 2] 확대/축소 버튼과 자유로운 드래그</div>
@@ -219,6 +227,8 @@ export default function Condition2() {
                     onMouseDown={() => handleMoveStart("up")}
                     onMouseUp={handleMoveStop}
                     onMouseLeave={handleMoveStop}
+                    onTouchStart={() => handleMoveStart("up")}
+                    onTouchEnd={handleMoveStop}
                 >
                     ↑
                 </ArrowButton>
@@ -228,6 +238,8 @@ export default function Condition2() {
                         onMouseDown={() => handleMoveStart("left")}
                         onMouseUp={handleMoveStop}
                         onMouseLeave={handleMoveStop}
+                        onTouchStart={() => handleMoveStart("up")}
+                        onTouchEnd={handleMoveStop}
                     >
                         ←
                     </ArrowButton>
@@ -235,6 +247,8 @@ export default function Condition2() {
                         onMouseDown={() => handleMoveStart("right")}
                         onMouseUp={handleMoveStop}
                         onMouseLeave={handleMoveStop}
+                        onTouchStart={() => handleMoveStart("up")}
+                        onTouchEnd={handleMoveStop}
                     >
                         →
                     </ArrowButton>
@@ -244,6 +258,8 @@ export default function Condition2() {
                     onMouseDown={() => handleMoveStart("down")}
                     onMouseUp={handleMoveStop}
                     onMouseLeave={handleMoveStop}
+                    onTouchStart={() => handleMoveStart("up")}
+                    onTouchEnd={handleMoveStop}
                 >
                     ↓
                 </ArrowButton>
@@ -255,7 +271,9 @@ export default function Condition2() {
 
             
             
-            <MapContainer style={{
+            <MapContainer 
+            key="task2"
+            style={{
                     transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
                 }}>
                 <M1Con isColumn="column"> 

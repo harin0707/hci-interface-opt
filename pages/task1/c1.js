@@ -17,6 +17,8 @@ export default function Condition1() {
     const experimentId = useRecoilValue(experimentIdState);
     const [tasks, setTasks] = useRecoilState(taskState);
 
+    const [scale, setScale] = useState(1); // 확대/축소 배율
+    const [position, setPosition] = useState({ x: 0, y: 0 });
     const [elapsedTime, setElapsedTime] = useState(0); // 소요 시간 상태
     const [clickCount, setClickCount] = useState(0); // 클릭 횟수 상태
     const [isTimerRunning, setIsTimerRunning] = useState(false); // 타이머 상태
@@ -39,6 +41,20 @@ export default function Condition1() {
             totalClicks: 0,
             timeSpent: 0,
         };
+
+        useEffect(() => {
+            const handleRouteChange = () => {
+                // 라우트 변경 시 확대 비율 초기화
+                document.body.style.zoom = "1";
+            };
+    
+            router.events.on("routeChangeComplete", handleRouteChange);
+            return () => {
+                router.events.off("routeChangeComplete", handleRouteChange);
+            };
+        }, [router.events]);
+    
+
 
     // 전역 클릭 이벤트 추가
     useEffect(() => {
@@ -118,16 +134,23 @@ export default function Condition1() {
                         : task
                 )
             );
+            // 전체 문서 확대율을 기본값으로 설정
+        // document.body.style.zoom = "1"; 
+        // document.body.style.transform = ""; 
             router.push("/task1/c2"); // /task1/c2로 라우팅
         }
     };
 
     
 
+    
+
 
 
     return (
-        <Container>
+        <Container  style={{
+            zoom: 1, // 기본 확대율
+        }}>
             <div style={{ fontWeight: "bold" }}> [조건 1] 자유로운 확대와 드래그</div>
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
 
@@ -140,7 +163,10 @@ export default function Condition1() {
             <Button onClick={handleStartTimer} disabled={isTimerRunning}>
                 {isTimerRunning ? "실험 진행 중..." : "실험 시작"}
             </Button>
-            <MapContainer>
+            <MapContainer
+            style={{
+            transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+            }}>
                 <M1Con isColumn="column"> 
                     <M2Con id="3"
                     style={{
@@ -361,6 +387,17 @@ const MB = styled.div`
 const Btn = styled.button`
         position: fixed;
         top: 20px;
+        right: 20px;
+        background-color: black;
+        color: white;
+        border: none;
+        padding: 5px;
+        border-radius: 5px;
+`
+
+const Btn2 = styled.button`
+        position: fixed;
+        top: 40px;
         right: 20px;
         background-color: black;
         color: white;
