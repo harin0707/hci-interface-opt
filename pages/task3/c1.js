@@ -183,6 +183,9 @@ export default function Condition1() {
                         width:store.width,
                         height:store.height,
                         transform: `rotate(${store.rotation}deg)`,
+                        fontSize: store.size,
+                            color: store.color,
+                            backgroundColor: store.bg,
                         
                         }}>{store.name}</MA>))}
                     </M2Con>
