@@ -9,19 +9,19 @@ import { storeDataC } from "../../data/storedataC.js";
 import { storeDataD } from "../../data/storedataD.js";
 import { storeDataE } from "../../data/storedataE.js";
 import { storeDataF } from "../../data/storedataF.js";
-// import {
-//     Container,
-//     InfoContainer,
-//     Button,
-//     Btn,
-//     MapContainer,
-//     ZoomContainer,
-//     ZoomButton,
-//     Nav,
-//     ArrorContainer,
-//     ArrowButton,
-//     AdminToggleButton,
-// } from "../../styles/c2Style.js";
+import {
+    Container,
+    InfoContainer,
+    Button,
+    Btn,
+    MapContainer,
+    ZoomContainer,
+    ZoomButton,
+    Nav,
+    ArrorContainer,
+    ArrowButton,
+    AdminToggleButton,
+} from "../../styles/c2Style.js";
 
 
 
@@ -110,19 +110,19 @@ export default function Condition2() {
     };
 
     // 확대/축소 제한 핸들러 추가
-    useEffect(() => {
-        const preventPinchZoom = (e) => {
-            if (e.touches.length > 1) {
-                // 두 손가락 터치를 방지
-                e.preventDefault();
-            }
-        };
-        document.addEventListener("touchmove", preventPinchZoom, { passive: false });
+    // useEffect(() => {
+    //     const preventPinchZoom = (e) => {
+    //         if (e.touches.length > 1) {
+    //             // 두 손가락 터치를 방지
+    //             e.preventDefault();
+    //         }
+    //     };
+    //     document.addEventListener("touchmove", preventPinchZoom, { passive: false });
 
-        return () => {
-            document.removeEventListener("touchmove", preventPinchZoom);
-        };
-    }, []);
+    //     return () => {
+    //         document.removeEventListener("touchmove", preventPinchZoom);
+    //     };
+    // }, []);
 
     // 전역 클릭 이벤트 추가
     // 전역 클릭 이벤트 추가
@@ -237,6 +237,7 @@ export default function Condition2() {
 
     const toggleAdminMode = () => {
         setIsAdminMode((prevMode) => !prevMode); // 운영자 모드 토글
+        console.log(isAdminMode);
     };
 
 
@@ -489,124 +490,5 @@ const MB = styled.div`
     cursor: pointer;
     height: 50px;
     z-index: 100;
-`;
-
-
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px 0;
-    cursor: grab;
-
-    &:active {
-        cursor: grabbing;
-    }
-`;
-
-const InfoContainer = styled.div`
-    display: flex;
-    align-items: center;
-    margin: 20px 0;
-
-    #info {
-        margin: 15px;
-    }
-`;
-
-const Button = styled.button`
-    padding: 10px 20px;
-    background-color: black;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    height: 30px;
-
-    &:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-    }
-`;
-
-const Btn = styled.button`
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: black;
-    color: white;
-    border: none;
-    padding: 5px;
-    border-radius: 5px;
-`;
-
-const MapContainer = styled.div`
-    padding: 1px;
-    display: flex;
-    width: 80vw;
-    height: 70vh;
-    transform-origin: center;
-    pointer-events: auto;
-    touch-action: manipulation;
-`;
-
-const ZoomContainer = styled.div`
-    display: flex;
-    justify-content: baseline;
-    z-index: 100;
-    gap: 10px;
-`;
-
-const ZoomButton = styled.button`
-    padding: 10px 20px;
-    background-color: black;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-
-    &:hover {
-        background-color: #005bb5;
-    }
-`;
-
-const Nav = styled.div`
-    display: flex;
-    gap: 20px;
-    align-items: center;
-`;
-
-const ArrorContainer = styled.div`
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    flex-direction: column;
-    z-index: 100;
-    gap: 0;
-`;
-
-const ArrowButton = styled.button`
-    padding: 10px 20px;
-    background-color: black;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-
-    &:hover {
-        background-color: #005bb5;
-    }
-
-    &:active {
-        background-color: #003f7f;
-    }
-`;
-
-const AdminToggleButton = styled.button`
-    padding: 10px 20px;
-    background-color: ${({ isActive }) => (isActive ? "green" : "black")};
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
 `;
 
