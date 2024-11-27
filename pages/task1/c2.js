@@ -9,19 +9,19 @@ import { storeDataC } from "../../data/storedataC.js";
 import { storeDataD } from "../../data/storedataD.js";
 import { storeDataE } from "../../data/storedataE.js";
 import { storeDataF } from "../../data/storedataF.js";
-import {
-    Container,
-    InfoContainer,
-    Button,
-    Btn,
-    MapContainer,
-    ZoomContainer,
-    ZoomButton,
-    Nav,
-    ArrorContainer,
-    ArrowButton,
-    AdminToggleButton,
-} from "../../styles/c2Style.js";
+// import {
+//     Container,
+//     InfoContainer,
+//     Button,
+//     Btn,
+//     MapContainer,
+//     ZoomContainer,
+//     ZoomButton,
+//     Nav,
+//     ArrorContainer,
+//     ArrowButton,
+//     AdminToggleButton,
+// } from "../../styles/c2Style.js";
 
 
 
@@ -72,7 +72,7 @@ export default function Condition2() {
             document.removeEventListener("touchmove", preventPinchZoom);
             document.removeEventListener("touchmove", allowPinchZoom);
         };
-    }, [mode]); // mode가 변경될 때마다 실행
+    }, [isAdminMode]); // mode가 변경될 때마다 실행
 
 
     useEffect(() => {
@@ -490,3 +490,123 @@ const MB = styled.div`
     height: 50px;
     z-index: 100;
 `;
+
+
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+    cursor: grab;
+
+    &:active {
+        cursor: grabbing;
+    }
+`;
+
+const InfoContainer = styled.div`
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+
+    #info {
+        margin: 15px;
+    }
+`;
+
+const Button = styled.button`
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    height: 30px;
+
+    &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+`;
+
+const Btn = styled.button`
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+`;
+
+const MapContainer = styled.div`
+    padding: 1px;
+    display: flex;
+    width: 80vw;
+    height: 70vh;
+    transform-origin: center;
+    pointer-events: auto;
+    touch-action: manipulation;
+`;
+
+const ZoomContainer = styled.div`
+    display: flex;
+    justify-content: baseline;
+    z-index: 100;
+    gap: 10px;
+`;
+
+const ZoomButton = styled.button`
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #005bb5;
+    }
+`;
+
+const Nav = styled.div`
+    display: flex;
+    gap: 20px;
+    align-items: center;
+`;
+
+const ArrorContainer = styled.div`
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-direction: column;
+    z-index: 100;
+    gap: 0;
+`;
+
+const ArrowButton = styled.button`
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #005bb5;
+    }
+
+    &:active {
+        background-color: #003f7f;
+    }
+`;
+
+const AdminToggleButton = styled.button`
+    padding: 10px 20px;
+    background-color: ${({ isActive }) => (isActive ? "green" : "black")};
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+`;
+
