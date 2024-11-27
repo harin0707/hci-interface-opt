@@ -43,10 +43,10 @@ export default function Condition3() {
                 }
             };
     
-            if (mode === "touch" || mode === "drag") {
+            if (mode === "touch" ) {
                 // 터치나 드래그 모드일 때 두 손가락 방지
                 document.addEventListener("touchmove", preventPinchZoom, { passive: false });
-            } else if (mode === "zoom") {
+            } else if (mode === "zoom" || mode === "drag") {
                 // 줌 모드일 때 두 손가락 확대/축소 허용
                 document.addEventListener("touchmove", allowPinchZoom, { passive: false });
             }

@@ -38,9 +38,9 @@ export default function Condition2() {
     const [isProcessingClick, setIsProcessingClick] = useState(false);
     const [isInteractionEnabled, setIsInteractionEnabled] = useState(true);
     const MAX_INTERACTIONS = 2; // 최대 연속 터치 횟수
-    const INTERACTION_RESET_TIME = 2000; // 터치 카운트 리셋 시간 (3초)
-    const CLICK_DELAY = 2000; // 클릭 지연 시간 (0.5초)
-    const INTERACTION_COOLDOWN = 2000; 
+    const INTERACTION_RESET_TIME = 0; // 터치 카운트 리셋 시간 (3초)
+    const CLICK_DELAY = 0; // 클릭 지연 시간 (0.5초)
+    const INTERACTION_COOLDOWN = 0; 
 
 
     const handleInteraction = () => {
