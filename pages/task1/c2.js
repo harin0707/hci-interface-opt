@@ -45,7 +45,6 @@ export default function Condition2() {
     const [isMoving, setIsMoving] = useState(false); // 버튼 지속 상태
     const [moveDirection, setMoveDirection] = useState(null); // 이동 방향
 
-
     useEffect(() => {
         const handleTouchMove = (e) => {
             if (!isAdminMode && e.touches.length > 1) {
@@ -150,22 +149,6 @@ export default function Condition2() {
         id: "A-8", // 찾아야 하는 매장 ID
     };
 
-    // 확대/축소 제한 핸들러 추가
-    // useEffect(() => {
-    //     const preventPinchZoom = (e) => {
-    //         if (e.touches.length > 1) {
-    //             // 두 손가락 터치를 방지
-    //             e.preventDefault();
-    //         }
-    //     };
-    //     document.addEventListener("touchmove", preventPinchZoom, { passive: false });
-
-    //     return () => {
-    //         document.removeEventListener("touchmove", preventPinchZoom);
-    //     };
-    // }, []);
-
-    // 전역 클릭 이벤트 추가
     // 전역 클릭 이벤트 추가
     useEffect(() => {
         const handleGlobalClick = () => {
