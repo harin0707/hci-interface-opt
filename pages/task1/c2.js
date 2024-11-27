@@ -47,32 +47,73 @@ export default function Condition2() {
 
 
     useEffect(() => {
-        const preventPinchZoom = (e) => {
-            if (e.touches.length > 1) {
-                e.preventDefault(); // 두 손가락 터치 방지
+        const handleTouchMove = (e) => {
+            if (!isAdminMode && e.touches.length > 1) {
+                e.preventDefault(); // 운영자 모드가 아니면 두 손가락 확대/축소 방지
             }
         };
-
-        const allowPinchZoom = (e) => {
-            // 두 손가락 확대/축소 동작 허용
-            if (e.touches.length > 1) {
-                e.stopPropagation();
-            }
-        };
-
-        if (!isAdminMode) {
-            document.addEventListener("touchmove", preventPinchZoom, { passive: false });
-        } else if (isAdminMode) {
-            // 줌 모드일 때 두 손가락 확대/축소 허용
-            document.addEventListener("touchmove", allowPinchZoom, { passive: false });
-        }
-
-        // 클린업 함수
+    
+        document.addEventListener("touchmove", handleTouchMove, { passive: false });
         return () => {
-            document.removeEventListener("touchmove", preventPinchZoom);
-            document.removeEventListener("touchmove", allowPinchZoom);
+            document.removeEventListener("touchmove", handleTouchMove);
         };
-    }, [isAdminMode]); // mode가 변경될 때마다 실행
+    }, [isAdminMode]);
+    
+    // 두 손가락 터치 관련 상태
+    const [touchStartDistance, setTouchStartDistance] = useState(null);
+    
+    // 터치 확대/축소 계산 함수
+    const getTouchDistance = (touches) => {
+        const [touch1, touch2] = touches;
+        return Math.sqrt(
+            Math.pow(touch2.clientX - touch1.clientX, 2) +
+            Math.pow(touch2.clientY - touch1.clientY, 2)
+        );
+    };
+    
+    // 터치 시작 핸들러
+    const handleTouchStart = (e) => {
+        if (!isAdminMode) return; // 운영자 모드가 아니면 무시
+    
+        if (e.touches.length === 2) {
+            // 확대/축소 시작
+            const distance = getTouchDistance(e.touches);
+            setTouchStartDistance(distance);
+        } else if (e.touches.length === 1) {
+            // 드래그 시작
+            setDragging(true);
+            setStartPos({ x: e.touches[0].clientX, y: e.touches[0].clientY });
+        }
+    };
+    
+    // 터치 이동 핸들러
+    const handleTouchMove = (e) => {
+        if (!isAdminMode) return; // 운영자 모드가 아니면 무시
+    
+        if (e.touches.length === 2 && touchStartDistance) {
+            // 확대/축소 계산
+            const currentDistance = getTouchDistance(e.touches);
+            const scaleChange = currentDistance / touchStartDistance;
+            setScale((prevScale) => Math.min(Math.max(prevScale * scaleChange, 0.5), 3)); // 확대/축소 제한
+            setTouchStartDistance(currentDistance);
+        } else if (dragging && e.touches.length === 1) {
+            // 드래그 계산
+            const currentX = e.touches[0].clientX;
+            const currentY = e.touches[0].clientY;
+            setPosition((prevPos) => ({
+                x: prevPos.x + (currentX - startPos.x),
+                y: prevPos.y + (currentY - startPos.y),
+            }));
+            setStartPos({ x: currentX, y: currentY });
+        }
+    };
+    
+    // 터치 종료 핸들러
+    const handleTouchEnd = () => {
+        if (!isAdminMode) return; // 운영자 모드가 아니면 무시
+        setDragging(false); // 드래그 종료
+    };
+    
 
 
     useEffect(() => {
