@@ -10,6 +10,10 @@ import { storeDataD } from "../../data/storedataD.js";
 import { storeDataE } from "../../data/storedataE.js";
 import { storeDataF } from "../../data/storedataF.js";
 
+
+
+
+
 export default function Condition1() {
     const router = useRouter();
     const { id } = router.query;
@@ -141,16 +145,75 @@ export default function Condition1() {
         }
     };
 
+    const ZOOM_COOLDOWN = 2000; // 확대/축소 쿨다운 시간
+    const DRAG_COOLDOWN = 2000; // 드래그 쿨다운 시간
+    const [isZoomAllowed, setIsZoomAllowed] = useState(true); // 확대 쿨다운 상태
+    const [isDragAllowed, setIsDragAllowed] = useState(true); // 드래그 쿨다운 상태
+    const [dragging, setDragging] = useState(false); // 드래그 상태
+    const [startPos, setStartPos] = useState({ x: 0, y: 0 }); // 드래그 시작 위치
+
+    const handleDragStart = (e) => {
+        if (!isDragAllowed) return; // 쿨다운 중이면 동작하지 않음
+    
+        setDragging(true);
+        setStartPos({
+            x: e.clientX || e.touches[0]?.clientX,
+            y: e.clientY || e.touches[0]?.clientY,
+        });
+    };
+    
+    const handleDragMove = (e) => {
+        if (!dragging || !isDragAllowed) return; // 쿨다운 중이면 동작하지 않음
+    
+        const currentX = e.clientX || e.touches[0]?.clientX;
+        const currentY = e.clientY || e.touches[0]?.clientY;
+    
+        setPosition((prev) => ({
+            x: prev.x + (currentX - startPos.x),
+            y: prev.y + (currentY - startPos.y),
+        }));
+        setStartPos({ x: currentX, y: currentY });
+    
+        // 드래그 쿨다운 활성화
+        setIsDragAllowed(false);
+        setTimeout(() => setIsDragAllowed(true), DRAG_COOLDOWN);
+    };
+    
+    const handleDragEnd = () => {
+        setDragging(false);
+    };
     
 
+
+    const handleZoom = (e) => {
+        if (!isZoomAllowed) return; // 쿨다운 중이면 동작하지 않음
+    
+        if (e.touches.length === 2) {
+            const currentDistance = getTouchDistance(e.touches);
+            const scaleChange = currentDistance / touchStartDistance;
+            setScale((prevScale) => Math.min(Math.max(prevScale * scaleChange, 0.5), 3));
+            setTouchStartDistance(currentDistance);
+    
+            // 확대 쿨다운 활성화
+            setIsZoomAllowed(false);
+            setTimeout(() => setIsZoomAllowed(true), ZOOM_COOLDOWN);
+        }
+    };
     
 
 
 
     return (
-        <Container  style={{
-            zoom: 1, // 기본 확대율
-        }}>
+        <Container
+        onMouseDown={handleDragStart}
+        onMouseMove={handleDragMove}
+        onMouseUp={handleDragEnd}
+        onTouchStart={handleZoom}
+        onTouchMove={handleZoom}
+        onTouchEnd={handleDragEnd}
+        style={{
+            transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+        }} >
             <div style={{ fontWeight: "bold" }}> [조건 1] 자유로운 확대와 드래그</div>
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
 

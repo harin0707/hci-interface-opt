@@ -42,15 +42,6 @@ export default function Condition2() {
     const CLICK_DELAY = 2000; // 클릭 지연 시간 (0.5초)
     const INTERACTION_COOLDOWN = 2000; 
 
-    const handleMoveStart = (direction) => {
-        setMoveDirection(direction);
-        setIsMoving(true);
-    };
-
-    const handleMoveStop = () => {
-        setIsMoving(false);
-        setMoveDirection(null);
-    };
 
     const handleInteraction = () => {
         const currentTime = Date.now();
@@ -81,6 +72,7 @@ export default function Condition2() {
 
         return true;
     };
+
 
     useEffect(() => {
         // 페이지가 렌더링될 때 scale과 position 초기화
@@ -251,6 +243,17 @@ export default function Condition2() {
         }, CLICK_DELAY);
 
 
+    };
+
+    const handleMoveStart = (direction) => {
+        if (!handleInteraction()) return;
+        setMoveDirection(direction);
+        setIsMoving(true);
+    };
+
+    const handleMoveStop = () => {
+        setIsMoving(false);
+        setMoveDirection(null);
     };
 
     // 축소 버튼 핸들러
