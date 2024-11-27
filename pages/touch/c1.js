@@ -22,7 +22,7 @@ export default function Condition1() {
 
     const taskId = 1;
     const conditionId = 1;
-    const INTERACTION_DELAY = 1000;
+    const INTERACTION_DELAY = 500;
     
 
     // 전역적으로 관리할 매장 정보를 선언

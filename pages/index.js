@@ -43,7 +43,7 @@ export default function Home() {
 
         <div> 터치 속도 제어 버전 </div>
         <BtnContainer>
-        <Button onClick={() => router.push('/touch/c1')}>터치 1</Button>
+        <Button onClick={() => router.push('/touch/c11')}>터치 1</Button>
             {/* <Button onClick={() => router.push('/touch/c2')}>터치 2</Button> */}
             {/* <Button onClick={() => router.push('/touch/c3')}>터치 3</Button> */}
 
