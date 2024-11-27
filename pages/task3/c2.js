@@ -232,7 +232,8 @@ export default function Condition2() {
     const handleStoreClick = (storeId) => {
         if (storeId === targetStores[currentTargetIndex].id) {
             if (currentTargetIndex === targetStores.length - 1) {
-            alert(`정답입니다!\n총 클릭 횟수: ${clickCount + 1}\n소요 시간: ${elapsedTime}초`);
+            alert( `정답입니다!\n모든 매장을 찾았습니다!\n총 클릭 횟수: 
+                ${clickCount + 1}\n소요 시간: ${elapsedTime}초`);
             setIsTimerRunning(false); // 타이머 중단
             setTasks((prevTasks) =>
                 prevTasks.map((task) =>
@@ -256,6 +257,9 @@ export default function Condition2() {
             router.push("/task3/c3");
         } else {
             // 다음 매장으로 진행
+            alert(
+                `정답입니다! 다음 매장: ${targetStores[currentTargetIndex + 1].id[0]}구역에 ${targetStores[currentTargetIndex + 1].name}를 찾아주세요!`
+            );
             setCurrentTargetIndex((prevIndex) => prevIndex + 1);
         }
     }}
