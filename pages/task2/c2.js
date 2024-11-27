@@ -72,8 +72,9 @@ export default function Condition2() {
     const conditionId = 2;
     // 전역 변수로 관리할 매장 정보
     const targetStores = [
-        { name: "스타벅스", id: "A-1" }, // 첫 번째 매장
-        { name: "ABC 마트", id: "B-1" }, // 두 번째 매장
+        { name: "하남스타필드", id: "E-42" }, // 두 번째 매장
+        { name: "코스트코", id: "B-36" }, // 첫 번째 매장
+
     ];
 
     // 확대/축소 제한 핸들러 추가

@@ -26,9 +26,9 @@ export default function Condition1() {
     const taskId = 3;
     const conditionId = 1;
     const targetStores = [
-        { name: "스타벅스", id: "A-1" }, // 첫 번째 매장
-        { name: "ABC 마트", id: "B-1" }, // 두 번째 매장
-        { name: "이마트24", id: "C-1" }, // 세 번째 매장
+        { name: "현대백화점", id: "C-4" }, // 첫 번째 매장
+        { name: "휘슬러", id: "F-21" }, // 두 번째 매장
+        { name: "아리따움", id: "C-1" }, // 세 번째 매장
     ];
 
     // taskId가 1이고 conditionId가 1인 데이터 필터링

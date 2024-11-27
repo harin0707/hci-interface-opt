@@ -205,6 +205,7 @@ export default function Condition3() {
             
             <InfoContainer>
                 <div id="info" style={{ fontWeight: "bold" }}> {`연습용 ${targetStore.id[0]}구역에서 ${targetStore.name}를 찾아주세요`} </div>
+                <div id="info">탐색 매장 수: 1</div>
                 <div id="info">총 클릭 횟수: {clickCount}</div>
                 <div id="info">소요 시간: {elapsedTime}초</div>
             </InfoContainer>
@@ -219,7 +220,7 @@ export default function Condition3() {
                     isActive={mode === "touch"} onClick={() => setMode("touch")}>터치 모드
                 </ModeButton>
                 <ModeButton 
-                    isActive={mode === "drag"}onClick={() => setMode("drag")}>드래그 모드
+                    isActive={mode === "drag"}onClick={() => setMode("drag")}>확대 / 드래그 모드
                 </ModeButton>
                 
                 

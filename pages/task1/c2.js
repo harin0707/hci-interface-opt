@@ -108,9 +108,10 @@ export default function Condition2() {
     
     const taskId = 1;
     const conditionId = 2;
+  // 전역적으로 관리할 매장 정보를 선언
     const targetStore = {
-        name: "스타벅스", // 찾아야 하는 매장 이름
-        id: "A-1", // 찾아야 하는 매장 ID
+        name: "커피빈", // 찾아야 하는 매장 이름
+        id: "A-8", // 찾아야 하는 매장 ID
     };
 
     // 확대/축소 제한 핸들러 추가
