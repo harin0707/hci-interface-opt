@@ -46,20 +46,33 @@ export default function Condition2() {
     const [moveDirection, setMoveDirection] = useState(null); // 이동 방향
 
 
-
     useEffect(() => {
-        // 두 손가락 확대/축소 제한 관리
-        const handleTouchMove = (e) => {
-            if (!isAdminMode && e.touches.length > 1) {
-                e.preventDefault(); // 운영자 모드가 아닐 때 두 손가락 확대 방지
+        const preventPinchZoom = (e) => {
+            if (e.touches.length > 1) {
+                e.preventDefault(); // 두 손가락 터치 방지
             }
         };
 
-        document.addEventListener("touchmove", handleTouchMove, { passive: false });
-        return () => {
-            document.removeEventListener("touchmove", handleTouchMove);
+        const allowPinchZoom = (e) => {
+            // 두 손가락 확대/축소 동작 허용
+            if (e.touches.length > 1) {
+                e.stopPropagation();
+            }
         };
-    }, [isAdminMode]);
+
+        if (!isAdminMode) {
+            document.addEventListener("touchmove", preventPinchZoom, { passive: false });
+        } else if (isAdminMode) {
+            // 줌 모드일 때 두 손가락 확대/축소 허용
+            document.addEventListener("touchmove", allowPinchZoom, { passive: false });
+        }
+
+        // 클린업 함수
+        return () => {
+            document.removeEventListener("touchmove", preventPinchZoom);
+            document.removeEventListener("touchmove", allowPinchZoom);
+        };
+    }, [mode]); // mode가 변경될 때마다 실행
 
 
     useEffect(() => {
@@ -254,14 +267,10 @@ export default function Condition2() {
                     {isTimerRunning ? "실험 진행 중..." : "실험 시작"}
                 </Button>
 
-                <BtnContainer>
-
                     <ZoomContainer>
                         <ZoomButton onClick={handleZoomIn}  disabled={isZooming}>+</ZoomButton>
                         <ZoomButton onClick={handleZoomOut} disabled={isZooming}>-</ZoomButton>
                     </ZoomContainer>
-
-
 
                     <ArrorContainer>
                     <ArrowButton
@@ -306,13 +315,7 @@ export default function Condition2() {
                     </ArrowButton>
 
                     </ArrorContainer>
-
-                </BtnContainer>
             </Nav>
-            
-            
-
-            
             
             <MapContainer 
             key="task2"
@@ -487,14 +490,3 @@ const MB = styled.div`
     height: 50px;
     z-index: 100;
 `;
-
-
-const BtnContainer = styled.div`
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    width: 100%;
-    padding: 10px 20px;
-    z-index: 1000; /* 다른 요소 위로 올라오도록 설정 */
-    
-`
