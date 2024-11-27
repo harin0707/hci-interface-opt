@@ -159,21 +159,6 @@ export default function Condition2() {
     };
 
 
-    // 확대/축소 제한 핸들러 추가
-    useEffect(() => {
-        const preventPinchZoom = (e) => {
-            if (e.touches.length > 1) {
-                // 두 손가락 터치를 방지
-                e.preventDefault();
-            }
-        };
-        document.addEventListener("touchmove", preventPinchZoom, { passive: false });
-
-        return () => {
-            document.removeEventListener("touchmove", preventPinchZoom);
-        };
-    }, []);
-
     // 전역 클릭 이벤트 추가
     useEffect(() => {
         const handleGlobalClick = () => {
@@ -271,19 +256,19 @@ export default function Condition2() {
 
                 <div>
                     <ArrowButton
-                        onMouseDown={() => handleMoveStart("left")}
+                        onMouseDown={() => handleMoveStart("right")}
                         onMouseUp={handleMoveStop}
                         onMouseLeave={handleMoveStop}
-                        onTouchStart={() => handleMoveStart("left")}
+                        onTouchStart={() => handleMoveStart("right")}
                         onTouchEnd={handleMoveStop}
                     >
                         ←
                     </ArrowButton>
                     <ArrowButton
-                        onMouseDown={() => handleMoveStart("right")}
+                        onMouseDown={() => handleMoveStart("left")}
                         onMouseUp={handleMoveStop}
                         onMouseLeave={handleMoveStop}
-                        onTouchStart={() => handleMoveStart("right")}
+                        onTouchStart={() => handleMoveStart("left")}
                         onTouchEnd={handleMoveStop}
                     >
                         →

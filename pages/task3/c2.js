@@ -173,20 +173,6 @@ export default function Condition2() {
             totalClicks: 0,
             timeSpent: 0,
         };
-    // 확대/축소 제한 핸들러 추가
-    useEffect(() => {
-        const preventPinchZoom = (e) => {
-            if (e.touches.length > 1) {
-                // 두 손가락 터치를 방지
-                e.preventDefault();
-            }
-        };
-        document.addEventListener("touchmove", preventPinchZoom, { passive: false });
-
-        return () => {
-            document.removeEventListener("touchmove", preventPinchZoom);
-        };
-    }, []);
 
     // 전역 클릭 이벤트 추가
     useEffect(() => {
