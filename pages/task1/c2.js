@@ -39,7 +39,7 @@ export default function Condition2() {
 
     const [scale, setScale] = useState(1); // 확대/축소 배율
     const [isZooming, setIsZooming] = useState(false); // 확대/축소 버튼 사용 상태
-    const [isAdminMode, setIsAdminMode] = useState(false); // 운영자 모드 상태 추가
+    const [isAdminMode, setIsAdminMode] = useState(true); // 운영자 모드 상태 추가
 
     const [position, setPosition] = useState({ x: 0, y: 0 }); // 지도 이동 위치
     const [isMoving, setIsMoving] = useState(false); // 버튼 지속 상태

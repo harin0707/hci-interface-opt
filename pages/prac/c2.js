@@ -39,7 +39,7 @@ export default function Condition2() {
     const [isMoving, setIsMoving] = useState(false); // 버튼 지속 상태
     const [moveDirection, setMoveDirection] = useState(null); // 이동 방향
 
-    const [isAdminMode, setIsAdminMode] = useState(false); // 운영자 모드 상태 추가
+    const [isAdminMode, setIsAdminMode] = useState(true); // 운영자 모드 상태 추가
     useEffect(() => {
         const handleTouchMove = (e) => {
             if (!isAdminMode && e.touches.length > 1) {

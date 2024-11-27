@@ -30,7 +30,7 @@ export default function Condition3() {
     const [currentTargetIndex, setCurrentTargetIndex] = useState(0); // 현재 탐색 중인 매장 인덱스
 
     const taskId = 3;
-    const conditionId = 2;
+    const conditionId = 3;
     const targetStores = [
         { name: "휘슬러", id: "F-21" }, // 두 번째 매장
         { name: "아리따움", id: "D-6" }, // 세 번째 매장
