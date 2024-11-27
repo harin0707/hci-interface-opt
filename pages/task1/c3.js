@@ -266,7 +266,7 @@ export default function Condition3() {
                     isActive={mode === "touch"} onClick={() => setMode("touch")}>터치 모드
                 </ModeButton>
                 <ModeButton 
-                    isActive={mode === "drag"}onClick={() => setMode("drag")}>확대 / 드래그 모드
+                    isActive={mode === "drag"}onClick={() => setMode("drag")}>확대 모드
                 </ModeButton>
                 
                 

@@ -60,10 +60,10 @@ export default function Condition3() {
                 }
             };
     
-            if (mode === "touch" || mode === "drag") {
+            if (mode === "touch") {
                 // 터치나 드래그 모드일 때 두 손가락 방지
                 document.addEventListener("touchmove", preventPinchZoom, { passive: false });
-            } else if (mode === "zoom") {
+            } else if (mode === "zoom"|| mode === "drag") {
                 // 줌 모드일 때 두 손가락 확대/축소 허용
                 document.addEventListener("touchmove", allowPinchZoom, { passive: false });
             }
@@ -129,7 +129,7 @@ export default function Condition3() {
     };
 
    // 드래그 시작 이벤트 핸들러
-   const handleDragStart = (e) => {
+    const handleDragStart = (e) => {
     if (mode !== "drag") return;
     e.preventDefault();
     setDragging(true);
@@ -286,7 +286,7 @@ const handleDragEnd = () => {
                     isActive={mode === "touch"} onClick={() => setMode("touch")}>터치 모드
                 </ModeButton>
                 <ModeButton 
-                    isActive={mode === "drag"}onClick={() => setMode("drag")}>확대 / 드래그 모드
+                    isActive={mode === "drag"}onClick={() => setMode("drag")}>확대 모드
                 </ModeButton>
                 
                 </ModeContainer>
