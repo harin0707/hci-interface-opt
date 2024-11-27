@@ -311,10 +311,10 @@ export default function Condition2() {
 
                 <ArrorContainer>
                 <ArrowButton
-                    onMouseDown={() => handleMoveStart("up")}
+                    onMouseDown={() => handleMoveStart("down")}
                     onMouseUp={handleMoveStop}
                     onMouseLeave={handleMoveStop}
-                    onTouchStart={() => handleMoveStart("up")}
+                    onTouchStart={() => handleMoveStart("down")}
                         onTouchEnd={handleMoveStop}
                 >
                     ↑
@@ -331,10 +331,10 @@ export default function Condition2() {
                         ←
                     </ArrowButton>
                     <ArrowButton
-                        onMouseDown={() => handleMoveStart("right")}
+                        onMouseDown={() => handleMoveStart("up")}
                         onMouseUp={handleMoveStop}
                         onMouseLeave={handleMoveStop}
-                        onTouchStart={() => handleMoveStart("right")}
+                        onTouchStart={() => handleMoveStart("up")}
                         onTouchEnd={handleMoveStop}
                     >
                         →

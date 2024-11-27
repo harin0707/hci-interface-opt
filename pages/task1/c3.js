@@ -9,6 +9,16 @@ import { storeDataC } from "../../data/storedataC.js";
 import { storeDataD } from "../../data/storedataD.js";
 import { storeDataE } from "../../data/storedataE.js";
 import { storeDataF } from "../../data/storedataF.js";
+import {
+    Container,
+    ModeContainer,
+    ModeButton,
+    InfoContainer,
+    Button,
+    Btn,
+    MapContainer,
+    Nav,
+} from "../../styles/c3Style.js";
 
 export default function Condition3() {
     const router = useRouter();
@@ -360,68 +370,6 @@ export default function Condition3() {
     );
 }
 
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px 0;
-`;
-
-const ModeContainer = styled.div`
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    z-index: 100;
-`;
-
-const ModeButton = styled.button`
-    padding: 10px 20px;
-    border: none;
-    background-color: ${({ isActive }) => (isActive ? "#ccc": "black")};
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-
-    &:hover {
-        background-color: ${({ isActive }) => (isActive ? "#005bb5" : "#bbb")};
-    }
-`;
-
-
-const InfoContainer = styled.div`
-    display: flex;
-    align-items: center;
-    margin: 20px 0;
-
-    #info {
-        margin: 15px;
-    }
-`;
-
-const Button = styled.button`
-    padding: 10px 20px;
-    background-color: black;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 20px;
-
-    &:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-    }
-`;
-
-const MapContainer = styled.div`
-padding: 1px;
-display: flex;
-width: 80vw;
-height: 70vh;
-
-transform-origin: center;
-pointer-events: auto;
-`
 
 const M1Con = styled.div`
     display: flex;
@@ -507,20 +455,3 @@ const MB = styled.div`
     height: 50px;
     z-index: 100;
 `;
-
-const Btn = styled.button`
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background-color: black;
-        color: white;
-        border: none;
-        padding: 5px;
-        border-radius: 5px;
-`
-
-const Nav = styled.div`
-    display: flex;
-    gap: 20px;
-`
-
