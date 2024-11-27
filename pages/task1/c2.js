@@ -9,6 +9,20 @@ import { storeDataC } from "../../data/storedataC.js";
 import { storeDataD } from "../../data/storedataD.js";
 import { storeDataE } from "../../data/storedataE.js";
 import { storeDataF } from "../../data/storedataF.js";
+import {
+    Container,
+    InfoContainer,
+    Button,
+    Btn,
+    MapContainer,
+    ZoomContainer,
+    ZoomButton,
+    Nav,
+    ArrorContainer,
+    ArrowButton,
+    AdminToggleButton,
+} from "../../styles/c2Style.js";
+
 
 
 export default function Condition2() {
@@ -25,60 +39,28 @@ export default function Condition2() {
 
     const [scale, setScale] = useState(1); // 확대/축소 배율
     const [isZooming, setIsZooming] = useState(false); // 확대/축소 버튼 사용 상태
+    const [isAdminMode, setIsAdminMode] = useState(false); // 운영자 모드 상태 추가
 
     const [position, setPosition] = useState({ x: 0, y: 0 }); // 지도 이동 위치
     const [isMoving, setIsMoving] = useState(false); // 버튼 지속 상태
     const [moveDirection, setMoveDirection] = useState(null); // 이동 방향
 
 
-    const [lastInteractionTime, setLastInteractionTime] = useState(0);
-    const [touchCount, setTouchCount] = useState(0);
-    const [isInteractionAllowed, setIsInteractionAllowed] = useState(true);
-
-    const [isProcessingClick, setIsProcessingClick] = useState(false);
-    const [isInteractionEnabled, setIsInteractionEnabled] = useState(true);
-    const MAX_INTERACTIONS = 2; // 최대 연속 터치 횟수
-    const INTERACTION_RESET_TIME = 0; // 터치 카운트 리셋 시간 (3초)
-    const CLICK_DELAY = 0; // 클릭 지연 시간 (0.5초)
-    const INTERACTION_COOLDOWN = 0; 
-
-
-    const handleInteraction = () => {
-        const currentTime = Date.now();
-        
-        if (!isInteractionAllowed) {
-            return false;
-        }
-
-        if (currentTime - lastInteractionTime < INTERACTION_COOLDOWN) {
-            return false;
-        }
-
-        if (touchCount >= MAX_INTERACTIONS) {
-            setIsInteractionAllowed(false);
-            setTimeout(() => {
-                setIsInteractionAllowed(true);
-                setTouchCount(0);
-            }, INTERACTION_RESET_TIME);
-            return false;
-        }
-
-        setLastInteractionTime(currentTime);
-        setTouchCount(prev => prev + 1);
-
-        setTimeout(() => {
-            setTouchCount(prev => Math.max(0, prev - 1));
-        }, INTERACTION_RESET_TIME);
-
-        return true;
-    };
-
 
     useEffect(() => {
-        // 페이지가 렌더링될 때 scale과 position 초기화
-        setScale(1); // 배율 초기화
-        setPosition({ x: 0, y: 0 }); // 위치 초기화
-    }, []);
+        // 두 손가락 확대/축소 제한 관리
+        const handleTouchMove = (e) => {
+            if (!isAdminMode && e.touches.length > 1) {
+                e.preventDefault(); // 운영자 모드가 아닐 때 두 손가락 확대 방지
+            }
+        };
+
+        document.addEventListener("touchmove", handleTouchMove, { passive: false });
+        return () => {
+            document.removeEventListener("touchmove", handleTouchMove);
+        };
+    }, [isAdminMode]);
+
 
     useEffect(() => {
         if (!isMoving || !moveDirection) return;
@@ -130,21 +112,16 @@ export default function Condition2() {
     }, []);
 
     // 전역 클릭 이벤트 추가
+    // 전역 클릭 이벤트 추가
     useEffect(() => {
-        const handleGlobalInteraction = () => {
-            if (handleInteraction()) {
-                setTimeout(() => {
-                    setClickCount((prev) => prev + 1);
-                }, CLICK_DELAY);
-            }
+        const handleGlobalClick = () => {
+            setClickCount((prev) => prev + 1);
         };
 
-        document.addEventListener("click", handleGlobalInteraction);
-        document.addEventListener("touchstart", handleGlobalInteraction);
+        document.addEventListener("click", handleGlobalClick);
 
         return () => {
-        document.addEventListener("click", handleGlobalInteraction);
-        document.addEventListener("touchstart", handleGlobalInteraction);
+            document.removeEventListener("click", handleGlobalClick);
         };
     }, []);
 
@@ -186,19 +163,13 @@ export default function Condition2() {
     const handleStartTimer = () => {
         setIsTimerRunning(true); // 타이머 시작
         setElapsedTime(0); // 시간 초기화
-        setLastInteractionTime(Date.now());
     };
 
 
     // 맞게 클릭했을 때 동작
     const handleStoreClick = (storeId) => {
-        if (!handleInteraction()) {
-            return;
-        }
         if (storeId === targetStore.id) {
-            setIsProcessingClick(true);
 
-            setTimeout(()=>{
             alert(`정답입니다!\n총 클릭 횟수: ${clickCount + 1}\n소요 시간: ${elapsedTime}초`);
             setIsTimerRunning(false); // 타이머 중단
 
@@ -222,32 +193,26 @@ export default function Condition2() {
                 )
             );
             router.push("/task1/c3");
-        setIsProcessingClick(false);
-        }, CLICK_DELAY);
         }
     };
 
 
      // 확대 버튼 핸들러
     const handleZoomIn = () => {
-        // setIsZooming(true);
-        // setScale((prevScale) => Math.min(prevScale + 0.2, 3));
-        // setTimeout(() => setIsZooming(false), 300); 
-        // 확대 후 상태 복원
-
-        if (!handleInteraction()) return;
-
         setIsZooming(true);
-        setTimeout(() => {
         setScale((prevScale) => Math.min(prevScale + 0.2, 3));
-        setIsZooming(false);
-        }, CLICK_DELAY);
+        setTimeout(() => setIsZooming(false), 300); // 확대 후 상태 복원
+    };
 
 
+    // 축소 버튼 핸들러
+    const handleZoomOut = () => {
+        setIsZooming(true);
+        setScale((prevScale) => Math.max(prevScale - 0.2, 0.5));
+        setTimeout(() => setIsZooming(false), 300); // 축소 후 상태 복원
     };
 
     const handleMoveStart = (direction) => {
-        if (!handleInteraction()) return;
         setMoveDirection(direction);
         setIsMoving(true);
     };
@@ -257,20 +222,8 @@ export default function Condition2() {
         setMoveDirection(null);
     };
 
-    // 축소 버튼 핸들러
-    const handleZoomOut = () => {
-        // setIsZooming(true);
-        // setScale((prevScale) => Math.max(prevScale - 0.2, 0.5));
-        // setTimeout(() => setIsZooming(false), 300); 
-        // 축소 후 상태 복원
-
-        if (!handleInteraction()) return;
-        
-        setIsZooming(true);
-        setTimeout(() => {
-            setScale((prevScale) => Math.max(prevScale - 0.2, 0.5));
-            setIsZooming(false);
-        }, CLICK_DELAY);
+    const toggleAdminMode = () => {
+        setIsAdminMode((prevMode) => !prevMode); // 운영자 모드 토글
     };
 
 
@@ -289,62 +242,72 @@ export default function Condition2() {
                 <div id="info">실험자: {experimentId || "정보 없음"}</div>
                 <div id="info">총 클릭 횟수: {clickCount}</div>
                 <div id="info">소요 시간: {elapsedTime}초</div>
+                <div id="info" style={{ fontWeight: "bold" }}> 운영자 모드  </div>
+                <AdminToggleButton onClick={toggleAdminMode}>
+                    {isAdminMode ? "활성화" : "비활성화"}
+                </AdminToggleButton>
             </InfoContainer>
 
             <Nav>
+
                 <Button onClick={handleStartTimer} disabled={isTimerRunning}>
                     {isTimerRunning ? "실험 진행 중..." : "실험 시작"}
                 </Button>
-                <ZoomContainer>
-                    <ZoomButton onClick={handleZoomIn}  disabled={isZooming}>+</ZoomButton>
-                    <ZoomButton onClick={handleZoomOut} disabled={isZooming}>-</ZoomButton>
-                </ZoomContainer>
+
+                <BtnContainer>
+
+                    <ZoomContainer>
+                        <ZoomButton onClick={handleZoomIn}  disabled={isZooming}>+</ZoomButton>
+                        <ZoomButton onClick={handleZoomOut} disabled={isZooming}>-</ZoomButton>
+                    </ZoomContainer>
 
 
 
-                <ArrorContainer>
-                <ArrowButton
-                    onMouseDown={() => handleMoveStart("up")}
-                    onMouseUp={handleMoveStop}
-                    onMouseLeave={handleMoveStop}
-                    onTouchStart={() => handleMoveStart("up")}
-                    onTouchEnd={handleMoveStop}
-                >
-                    ↑
-                </ArrowButton>
-
-                <div>
+                    <ArrorContainer>
                     <ArrowButton
-                        onMouseDown={() => handleMoveStart("left")}
+                        onMouseDown={() => handleMoveStart("up")}
                         onMouseUp={handleMoveStop}
                         onMouseLeave={handleMoveStop}
-                        onTouchStart={() => handleMoveStart("left")}
+                        onTouchStart={() => handleMoveStart("up")}
                         onTouchEnd={handleMoveStop}
                     >
-                        ←
+                        ↑
                     </ArrowButton>
+
+                    <div>
+                        <ArrowButton
+                            onMouseDown={() => handleMoveStart("left")}
+                            onMouseUp={handleMoveStop}
+                            onMouseLeave={handleMoveStop}
+                            onTouchStart={() => handleMoveStart("left")}
+                            onTouchEnd={handleMoveStop}
+                        >
+                            ←
+                        </ArrowButton>
+                        <ArrowButton
+                            onMouseDown={() => handleMoveStart("right")}
+                            onMouseUp={handleMoveStop}
+                            onMouseLeave={handleMoveStop}
+                            onTouchStart={() => handleMoveStart("right")}
+                            onTouchEnd={handleMoveStop}
+                        >
+                            →
+                        </ArrowButton>
+                    </div>
+
                     <ArrowButton
-                        onMouseDown={() => handleMoveStart("right")}
+                        onMouseDown={() => handleMoveStart("down")}
                         onMouseUp={handleMoveStop}
                         onMouseLeave={handleMoveStop}
-                        onTouchStart={() => handleMoveStart("right")}
+                        onTouchStart={() => handleMoveStart("down")}
                         onTouchEnd={handleMoveStop}
                     >
-                        →
+                        ↓
                     </ArrowButton>
-                </div>
 
-                <ArrowButton
-                    onMouseDown={() => handleMoveStart("down")}
-                    onMouseUp={handleMoveStop}
-                    onMouseLeave={handleMoveStop}
-                    onTouchStart={() => handleMoveStart("down")}
-                    onTouchEnd={handleMoveStop}
-                >
-                    ↓
-                </ArrowButton>
+                    </ArrorContainer>
 
-                </ArrorContainer>
+                </BtnContainer>
             </Nav>
             
             
@@ -446,70 +409,6 @@ export default function Condition2() {
     );
 }
 
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px 0;
-
-    cursor: grab;
-
-    &:active {
-        cursor: grabbing;
-    }
-
-`;
-
-const InfoContainer = styled.div`
-    display: flex;
-    align-items: center;
-    margin: 20px 0;
-
-    #info {
-        margin: 15px;
-    }
-`;
-
-const Button = styled.button`
-    padding: 10px 20px;
-    background-color: black;
-    color: white;
-    border: none;
-    border-radius: 5px;
-
-    height: 30px;
-
-
-    &:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-    }
-
-`;
-
-const Btn = styled.button`
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background-color: black;
-        color: white;
-        border: none;
-        padding: 5px;
-        border-radius: 5px;
-`
-
-
-const MapContainer = styled.div`
-padding: 1px;
-display: flex;
-width: 80vw;
-height: 70vh;
-
-transform-origin: center;
-pointer-events: auto;
-
-touch-action: manipulation;
-`
 
 const M1Con = styled.div`
     display: flex;
@@ -590,56 +489,12 @@ const MB = styled.div`
 `;
 
 
-const ZoomContainer = styled.div`
-    display: flex;
-    justify-content: baseline;
-    z-index: 100;
-    gap: 10px;
-`;
-
-const ZoomButton = styled.button`
-    padding: 10px 20px;
-    background-color: black;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    
-
-    &:hover {
-        background-color: #005bb5;
-    }
-`;
-
-const Nav = styled.div`
+const BtnContainer = styled.div`
     display: flex;
     gap: 20px;
     align-items: center;
-`
-
-const ArrorContainer = styled.div`
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    flex-direction: column;
-    z-index: 100;
-    gap: 0;
-`;
-
-
-const ArrowButton = styled.button`
+    width: 100%;
     padding: 10px 20px;
-    background-color: black;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-
-    &:hover {
-        background-color: #005bb5;
-    }
-
-    &:active {
-        background-color: #003f7f;
-    }
-`;
+    z-index: 1000; /* 다른 요소 위로 올라오도록 설정 */
+    
+`
