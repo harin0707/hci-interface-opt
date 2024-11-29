@@ -35,10 +35,15 @@ export const Button = styled.button`
 
 
 export const MapContainer = styled.div`
+position: relative;
 padding: 1px;
 display: flex;
 width: 80vw;
 height: 70vh;
+
+background-color: #FFD2B2;
+overflow: hidden;
+border: 2px solid #333;
 
 `
 
