@@ -60,11 +60,11 @@ padding: 1px;
 display: flex;
 width: 80vw;
 height: 70vh;
+background-color: #FFD2B2;
 
 transform-origin: center;
 pointer-events: auto;
-
-background-color: #FFD2B2;
+touch-action: none;  
 `
 
 export const MapCon = styled.div`

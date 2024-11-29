@@ -11,6 +11,7 @@ margin: 0;
 
 background-color: #BFD1E2;
 overflow: hidden;
+
 `
 
 export const M1Con = styled.div`

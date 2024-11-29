@@ -40,6 +40,7 @@ padding: 1px;
 display: flex;
 width: 80vw;
 height: 70vh;
+touch-action: none;  
 
 background-color: #BFD1E2;
 overflow: hidden;

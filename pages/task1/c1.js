@@ -139,13 +139,19 @@ export default function Condition1() {
             <MapContainer 
             onTouchStart={(e) => handleTouchStart(e, "map-container")}
             onTouchMove={(e) => handleTouchMove(e, "map-container")}
+            style={{
+                touchAction: "none",
+
+            }}
             onTouchEnd={handleTouchEnd}
+
             >
                 <MapCon
                 className="map-container"
                 style={{
                     transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
                     transformOrigin: "center",
+                    touchAction: "manipulation",
                 }}
                 >
                 <M1Con isColumn="column"> 
