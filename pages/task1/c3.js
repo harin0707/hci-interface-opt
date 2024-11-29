@@ -269,9 +269,9 @@ export default function Condition3() {
                         onTouchStart={handleTouchStart}
                         onTouchMove={handleTouchMove}
                         onTouchEnd={handleTouchEnd}
-                    style={{
-                        transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-                    }}
+                        style={{
+                            transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+                        }}
                     
                     >
                 <M1Con isColumn="column"> 

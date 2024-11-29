@@ -159,21 +159,31 @@ export default function Condition1() {
     };
     
     const handleDragMove = (e) => {
-        if (!dragging || !isDragAllowed) return; // 쿨다운 중이면 동작하지 않음
+        if (!dragging) return;
     
         const currentX = e.clientX || e.touches[0]?.clientX;
         const currentY = e.clientY || e.touches[0]?.clientY;
     
-        setPosition((prev) => ({
-            x: prev.x + (currentX - startPos.x),
-            y: prev.y + (currentY - startPos.y),
-        }));
-        setStartPos({ x: currentX, y: currentY });
+        const deltaX = currentX - startPos.x;
+        const deltaY = currentY - startPos.y;
     
-        // 드래그 쿨다운 활성화
-        setIsDragAllowed(false);
-        setTimeout(() => setIsDragAllowed(true), DRAG_COOLDOWN);
+        setPosition((prev) => {
+            const newX = prev.x + deltaX;
+            const newY = prev.y + deltaY;
+    
+            // MapContainer 크기를 벗어나지 않도록 제한
+            const maxOffsetX = (scale - 1) * MapContainerWidth / 2;
+            const maxOffsetY = (scale - 1) * MapContainerHeight / 2;
+    
+            return {
+                x: Math.max(-maxOffsetX, Math.min(newX, maxOffsetX)),
+                y: Math.max(-maxOffsetY, Math.min(newY, maxOffsetY)),
+            };
+        });
+    
+        setStartPos({ x: currentX, y: currentY });
     };
+    
     
     const handleDragEnd = () => {
         setDragging(false);
@@ -182,31 +192,19 @@ export default function Condition1() {
 
 
     const handleZoom = (e) => {
-        if (!isZoomAllowed) return; // 쿨다운 중이면 동작하지 않음
-    
         if (e.touches.length === 2) {
             const currentDistance = getTouchDistance(e.touches);
             const scaleChange = currentDistance / touchStartDistance;
-            setScale((prevScale) => Math.min(Math.max(prevScale * scaleChange, 0.5), 3));
-            setTouchStartDistance(currentDistance);
     
-            // 확대 쿨다운 활성화
-            setIsZoomAllowed(false);
-            setTimeout(() => setIsZoomAllowed(true), ZOOM_COOLDOWN);
+            setScale((prevScale) => {
+                const newScale = Math.min(Math.max(prevScale * scaleChange, 0.5), 3); // 최소 0.5, 최대 3
+                return newScale;
+            });
+    
+            setTouchStartDistance(currentDistance);
         }
     };
-    
-    useEffect(() => {
-        const preventDefaultTouch = (e) => {
-            if (e.touches.length > 1) e.preventDefault(); // 멀티 터치 기본 동작 방지
-        };
-    
-        document.addEventListener("touchmove", preventDefaultTouch, { passive: false });
-    
-        return () => {
-            document.removeEventListener("touchmove", preventDefaultTouch);
-        };
-    }, []);
+
 
 
 
@@ -226,8 +224,23 @@ export default function Condition1() {
             </Button>
             <MapContainer>
                 <MapCon
+                onMouseDown={handleDragStart}
+                onMouseMove={handleDragMove}
+                onMouseUp={handleDragEnd}
+                onTouchStart={(e) => {
+                    if (e.touches.length > 1) e.preventDefault();
+                    handleZoomStart(e);
+                    handleDragStart(e);
+                }}
+                onTouchMove={(e) => {
+                    if (e.touches.length > 1) e.preventDefault();
+                    handleZoom(e);
+                    handleDragMove(e);
+                }}
+                onTouchEnd={handleDragEnd}
                 style={{
                     transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+                    transformOrigin: "center",
                     }}>
                 <M1Con isColumn="column"> 
                     <M2Con id="3"
