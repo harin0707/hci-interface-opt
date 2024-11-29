@@ -131,8 +131,6 @@ export default function Condition1() {
 
         <Container>
             <TimerModal isVisible={isModalVisible} onStart={handleStartTimer} />
-
-
             <div style={{ fontWeight: "bold" }}> [조건 1] 자유로운 확대와 드래그</div>
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
 

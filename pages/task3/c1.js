@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useTimer } from "../../hooks/useTimer";
-import { useTimer } from "../../hooks/useTimer";
+import { useTimerModal } from "@/hooks/useModal";
 import TimerModal from "@/components/TimeModal";
 import { useTouchDrag } from "../../hooks/useTouchDrag";
 import { useRecoilValue, useRecoilState } from "recoil";
