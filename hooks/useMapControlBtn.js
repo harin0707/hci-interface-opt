@@ -6,9 +6,6 @@ export const useMapControlBtn = (isAdminMode) => {
     const [isZooming, setIsZooming] = useState(false);
     const [isMoving, setIsMoving] = useState(false);
     const [moveDirection, setMoveDirection] = useState(null);
-    const [touchStartDistance, setTouchStartDistance] = useState(null);
-    const [dragging, setDragging] = useState(false);
-    const [startPos, setStartPos] = useState({ x: 0, y: 0 });
 
     const handleZoomIn = () => {
         setIsZooming(true);
@@ -22,14 +19,22 @@ export const useMapControlBtn = (isAdminMode) => {
         setTimeout(() => setIsZooming(false), 300);
     };
 
-    const handleMoveStart = (direction) => {
-        setMoveDirection(direction);
-        setIsMoving(true);
-    };
-
-    const handleMoveStop = () => {
-        setIsMoving(false);
-        setMoveDirection(null);
+    const handleMove = (direction) => {
+        const moveDistance = 50; // 한 번에 이동할 거리
+        setPosition((prev) => {
+            switch (direction) {
+                case "up":
+                    return { ...prev, y: prev.y - moveDistance };
+                case "down":
+                    return { ...prev, y: prev.y + moveDistance };
+                case "left":
+                    return { ...prev, x: prev.x - moveDistance };
+                case "right":
+                    return { ...prev, x: prev.x + moveDistance };
+                default:
+                    return prev;
+            }
+        });
     };
 
     const getTouchDistance = (touches) => {
@@ -45,35 +50,16 @@ export const useMapControlBtn = (isAdminMode) => {
 
         if (e.touches.length === 2) {
             const distance = getTouchDistance(e.touches);
-            setTouchStartDistance(distance);
-        } else if (e.touches.length === 1) {
-            setDragging(true);
-            setStartPos({ x: e.touches[0].clientX, y: e.touches[0].clientY });
+            setScale((prevScale) => Math.min(Math.max(prevScale * (distance / 100), 0.5), 3));
         }
     };
 
     const handleTouchMove = (e) => {
         if (!isAdminMode) return;
-
-        if (e.touches.length === 2 && touchStartDistance) {
-            const currentDistance = getTouchDistance(e.touches);
-            const scaleChange = currentDistance / touchStartDistance;
-            setScale((prevScale) => Math.min(Math.max(prevScale * scaleChange, 0.5), 3));
-            setTouchStartDistance(currentDistance);
-        } else if (dragging && e.touches.length === 1) {
-            const currentX = e.touches[0].clientX;
-            const currentY = e.touches[0].clientY;
-            setPosition((prevPos) => ({
-                x: prevPos.x + (currentX - startPos.x),
-                y: prevPos.y + (currentY - startPos.y),
-            }));
-            setStartPos({ x: currentX, y: currentY });
-        }
     };
 
     const handleTouchEnd = () => {
         if (!isAdminMode) return;
-        setDragging(false);
     };
 
     useEffect(() => {
@@ -107,8 +93,7 @@ export const useMapControlBtn = (isAdminMode) => {
         isZooming,
         handleZoomIn,
         handleZoomOut,
-        handleMoveStart,
-        handleMoveStop,
+        handleMove,
         handleTouchStart,
         handleTouchMove,
         handleTouchEnd,

@@ -37,8 +37,7 @@ export default function Condition2() {
         isZooming,
         handleZoomIn,
         handleZoomOut,
-        handleMoveStart,
-        handleMoveStop,
+        handleMove
     } = useMapControlBtn(isAdminMode);
 
     const experimentId = useRecoilValue(experimentIdState);
@@ -182,47 +181,12 @@ export default function Condition2() {
                 </ZoomContainer>
 
                 <ArrorContainer>
-                <ArrowButton
-                    onMouseDown={() => handleMoveStart("down")}
-                    onMouseUp={handleMoveStop}
-                    onMouseLeave={handleMoveStop}
-                    onTouchStart={() => handleMoveStart("down")}
-                        onTouchEnd={handleMoveStop}
-                >
-                    ↑
-                </ArrowButton>
-
-                <div>
-                    <ArrowButton
-                        onMouseDown={() => handleMoveStart("right")}
-                        onMouseUp={handleMoveStop}
-                        onMouseLeave={handleMoveStop}
-                        onTouchStart={() => handleMoveStart("right")}
-                        onTouchEnd={handleMoveStop}
-                    >
-                        ←
-                    </ArrowButton>
-                    <ArrowButton
-                        onMouseDown={() => handleMoveStart("left")}
-                        onMouseUp={handleMoveStop}
-                        onMouseLeave={handleMoveStop}
-                        onTouchStart={() => handleMoveStart("left")}
-                        onTouchEnd={handleMoveStop}
-                    >
-                        →
-                    </ArrowButton>
-                </div>
-
-                <ArrowButton
-                    onMouseDown={() => handleMoveStart("up")}
-                    onMouseUp={handleMoveStop}
-                    onMouseLeave={handleMoveStop}
-                    onTouchStart={() => handleMoveStart("up")}
-                    onTouchEnd={handleMoveStop}
-                >
-                    ↓
-                </ArrowButton>
-
+                    <ArrowButton onClick={() => handleMove("up")}>↑</ArrowButton>
+                    <div>
+                    <ArrowButton onClick={() => handleMove("left")}>←</ArrowButton>
+                    <ArrowButton onClick={() => handleMove("right")}>→</ArrowButton>
+                    </div>
+                    <ArrowButton onClick={() => handleMove("down")}>↓</ArrowButton>
                 </ArrorContainer>
             </Nav>
             
