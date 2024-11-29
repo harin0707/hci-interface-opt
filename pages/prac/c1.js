@@ -8,6 +8,14 @@ import { storeDataC } from "../../data/storedataC.js";
 import { storeDataD } from "../../data/storedataD.js";
 import { storeDataE } from "../../data/storedataE.js";
 import { storeDataF } from "../../data/storedataF.js";
+import {
+    Container,
+    InfoContainer,
+    Button,
+    Btn,
+    MapContainer,
+} from "../../styles/c1Style.js";
+import { M1Con, M1ConD, M2Con, M3Con, M4Con, MA, MB } from "../../styles/mapStyle";
 
 export default function Condition1() {
     const router = useRouter();
@@ -182,148 +190,3 @@ export default function Condition1() {
         </Container>
     );
 }
-
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px 0;
-`;
-
-const InfoContainer = styled.div`
-    display: flex;
-    align-items: center;
-    margin: 20px 0;
-
-    #info {
-        margin: 15px;
-    }
-`;
-
-const Button = styled.button`
-    padding: 10px 20px;
-    background-color: black;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 20px;
-
-    &:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-    }
-`;
-
-
-const MapContainer = styled.div`
-padding: 1px;
-display: flex;
-width: 80vw;
-height: 70vh;
-
-`
-
-const M1Con = styled.div`
-    display: flex;
-    flex-direction: ${({ isColumn }) => (isColumn === "column" ? "row" : "column")}; /* id에 따라 방향 변경 */
-    padding: 5px;
-    width: 100vw;
-`;
-
-
-const M1ConD = styled.div`
-    display: flex;
-    flex-direction: ${({ isColumn }) => (isColumn === "column" ? "row" : "column")}; /* id에 따라 방향 변경 */
-    padding: 5px;
-    width: 100vw;
-    flex-wrap: wrap;
-`;
-
-
-
-const M2Con = styled.div`
-    flex-direction: ${({ isColumn }) => (isColumn === "column" ? "row" : "column")};
-    flex-grow: ${({ id }) => id || 1}; /* ID를 기반으로 flex-grow 설정 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-`;
-
-const M3Con = styled.div`
-    flex-grow: ${({ id }) => id || 1}; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    padding: 30px 0 ;
-
-
-`;
-
-
-const M4Con = styled.div`
-    flex-grow: ${({ id }) => id || 1}; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    padding: 40px;
-
-
-`;
-
-
-const MA = styled.div`
-    background-color: #F5F5F5;
-    border-radius: 3px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: black;
-    font-weight: bold;
-    font-size: 0.2rem;
-    margin: 1px;
-
-    padding: 1px;
-    cursor: pointer;
-    z-index: 10;
-`;
-
-const MB = styled.div`
-    background-color: #F5F5F5;
-    border-radius: 3px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: black;
-    font-weight: bold;
-    font-size: 0.2rem;
-    margin: 1px;
-
-    padding: 1px;
-    cursor: pointer;
-
-    z-index: 100;
-`;
-
-const Btn = styled.button`
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background-color: black;
-        color: white;
-        border: none;
-        padding: 5px;
-        border-radius: 5px;
-`
-
-const Nav = styled.div`
-    display: flex;
-    gap: 20px;
-`
-
-
-
-
