@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useTimer } from "../../hooks/useTimer";
+import { useTouchMode } from "@/hooks/useTouchMode";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { experimentIdState, taskState } from "../../atoms/atoms.js";
 import { storeDataA } from "../../data/storedataA.js";
@@ -17,7 +18,7 @@ import {
     Button,
     Btn,
     MapContainer,
-    Nav, M1Con, M1ConD, M2Con, M3Con, M4Con, MA, MB 
+    Nav, M1Con, M1ConD, M2Con, M3Con, M4Con, MA, MB, MapCon
 } from "../../styles/c3Style.js";
 
 export default function Condition3() {
@@ -30,11 +31,8 @@ export default function Condition3() {
     const [clickCount, setClickCount] = useState(0); // 클릭 횟수 상태
     const { elapsedTime, isTimerRunning, startTimer, stopTimer } = useTimer();
     
-    const [scale, setScale] = useState(1); // 확대/축소 배율
-    const [position, setPosition] = useState({ x: 0, y: 0 }); // 지도 이동 위치
-    const [dragging, setDragging] = useState(false); // 드래그 상태
-    const [startPos, setStartPos] = useState({ x: 0, y: 0 }); // 드래그 시작 위치
     const [mode, setMode] = useState("touch"); // 모드 상태 (기본은 "zoom")
+    const { scale, position, handleTouchStart, handleTouchMove, handleTouchEnd} = useTouchMode(mode);
     
     const [currentTargetIndex, setCurrentTargetIndex] = useState(0); // 현재 탐색 중인 매장 인덱스
 
@@ -46,43 +44,7 @@ export default function Condition3() {
         { name: "현대백화점", id: "C-4" }, // 첫 번째 매장
     ];
 
-    // taskId가 1이고 conditionId가 1인 데이터 필터링
-    const conditionData =
-        tasks
-            ?.find((task) => task.taskId === taskId)
-            ?.conditions.find((condition) => condition.conditionId === conditionId) || {
-            totalClicks: 0,
-            timeSpent: 0,
-        };
 
-        useEffect(() => {
-            const preventPinchZoom = (e) => {
-                if (e.touches.length > 1) {
-                    e.preventDefault(); // 두 손가락 터치 방지
-                }
-            };
-    
-            const allowPinchZoom = (e) => {
-                // 두 손가락 확대/축소 동작 허용
-                if (e.touches.length > 1) {
-                    e.stopPropagation();
-                }
-            };
-    
-            if (mode === "touch") {
-                // 터치나 드래그 모드일 때 두 손가락 방지
-                document.addEventListener("touchmove", preventPinchZoom, { passive: false });
-            } else if (mode === "zoom"|| mode === "drag") {
-                // 줌 모드일 때 두 손가락 확대/축소 허용
-                document.addEventListener("touchmove", allowPinchZoom, { passive: false });
-            }
-    
-            // 클린업 함수
-            return () => {
-                document.removeEventListener("touchmove", preventPinchZoom);
-                document.removeEventListener("touchmove", allowPinchZoom);
-            };
-        }, [mode]); // mode가 변경될 때마다 실행
 
     // 전역 클릭 이벤트 추가
     useEffect(() => {
@@ -118,40 +80,6 @@ export default function Condition3() {
                 )
             );
         }, [elapsedTime, clickCount, setTasks]);
-
-
-   // 드래그 시작 이벤트 핸들러
-    const handleDragStart = (e) => {
-    if (mode !== "drag") return;
-    e.preventDefault();
-    setDragging(true);
-    setStartPos({
-        x: e.clientX || e.touches[0]?.clientX,
-        y: e.clientY || e.touches[0]?.clientY,
-    });
-};
-
-// 드래그 이동 이벤트 핸들러
-const handleDragMove = (e) => {
-    if (!dragging || mode !== "drag") return;
-
-    const currentX = e.clientX || e.touches[0]?.clientX;
-    const currentY = e.clientY || e.touches[0]?.clientY;
-
-    const newX = position.x + (currentX - startPos.x);
-    const newY = position.y + (currentY - startPos.y);
-
-    setPosition({ x: newX, y: newY });
-    setStartPos({ x: currentX, y: currentY });
-};
-
-
-
-// 드래그 끝 이벤트 핸들러
-const handleDragEnd = () => {
-    if (mode !== "drag") return;
-    setDragging(false);
-};
 
 
 
@@ -193,70 +121,10 @@ const handleDragEnd = () => {
     // 순서에 맞지 않는 매장은 무시
 
 
-       // 두 손가락 터치 관련 상태
-        const [touchStartDistance, setTouchStartDistance] = useState(null);
-
-        // 터치와 확대/축소 처리 핸들러 **수정된 부분**
-    const getTouchDistance = (touches) => {
-        const [touch1, touch2] = touches;
-        return Math.sqrt(
-            Math.pow(touch2.clientX - touch1.clientX, 2) +
-            Math.pow(touch2.clientY - touch1.clientY, 2)
-        );
-    };
-
-    const handleTouchStart = (e) => {
-        if (mode === "zoom" && e.touches.length === 2) {
-            // 확대/축소 동작 시작
-            const distance = getTouchDistance(e.touches);
-            setDragging(false); // 드래그 초기화
-            setStartPos({ x: 0, y: 0 });
-            setTouchStartDistance(distance);
-        } else if (mode === "zoom" && e.touches.length === 1) {
-            // 드래그 동작 시작
-            setDragging(true);
-            setStartPos({ x: e.touches[0].clientX, y: e.touches[0].clientY });
-        }
-    };
-
-    const handleTouchMove = (e) => {
-        if (mode === "zoom" && e.touches.length === 2 && touchStartDistance) {
-            // 확대/축소 계산
-            const currentDistance = getTouchDistance(e.touches);
-            const scaleChange = currentDistance / touchStartDistance;
-            setScale((prevScale) => Math.min(Math.max(prevScale * scaleChange, 0.5), 3)); // 확대/축소 제한
-            setTouchStartDistance(currentDistance); // 거리 갱신
-        } else if (mode === "zoom" && dragging && e.touches.length === 1) {
-            // 드래그 계산
-            const currentX = e.touches[0].clientX;
-            const currentY = e.touches[0].clientY;
-            setPosition((prevPos) => ({
-                x: prevPos.x + (currentX - startPos.x),
-                y: prevPos.y + (currentY - startPos.y),
-            }));
-            setStartPos({ x: currentX, y: currentY });
-        }
-    };
-
-    const handleTouchEnd = () => {
-        if (mode === "zoom") {
-            setDragging(false); // 드래그 종료
-        }
-    };
-
-
 
 
     return (
-        <Container
-            onMouseDown={handleDragStart}
-            onMouseMove={handleDragMove}
-            onMouseUp={handleDragEnd}
-            onMouseLeave={handleDragEnd}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            >
+        <Container>
 
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
             <div style={{ fontWeight: "bold" }}> [조건 3] 터치/비터치 모드 구분 </div>
@@ -289,10 +157,22 @@ const handleDragEnd = () => {
 
             </Nav>
 
-            <MapContainer
+            <MapContainer 
+            onTouchStart={(e) => handleTouchStart(e, "map-container")}
+            onTouchMove={(e) => handleTouchMove(e, "map-container")}
+            onTouchEnd={handleTouchEnd}
+            style={{
+                touchAction: "none",
+
+            }}>
+                <MapCon
+                className="map-container"
                 style={{
                     transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-                }}>
+                    transformOrigin: "center",
+                    touchAction: "manipulation",
+                }}
+                >
                 <M1Con isColumn="column"> 
                     <M2Con id="3" style={{
                         borderRight: "solid 15px #CFBFBA",
@@ -369,6 +249,7 @@ const handleDragEnd = () => {
                         }} disabled={mode !== "touch"}>{store.name}</MA>))}</M4Con>
                     </M2Con>
                 </M1ConD>
+                </MapCon>
             </MapContainer>
 
         </Container>
