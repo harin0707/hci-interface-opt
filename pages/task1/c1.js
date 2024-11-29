@@ -2,8 +2,10 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useTimer } from "../../hooks/useTimer";
 import TimerModal from "@/components/TimeModal";
+import { useInfoScale } from "../../hooks/useInfoScale"; 
 import { useTouchDrag } from "../../hooks/useTouchDrag";
 import { useTimerModal } from "@/hooks/useModal";
+import { ScaleInfo } from "@/components/ScaleInfo";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { experimentIdState, taskState } from "../../atoms/atoms.js";
 import { storeDataA } from "../../data/storedataA.js";
@@ -37,6 +39,9 @@ export default function Condition1() {
     const { scale, position, handleTouchStart, handleTouchMove, handleTouchEnd } =
     useTouchDrag(); 
     const { isModalVisible, startTimer: handleStartTimer } = useTimerModal(startTimer); // 타이머 시작
+
+    const MINIMUM_SCALE = 1.5;
+    const { scaleI, updateScale } = useInfoScale(1); 
 
     const taskId = 1;
     const conditionId = 1;
@@ -90,6 +95,9 @@ export default function Condition1() {
 
     // 맞게 클릭했을 때 동작
     const handleStoreClick = (storeId) => {
+        if (scale >= MINIMUM_SCALE) {
+            setClickCount((prev) => prev + 1);
+
         if (storeId === targetStore.id) {
             alert(`정답입니다!\n총 클릭 횟수: ${clickCount + 1}\n소요 시간: ${elapsedTime}초`);
             
@@ -115,15 +123,7 @@ export default function Condition1() {
                 )
             );
             router.push("/task1/c2"); // /task1/c2로 라우팅
-        }
-    };
-
-    const getTouchDistance = (touches) => {
-        const [touch1, touch2] = touches;
-        return Math.sqrt(
-            Math.pow(touch2.clientX - touch1.clientX, 2) +
-            Math.pow(touch2.clientY - touch1.clientY, 2)
-        );
+        }}
     };
 
 
@@ -139,6 +139,7 @@ export default function Condition1() {
                 <div id="info">실험자: {experimentId || "정보 없음"}</div>
                 <div id="info">총 클릭 횟수: {clickCount}</div>
                 <div id="info">소요 시간: {elapsedTime}초</div>
+                <ScaleInfo scale={scale} />
             </InfoContainer>
             <Button onClick={startTimer} disabled={isTimerRunning}>
                 {isTimerRunning ? "실험 진행 중..." : "실험 시작"}

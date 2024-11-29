@@ -17,6 +17,14 @@ import {
 } from "../../styles/c1Style.js";
 import { MapCon, M1Con, M1ConD, M2Con, M3Con, M4Con, MA, MB } from "../../styles/mapStyle";
 
+const ScaleInfo = ({ scale }) => {
+    return (
+        <div style={{ fontWeight: "bold", marginTop: "10px" }}>
+            확대율: {scale.toFixed(2)}x
+        </div>
+    );
+};
+
 export default function Condition1() {
     const router = useRouter();
     const { id } = router.query;
@@ -25,7 +33,7 @@ export default function Condition1() {
     useTouchDrag();
 
     const [clickCount, setClickCount] = useState(0);
-    const MINIMUM_SCALE = 1; // 확대 배수를 조절할 수 있습니다
+    const MINIMUM_SCALE = 2; // 확대 배수를 조절할 수 있습니다
 
     const taskId = 1;
     const conditionId = 1;
@@ -66,6 +74,7 @@ export default function Condition1() {
                 <div id="info">탐색 매장 수: 1</div>
                 <div id="info">총 클릭 횟수: {clickCount}</div>
                 <div id="info">소요 시간: {elapsedTime}초</div>
+                <ScaleInfo scale={scale} />
             </InfoContainer>
             <Button onClick={startTimer} disabled={isTimerRunning}>
                 {isTimerRunning ? "실험 진행 중..." : "실험 시작"}

@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useTimer } from "../../hooks/useTimer";
 import TimerModal from "@/components/TimeModal";
 import { useTimerModal } from "@/hooks/useModal";
+import { useInfoScale } from "../../hooks/useInfoScale"; 
+import { ScaleInfo } from "@/components/ScaleInfo";
 import { useMapControlBtn } from "../../hooks/useMapControlBtn.js";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { experimentIdState, taskState } from "../../atoms/atoms.js";
@@ -46,6 +48,8 @@ export default function Condition2() {
 
     const experimentId = useRecoilValue(experimentIdState);
     const [tasks, setTasks] = useRecoilState(taskState);
+    const MINIMUM_SCALE = 1.5;
+    const { scaleI, updateScale } = useInfoScale(1); 
 
     const [clickCount, setClickCount] = useState(0); // 클릭 횟수 상태
 
@@ -121,6 +125,9 @@ export default function Condition2() {
 
     // 맞게 클릭했을 때 동작
     const handleStoreClick = (storeId) => {
+        if (scale >= MINIMUM_SCALE) {
+            setClickCount((prev) => prev + 1);
+
         if (storeId === targetStores[currentTargetIndex].id) {
             if (currentTargetIndex === targetStores.length - 1) {
                 alert( `정답입니다!\n모든 매장을 찾았습니다!\n총 클릭 횟수: 
@@ -153,7 +160,7 @@ export default function Condition2() {
                 `정답입니다! 다음 매장: ${targetStores[currentTargetIndex + 1].id[0]}구역에 ${targetStores[currentTargetIndex + 1].name}를 찾아주세요!`
             );
             setCurrentTargetIndex((prevIndex) => prevIndex + 1);
-        }
+        }}
     }}
     // 순서에 맞지 않는 매장은 무시
 
@@ -174,6 +181,7 @@ export default function Condition2() {
                 <div id="info">실험자: {experimentId || "정보 없음"}</div>
                 <div id="info">총 클릭 횟수: {clickCount}</div>
                 <div id="info">소요 시간: {elapsedTime}초</div>
+                <ScaleInfo scale={scale} />
                 <div id="info" style={{ fontWeight: "bold" }}> 운영자 모드  </div>
                 <AdminToggleButton onClick={toggleAdminMode}>
                     {isAdminMode ? "활성화" : "비활성화"}

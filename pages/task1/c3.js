@@ -4,6 +4,8 @@ import { useTimer } from "../../hooks/useTimer";
 import TimerModal from "@/components/TimeModal";
 import { useTimerModal } from "@/hooks/useModal";
 import { useTouchMode } from "@/hooks/useTouchMode";
+import { ScaleInfo } from "@/components/ScaleInfo";
+import { useInfoScale } from "../../hooks/useInfoScale"; 
 import { useRecoilValue, useRecoilState } from "recoil";
 import { experimentIdState, taskState } from "../../atoms/atoms.js";
 import { storeDataA } from "../../data/storedataA.js";
@@ -37,6 +39,8 @@ export default function Condition3() {
     const { isModalVisible, startTimer: handleStartTimer } = useTimerModal(startTimer); // 타이머 시작
     const { scale, position, handleTouchStart, handleTouchMove, handleTouchEnd} = useTouchMode(mode);
     const [clickCount, setClickCount] = useState(0); // 클릭 횟수 상태
+    const MINIMUM_SCALE = 1.5;
+    const { scaleI, updateScale } = useInfoScale(1); 
     
     
     const taskId = 1;
@@ -88,6 +92,8 @@ export default function Condition3() {
 
     // 맞게 클릭했을 때 동작
     const handleStoreClick = (storeId) => {
+        if (scale >= MINIMUM_SCALE) {
+            setClickCount((prev) => prev + 1);
         if (mode === "touch" & storeId === targetStore.id) {
             alert(`정답입니다!\n총 클릭 횟수: ${clickCount + 1}\n소요 시간: ${elapsedTime}초`);
             stopTimer();
@@ -112,7 +118,7 @@ export default function Condition3() {
                 )
             );
             router.push("/task2/c1"); 
-        }
+        }}
     };
 
 
@@ -129,6 +135,7 @@ export default function Condition3() {
                 <div id="info">실험자: {experimentId || "정보 없음"}</div>
                 <div id="info">총 클릭 횟수: {clickCount}</div>
                 <div id="info">소요 시간: {elapsedTime}초</div>
+                <ScaleInfo scale={scale} />
             </InfoContainer>
 
             <Nav>

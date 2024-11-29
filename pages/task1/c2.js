@@ -4,6 +4,8 @@ import { useTimer } from "../../hooks/useTimer";
 import { useMapControlBtn } from "../../hooks/useMapControlBtn.js";
 import TimerModal from "@/components/TimeModal";
 import { useTimerModal } from "@/hooks/useModal";
+import { ScaleInfo } from "@/components/ScaleInfo";
+import { useInfoScale } from "../../hooks/useInfoScale"; 
 import { useRecoilValue, useRecoilState } from "recoil";
 import { experimentIdState, taskState } from "../../atoms/atoms.js";
 import { storeDataA } from "../../data/storedataA.js";
@@ -47,6 +49,8 @@ export default function Condition2() {
     const [tasks, setTasks] = useRecoilState(taskState);
 
     const [clickCount, setClickCount] = useState(0); // 클릭 횟수 상태
+    const MINIMUM_SCALE = 1.5;
+    const { scaleI, updateScale } = useInfoScale(1); 
 
     const taskId = 1;
     const conditionId = 2;
@@ -110,6 +114,9 @@ export default function Condition2() {
 
     // 맞게 클릭했을 때 동작
     const handleStoreClick = (storeId) => {
+        if (scale >= MINIMUM_SCALE) {
+            setClickCount((prev) => prev + 1);
+
         if (storeId === targetStore.id) {
 
             alert(`정답입니다!\n총 클릭 횟수: ${clickCount + 1}\n소요 시간: ${elapsedTime}초`);
@@ -135,7 +142,7 @@ export default function Condition2() {
                 )
             );
             router.push("/task1/c3");
-        }
+        }}
     };
 
 
@@ -159,6 +166,7 @@ export default function Condition2() {
                 <div id="info">실험자: {experimentId || "정보 없음"}</div>
                 <div id="info">총 클릭 횟수: {clickCount}</div>
                 <div id="info">소요 시간: {elapsedTime}초</div>
+                <ScaleInfo scale={scale} />
                 <div id="info" style={{ fontWeight: "bold" }}> 운영자 모드  </div>
                 <AdminToggleButton onClick={toggleAdminMode}>
                     {isAdminMode ? "활성화" : "비활성화"}

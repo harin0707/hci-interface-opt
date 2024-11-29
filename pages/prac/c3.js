@@ -2,6 +2,8 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useTimer } from "../../hooks/useTimer";
 import { useTouchMode } from "@/hooks/useTouchMode";
+import { useInfoScale } from "../../hooks/useInfoScale"; 
+import { ScaleInfo } from "@/components/ScaleInfo";
 import { storeDataA } from "../../data/storedataA.js";
 import { storeDataB } from "../../data/storedataB.js";
 import { storeDataC } from "../../data/storedataC.js";
@@ -34,6 +36,10 @@ export default function Condition3() {
         name: "스타벅스", // 찾아야 하는 매장 이름
         id: "A-1", // 찾아야 하는 매장 ID
     };
+
+    const MINIMUM_SCALE = 1.5;
+    const { scaleI, updateScale } = useInfoScale(1); 
+
 
         useEffect(() => {
             const preventPinchZoom = (e) => {
@@ -80,11 +86,13 @@ export default function Condition3() {
 
     // 맞게 클릭했을 때 동작
     const handleStoreClick = (storeId) => {
+        if (scale >= MINIMUM_SCALE) {
+            setClickCount((prev) => prev + 1);
         if (mode === "touch" & storeId === targetStore.id) {
             alert(`정답입니다!\n총 클릭 횟수: ${clickCount + 1}\n소요 시간: ${elapsedTime}초`);
-            setIsTimerRunning(false); // 타이머 중단
+            stopTimer(); // 타이머 중단
             router.push("/"); 
-        }
+        }}
     };
 
 
@@ -102,6 +110,7 @@ export default function Condition3() {
                 <div id="info">탐색 매장 수: 1</div>
                 <div id="info">총 클릭 횟수: {clickCount}</div>
                 <div id="info">소요 시간: {elapsedTime}초</div>
+                <ScaleInfo scale={scale} />
             </InfoContainer>
 
             <Nav>

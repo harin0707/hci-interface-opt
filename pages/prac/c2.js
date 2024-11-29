@@ -2,6 +2,8 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useTimer } from "../../hooks/useTimer";
 import { useMapControlBtn } from "../../hooks/useMapControlBtn.js";
+import { useInfoScale } from "../../hooks/useInfoScale"; 
+import { ScaleInfo } from "@/components/ScaleInfo";
 import { storeDataA } from "../../data/storedataA.js";
 import { storeDataB } from "../../data/storedataB.js";
 import { storeDataC } from "../../data/storedataC.js";
@@ -40,6 +42,8 @@ export default function Condition2() {
     } = useMapControlBtn(isAdminMode);
 
     const [clickCount, setClickCount] = useState(0); // 클릭 횟수 상태
+    const MINIMUM_SCALE = 1.5;
+    const { scaleI, updateScale } = useInfoScale(1); 
 
     
     useEffect(() => {
@@ -85,11 +89,13 @@ export default function Condition2() {
 
     // 맞게 클릭했을 때 동작
     const handleStoreClick = (storeId) => {
+        if (scale >= MINIMUM_SCALE) {
+            setClickCount((prev) => prev + 1);
         if (storeId === targetStore.id) {
             alert(`정답입니다!\n총 클릭 횟수: ${clickCount + 1}\n소요 시간: ${elapsedTime}초`);
-            setIsTimerRunning(false); // 타이머 중단
+            stopTimer(); // 타이머 중단
             router.push("/");
-        }
+        }}
     };
 
 
@@ -107,6 +113,7 @@ export default function Condition2() {
                 <div id="info">탐색 매장 수: 1</div>
                 <div id="info">총 클릭 횟수: {clickCount}</div>
                 <div id="info">소요 시간: {elapsedTime}초</div>
+                <ScaleInfo scale={scale} />
                 <div id="info" style={{ fontWeight: "bold" }}> 운영자 모드  </div>
                 <AdminToggleButton onClick={toggleAdminMode}>
                     {isAdminMode ? "활성화" : "비활성화"}
