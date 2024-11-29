@@ -90,6 +90,9 @@ export const ArrorContainer = styled.div`
     flex-direction: column;
     z-index: 100;
     gap: 0;
+    width: 100px;
+    justify-content: center;
+    align-items: center;
 `;
 
 export const ArrowButton = styled.button`
@@ -99,6 +102,7 @@ export const ArrowButton = styled.button`
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    width: 50px;
 
     &:hover {
         background-color: #005bb5;
