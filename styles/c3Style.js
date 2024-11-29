@@ -61,6 +61,7 @@ display: flex;
 width: 80vw;
 height: 70vh;
 background-color: #BFD1E2;
+border: 2px solid #333;
 
 transform-origin: center;
 pointer-events: auto;
@@ -155,7 +156,7 @@ export const MA = styled.div`
     justify-content: center;
     color: black;
     font-weight: bold;
-    font-size: 0.2rem;
+    font-size: 0.3rem;
     margin: 1px;
     z-index: 10;
 
@@ -171,7 +172,7 @@ export const MB = styled.div`
     justify-content: center;
     color: black;
     font-weight: bold;
-    font-size: 0.2rem;
+    font-size: 0.3rem;
     margin: 1px;
 
     padding: 1px;

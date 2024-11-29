@@ -41,10 +41,10 @@ display: flex;
 width: 80vw;
 height: 70vh;
 touch-action: none;  
+border: 2px solid #333;
 
 background-color: #BFD1E2;
 overflow: hidden;
-border: 2px solid #ccc;
 
 `
 

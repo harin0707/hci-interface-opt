@@ -163,7 +163,7 @@ export default function Condition3() {
                 >
                 <M1Con isColumn="column"> 
                     <M2Con id="3" style={{
-                        borderRight: "solid 15px #CFBFBA",
+                        borderRight: "solid 15px gray",
                     }}> 
                     {storeDataA.map((store) => (
                     <MA onClick={() => handleStoreClick(store.id)} 
@@ -178,7 +178,7 @@ export default function Condition3() {
                     </M2Con>
                     <M2Con id="7"> 
                         <M3Con id="7" style={{
-                        borderBottom: "solid 5px #CFBFBA",
+                        borderBottom: "solid 5px gray",
                     }} >{storeDataB.map((store) => (<MB onClick={() => handleStoreClick(store.id)} key={store.id} style={{
                             width:store.width,
                             height:store.height,
@@ -188,7 +188,7 @@ export default function Condition3() {
                             backgroundColor: store.bg,
                         }} disabled={mode !== "touch"}>{store.name}</MB>))}</M3Con>
                         <M3Con id="3" style={{
-                        borderTop: "solid 10px #CFBFBA",
+                        borderTop: "solid 10px gray",
                     }}>{storeDataC.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
                                 width:store.width,
                                 height:store.height,
@@ -212,8 +212,8 @@ export default function Condition3() {
                     <M2Con id="5"> 
                         <M4Con id="4" style={{
                             transform: `rotate 0deg)`,
-                            borderTop: "solid 10px #CFBFBA",
-                            borderRight: "solid 10px #CFBFBA",
+                            borderTop: "solid 10px gray",
+                            borderRight: "solid 10px gray",
                         }} >{storeDataE.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
                             width:store.width,
                             height:store.height,
@@ -223,8 +223,8 @@ export default function Condition3() {
                             backgroundColor: store.bg,
                         }} disabled={mode !== "touch"}>{store.name}</MA>))}</M4Con>
                         <M4Con id="6" isColumn="column" style={{
-                        borderTop: "solid 10px #CFBFBA",
-                        borderLeft: "solid 10px #CFBFBA",
+                        borderTop: "solid 10px gray",
+                        borderLeft: "solid 10px gray",
                         transform: `rotate(-20deg)`,
                         
                     }}>{storeDataF.map((store) => (<MA onClick={() => handleStoreClick(store.id)} key={store.id} style={{
