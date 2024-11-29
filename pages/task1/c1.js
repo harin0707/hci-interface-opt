@@ -222,6 +222,7 @@ export default function Condition1() {
             </Button>
             <MapContainer>
                 <MapCon
+                className = "map-container"
                 onMouseDown={handleDragStart}
                 onMouseMove={handleDragMove}
                 onMouseUp={handleDragEnd}
