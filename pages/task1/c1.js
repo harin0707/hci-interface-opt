@@ -16,7 +16,7 @@ import {
     Btn,
     MapContainer,
 } from "../../styles/c1Style.js";
-import { M1Con, M1ConD, M2Con, M3Con, M4Con, MA, MB } from "../../styles/mapStyle";
+import { MapCon, M1Con, M1ConD, M2Con, M3Con, M4Con, MA, MB } from "../../styles/mapStyle";
 
 
 
@@ -225,12 +225,10 @@ export default function Condition1() {
                 {isTimerRunning ? "실험 진행 중..." : "실험 시작"}
             </Button>
             <MapContainer>
-                <MapCon>
-                    style={{
+                <MapCon
+                style={{
                     transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-                    }}
-
-                
+                    }}>
                 <M1Con isColumn="column"> 
                     <M2Con id="3"
                     style={{
