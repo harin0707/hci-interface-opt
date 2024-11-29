@@ -55,6 +55,7 @@ export const Button = styled.button`
 `;
 
 export const MapContainer = styled.div`
+position: relative;
 padding: 1px;
 display: flex;
 width: 80vw;
@@ -62,6 +63,12 @@ height: 70vh;
 
 transform-origin: center;
 pointer-events: auto;
+
+background-color: #FFD2B2;
+`
+
+export const MapCon = styled.div`
+
 `
 
 export const Btn = styled.button`

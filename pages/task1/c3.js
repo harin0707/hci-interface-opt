@@ -19,6 +19,7 @@ import {
     MapContainer,
     Nav, M1Con, M1ConD, M2Con, M3Con, M4Con, MA, MB 
 } from "../../styles/c3Style.js";
+import { MapCon } from "@/styles/mapStyle";
 
 export default function Condition3() {
     const router = useRouter();
@@ -230,13 +231,6 @@ export default function Condition3() {
 
     return (
         <Container
-            onMouseDown={handleDragStart}
-            onMouseMove={handleDragMove}
-            onMouseUp={handleDragEnd}
-            onMouseLeave={handleDragEnd}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
             >
 
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
@@ -262,16 +256,24 @@ export default function Condition3() {
                 <ModeButton 
                     isActive={mode === "drag"}onClick={() => setMode("drag")}>확대 모드
                 </ModeButton>
-                
-                
                 </ModeContainer>
 
             </Nav>
 
-            <MapContainer
-                style={{
-                    transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-                }}>
+            <MapContainer>
+                    <MapCon
+                        onMouseDown={handleDragStart}
+                        onMouseMove={handleDragMove}
+                        onMouseUp={handleDragEnd}
+                        onMouseLeave={handleDragEnd}
+                        onTouchStart={handleTouchStart}
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={handleTouchEnd}
+                    style={{
+                        transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+                    }}
+                    
+                    >
                 <M1Con isColumn="column"> 
                     <M2Con id="3" style={{
                         borderRight: "solid 15px #CFBFBA",
@@ -348,6 +350,7 @@ export default function Condition3() {
                         }} disabled={mode !== "touch"}>{store.name}</MA>))}</M4Con>
                     </M2Con>
                 </M1ConD>
+                </MapCon>
             </MapContainer>
 
         </Container>

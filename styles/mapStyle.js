@@ -2,6 +2,17 @@
 
 import styled from "styled-components";
 
+
+export const MapCon = styled.div`
+width: 100%;
+height: 100%;
+display: flex;
+margin: 0;
+
+background-color: #FFD2B2;
+overflow: hidden;
+`
+
 export const M1Con = styled.div`
     display: flex;
     flex-direction: ${({ isColumn }) => (isColumn === "column" ? "row" : "column")}; /* id에 따라 방향 변경 */

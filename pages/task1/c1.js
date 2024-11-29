@@ -224,24 +224,13 @@ export default function Condition1() {
             <Button onClick={startTimer} disabled={isTimerRunning}>
                 {isTimerRunning ? "실험 진행 중..." : "실험 시작"}
             </Button>
-            <MapContainer
-                onMouseDown={handleDragStart}
-                onMouseMove={handleDragMove}
-                onMouseUp={handleDragEnd}
-                onTouchStart={(e) => {
-                    e.preventDefault(); // 기본 터치 동작 방지
-                    handleZoomStart(e);
-                    handleDragStart(e);
-                }}
-                onTouchMove={(e) => {
-                    e.preventDefault(); // 기본 터치 동작 방지
-                    handleZoom(e);
-                    handleDragMove(e);
-                }}
-                onTouchEnd={handleDragEnd}
-                style={{
+            <MapContainer>
+                <MapCon>
+                    style={{
                     transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-                }}>
+                    }}
+
+                
                 <M1Con isColumn="column"> 
                     <M2Con id="3"
                     style={{
@@ -332,6 +321,7 @@ export default function Condition1() {
                         </M4Con>
                     </M2Con>
                 </M1ConD>
+                </MapCon>
             </MapContainer>
         </Container>
     );
