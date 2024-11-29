@@ -45,20 +45,6 @@ export const storeDataE = [
     { id: "E-42", name: "하남스타필드", width: 17, height: 19, rotation: 4 },
     { id: "E-43", name: "판교테크노밸리시네마", width: 19, height: 23, rotation: -2 },
     { id: "E-44", name: "센텀시티시네마", width: 22, height: 24, rotation: 6 },
-    { id: "E-45", name: "타임스퀘어시네마", width: 15, height: 18, rotation: 2 },
-    { id: "E-46", name: "광화문극장", width: 16, height: 20, rotation: 3 },
-    { id: "E-47", name: "DMC시네마", width: 20, height: 22, rotation: 4 },
-    { id: "E-48", name: "파주아울렛극장", width: 18, height: 24, rotation: -3 },
-    { id: "E-49", name: "용인동백시네마", width: 19, height: 21, rotation: 5 },
-    { id: "E-50", name: "김포한강극장", width: 17, height: 20, rotation: 3 },
-    { id: "E-51", name: "동대문디자인플라자극장", width: 18, height: 23, rotation: 5 },
-    { id: "E-52", name: "송도트리플스트리트극장", width: 19, height: 25, rotation: -2 },
-    { id: "E-53", name: "강릉아트센터극장", width: 20, height: 22, rotation: 4 },
-    { id: "E-54", name: "제주아라리오극장", width: 15, height: 19, rotation: -3 },
-    { id: "E-55", name: "코엑스아트하우스", width: 22, height: 25, rotation: 6 },
-    { id: "E-56", name: "수원AK플라자극장", width: 16, height: 18, rotation: 2 },
-    { id: "E-57", name: "청주롯데시네마", width: 19, height: 24, rotation: -1 },
-    { id: "E-58", name: "부산영화의전당극장", width: 20, height: 25, rotation: 5 },
-    { id: "E-59", name: "익산CGV", width: 17, height: 21, rotation: 3 },
+
 
 ];

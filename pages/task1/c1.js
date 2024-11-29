@@ -196,6 +196,17 @@ export default function Condition1() {
         }
     };
     
+    useEffect(() => {
+        const preventDefaultTouch = (e) => {
+            if (e.touches.length > 1) e.preventDefault(); // 멀티 터치 기본 동작 방지
+        };
+    
+        document.addEventListener("touchmove", preventDefaultTouch, { passive: false });
+    
+        return () => {
+            document.removeEventListener("touchmove", preventDefaultTouch);
+        };
+    }, []);
 
 
 
@@ -223,8 +234,19 @@ export default function Condition1() {
                 {isTimerRunning ? "실험 진행 중..." : "실험 시작"}
             </Button>
             <MapContainer
+
+            onTouchStart={(e) => {
+                handleZoomStart(e); // 확대 시작 이벤트
+            }}
+            onTouchMove={(e) => {
+                handleZoom(e); // 확대 동작 이벤트
+            }}
+            onTouchEnd={() => {
+                handleDragEnd(); // 드래그 종료
+            }}
             style={{
             transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+            overflow: "hidden", // 확대/축소 시 다른 영역을 숨김
             }}>
                 <M1Con isColumn="column"> 
                     <M2Con id="3"
