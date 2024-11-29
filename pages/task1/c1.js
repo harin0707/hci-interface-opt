@@ -1,7 +1,9 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useTimer } from "../../hooks/useTimer";
+import TimerModal from "@/components/TimeModal";
 import { useTouchDrag } from "../../hooks/useTouchDrag";
+import { useTimerModal } from "@/hooks/useModal";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { experimentIdState, taskState } from "../../atoms/atoms.js";
 import { storeDataA } from "../../data/storedataA.js";
@@ -34,6 +36,7 @@ export default function Condition1() {
     const { elapsedTime, isTimerRunning, startTimer, stopTimer } = useTimer();
     const { scale, position, handleTouchStart, handleTouchMove, handleTouchEnd } =
     useTouchDrag(); 
+    const { isModalVisible, startTimer: handleStartTimer } = useTimerModal(startTimer); // 타이머 시작
 
     const taskId = 1;
     const conditionId = 1;
@@ -43,6 +46,8 @@ export default function Condition1() {
         name: "커피빈", // 찾아야 하는 매장 이름
         id: "A-8", // 찾아야 하는 매장 ID
     };
+
+
     
 
 
@@ -123,7 +128,11 @@ export default function Condition1() {
 
 
     return (
+
         <Container>
+            <TimerModal isVisible={isModalVisible} onStart={handleStartTimer} />
+
+
             <div style={{ fontWeight: "bold" }}> [조건 1] 자유로운 확대와 드래그</div>
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
 

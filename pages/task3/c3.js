@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useTimer } from "../../hooks/useTimer";
+import { useTimer } from "../../hooks/useTimer";
+import TimerModal from "@/components/TimeModal";
 import { useTouchMode } from "@/hooks/useTouchMode";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { experimentIdState, taskState } from "../../atoms/atoms.js";
@@ -30,6 +32,7 @@ export default function Condition3() {
 
     const [clickCount, setClickCount] = useState(0); // 클릭 횟수 상태
     const { elapsedTime, isTimerRunning, startTimer, stopTimer } = useTimer();
+    const { isModalVisible, startTimer: handleStartTimer } = useTimerModal(startTimer); // 타이머 시작
     
     const [mode, setMode] = useState("touch"); // 모드 상태 (기본은 "zoom")
     const { scale, position, handleTouchStart, handleTouchMove, handleTouchEnd} = useTouchMode(mode);
@@ -125,6 +128,7 @@ export default function Condition3() {
 
     return (
         <Container>
+            <TimerModal isVisible={isModalVisible} onStart={handleStartTimer} />
 
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
             <div style={{ fontWeight: "bold" }}> [조건 3] 터치/비터치 모드 구분 </div>

@@ -2,7 +2,8 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useTimer } from "../../hooks/useTimer";
 import { useMapControlBtn } from "../../hooks/useMapControlBtn.js";
-import styled from "styled-components";
+import TimerModal from "@/components/TimeModal";
+import { useTimerModal } from "@/hooks/useModal";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { experimentIdState, taskState } from "../../atoms/atoms.js";
 import { storeDataA } from "../../data/storedataA.js";
@@ -31,7 +32,8 @@ export default function Condition2() {
     const router = useRouter();
     const { id } = router.query;
     const { elapsedTime, isTimerRunning, startTimer, stopTimer } = useTimer();
-    const [isAdminMode, setIsAdminMode] = useState(true); // 운영자 모드 상태 추가
+    const [isAdminMode, setIsAdminMode] = useState(false); // 운영자 모드 상태 추가
+    const { isModalVisible, startTimer: handleStartTimer } = useTimerModal(startTimer); // 타이머 시작
     const {
         scale,
         position,
@@ -146,6 +148,7 @@ export default function Condition2() {
 
     return (
         <Container>
+            <TimerModal isVisible={isModalVisible} onStart={handleStartTimer} />
 
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
             <div style={{ fontWeight: "bold" }}> [조건 2] 확대/축소, 드래그 버튼 구현</div>

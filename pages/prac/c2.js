@@ -29,7 +29,7 @@ export default function Condition2() {
     const router = useRouter();
     const { id } = router.query;
     const { elapsedTime, isTimerRunning, startTimer, stopTimer } = useTimer();
-    const [isAdminMode, setIsAdminMode] = useState(true); // 운영자 모드 상태 추가
+    const [isAdminMode, setIsAdminMode] = useState(false); // 운영자 모드 상태 추가
     const {
         scale,
         position,
