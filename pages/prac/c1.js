@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
-import { experimentIdState, taskState } from "../../atoms/atoms.js";
+import { useTimer } from "../../hooks/useTimer";
 import { storeDataA } from "../../data/storedataA.js";
 import { storeDataB } from "../../data/storedataB.js";
 import { storeDataC } from "../../data/storedataC.js";
@@ -20,10 +19,9 @@ import { M1Con, M1ConD, M2Con, M3Con, M4Con, MA, MB } from "../../styles/mapStyl
 export default function Condition1() {
     const router = useRouter();
     const { id } = router.query;
+    const { elapsedTime, isTimerRunning, startTimer, stopTimer } = useTimer();
 
-    const [elapsedTime, setElapsedTime] = useState(0); // 소요 시간 상태
     const [clickCount, setClickCount] = useState(0); // 클릭 횟수 상태
-    const [isTimerRunning, setIsTimerRunning] = useState(false); // 타이머 상태
 
     const taskId = 1;
     const conditionId = 1;
@@ -48,31 +46,12 @@ export default function Condition1() {
         };
     }, []);
 
-    // 타이머 시작 및 중단 관리
-    useEffect(() => {
-        let timer;
-        if (isTimerRunning) {
-            timer = setInterval(() => {
-                setElapsedTime((prev) => prev + 1);
-            }, 1000);
-        }
-
-        return () => clearInterval(timer); // 타이머 정리
-    }, [isTimerRunning]);
-
-
-    // 타이머 시작 핸들러
-    const handleStartTimer = () => {
-        setIsTimerRunning(true); // 타이머 시작
-        setElapsedTime(0); // 시간 초기화
-    };
-
 
     // 맞게 클릭했을 때 동작
     const handleStoreClick = (storeId) => {
         if (storeId === targetStore.id) {
             alert(`정답입니다!\n총 클릭 횟수: ${clickCount + 1}\n소요 시간: ${elapsedTime}초`);
-            setIsTimerRunning(false); // 타이머 중단
+            stopTimer(false); // 타이머 중단
             router.push("/"); // 
         }
     };
@@ -92,7 +71,7 @@ export default function Condition1() {
                 <div id="info">총 클릭 횟수: {clickCount}</div>
                 <div id="info">소요 시간: {elapsedTime}초</div>
             </InfoContainer>
-            <Button onClick={handleStartTimer} disabled={isTimerRunning}>
+            <Button onClick={startTimer} disabled={isTimerRunning}>
                 {isTimerRunning ? "실험 진행 중..." : "실험 시작"}
             </Button>
             <MapContainer>

@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
+import { useTimer } from "../../hooks/useTimer";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { experimentIdState, taskState } from "../../atoms/atoms.js";
 import { storeDataA } from "../../data/storedataA.js";
@@ -31,9 +31,10 @@ export default function Condition1() {
 
     const [scale, setScale] = useState(1); // 확대/축소 배율
     const [position, setPosition] = useState({ x: 0, y: 0 });
-    const [elapsedTime, setElapsedTime] = useState(0); // 소요 시간 상태
     const [clickCount, setClickCount] = useState(0); // 클릭 횟수 상태
-    const [isTimerRunning, setIsTimerRunning] = useState(false); // 타이머 상태
+
+    // 훅 사용
+    const { elapsedTime, isTimerRunning, startTimer, stopTimer } = useTimer();
 
     const taskId = 1;
     const conditionId = 1;
@@ -44,6 +45,11 @@ export default function Condition1() {
         id: "A-8", // 찾아야 하는 매장 ID
     };
     
+
+
+
+
+
 
     // taskId가 1이고 conditionId가 1인 데이터 필터링
     const conditionData =
@@ -81,17 +87,6 @@ export default function Condition1() {
         };
     }, []);
 
-    // 타이머 시작 및 중단 관리
-    useEffect(() => {
-        let timer;
-        if (isTimerRunning) {
-            timer = setInterval(() => {
-                setElapsedTime((prev) => prev + 1);
-            }, 1000);
-        }
-
-        return () => clearInterval(timer); // 타이머 정리
-    }, [isTimerRunning]);
 
     // Recoil 상태에 실시간 데이터 업데이트
         useEffect(() => {
@@ -115,18 +110,14 @@ export default function Condition1() {
             );
         }, [elapsedTime, clickCount, setTasks]);
 
-    // 타이머 시작 핸들러
-    const handleStartTimer = () => {
-        setIsTimerRunning(true); // 타이머 시작
-        setElapsedTime(0); // 시간 초기화
-    };
-
 
     // 맞게 클릭했을 때 동작
     const handleStoreClick = (storeId) => {
         if (storeId === targetStore.id) {
             alert(`정답입니다!\n총 클릭 횟수: ${clickCount + 1}\n소요 시간: ${elapsedTime}초`);
-            setIsTimerRunning(false); // 타이머 중단
+            
+            stopTimer();
+
             setTasks((prevTasks) =>
                 prevTasks.map((task) =>
                     task.taskId === taskId
@@ -146,9 +137,6 @@ export default function Condition1() {
                         : task
                 )
             );
-            // 전체 문서 확대율을 기본값으로 설정
-        // document.body.style.zoom = "1"; 
-        // document.body.style.transform = ""; 
             router.push("/task1/c2"); // /task1/c2로 라우팅
         }
     };
@@ -231,7 +219,7 @@ export default function Condition1() {
                 <div id="info">총 클릭 횟수: {clickCount}</div>
                 <div id="info">소요 시간: {elapsedTime}초</div>
             </InfoContainer>
-            <Button onClick={handleStartTimer} disabled={isTimerRunning}>
+            <Button onClick={startTimer} disabled={isTimerRunning}>
                 {isTimerRunning ? "실험 진행 중..." : "실험 시작"}
             </Button>
             <MapContainer
