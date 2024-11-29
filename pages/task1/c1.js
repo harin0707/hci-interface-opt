@@ -149,61 +149,59 @@ export default function Condition1() {
     const [startPos, setStartPos] = useState({ x: 0, y: 0 }); // 드래그 시작 위치
 
     const handleDragStart = (e) => {
-        if (!isDragAllowed) return; // 쿨다운 중이면 동작하지 않음
-    
+        if (!e.target.closest(".map-container")) return; // MapContainer 내부에서만 작동
         setDragging(true);
         setStartPos({
-            x: e.clientX || e.touches[0]?.clientX,
-            y: e.clientY || e.touches[0]?.clientY,
+            x: e.touches[0]?.clientX,
+            y: e.touches[0]?.clientY,
         });
     };
     
     const handleDragMove = (e) => {
-        if (!dragging) return;
+        if (!e.target.closest(".map-container") || !dragging) return; // MapContainer 내부에서만 작동
     
-        const currentX = e.clientX || e.touches[0]?.clientX;
-        const currentY = e.clientY || e.touches[0]?.clientY;
+        const currentX = e.touches[0]?.clientX;
+        const currentY = e.touches[0]?.clientY;
     
         const deltaX = currentX - startPos.x;
         const deltaY = currentY - startPos.y;
     
         setPosition((prev) => {
-            const newX = prev.x + deltaX;
-            const newY = prev.y + deltaY;
-    
-            // MapContainer 크기를 벗어나지 않도록 제한
-            const maxOffsetX = (scale - 1) * MapContainerWidth / 2;
-            const maxOffsetY = (scale - 1) * MapContainerHeight / 2;
+            const maxOffsetX = (scale - 1) * 200; // MapContainer 너비의 절반 (400 / 2)
+            const maxOffsetY = (scale - 1) * 150; // MapContainer 높이의 절반 (300 / 2)
     
             return {
-                x: Math.max(-maxOffsetX, Math.min(newX, maxOffsetX)),
-                y: Math.max(-maxOffsetY, Math.min(newY, maxOffsetY)),
+                x: Math.max(-maxOffsetX, Math.min(prev.x + deltaX, maxOffsetX)),
+                y: Math.max(-maxOffsetY, Math.min(prev.y + deltaY, maxOffsetY)),
             };
         });
     
         setStartPos({ x: currentX, y: currentY });
     };
     
-    
-    const handleDragEnd = () => {
-        setDragging(false);
+
+    const handleZoomStart = (e) => {
+        if (!e.target.closest(".map-container")) return; // MapContainer 내부에서만 작동
+        if (e.touches.length === 2) {
+            const distance = getTouchDistance(e.touches);
+            setTouchStartDistance(distance);
+        }
     };
     
-
-
     const handleZoom = (e) => {
+        if (!e.target.closest(".map-container")) return; // MapContainer 내부에서만 작동
         if (e.touches.length === 2) {
             const currentDistance = getTouchDistance(e.touches);
             const scaleChange = currentDistance / touchStartDistance;
     
-            setScale((prevScale) => {
-                const newScale = Math.min(Math.max(prevScale * scaleChange, 0.5), 3); // 최소 0.5, 최대 3
-                return newScale;
-            });
+            setScale((prevScale) =>
+                Math.min(Math.max(prevScale * scaleChange, 0.5), 3) // 최소 0.5, 최대 3
+            );
     
-            setTouchStartDistance(currentDistance);
+            setTouchStartDistance(currentDistance); // 현재 거리 업데이트
         }
     };
+
 
 
 
