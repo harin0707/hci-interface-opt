@@ -56,8 +56,7 @@ export const MapContainer = styled.div`
     background-color: #BFD1E2;
     transform-origin: center;
     pointer-events: auto;
-    touch-action: none;  
-
+    
     background-color: #BFD1E2;
     overflow: hidden;
     border: 2px solid #333;

@@ -21,7 +21,7 @@ import {
     ArrowButton,
     AdminToggleButton,
 } from "../../styles/c2Style.js";
-import { M1Con, M1ConD, M2Con, M3Con, M4Con, MA, MB } from "../../styles/mapStyle";
+import { MapCon, M1Con, M1ConD, M2Con, M3Con, M4Con, MA, MB } from "../../styles/mapStyle";
 
 
 
@@ -135,9 +135,12 @@ export default function Condition2() {
 
             
             
-            <MapContainer style={{
-                    transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-                }}>
+            <MapContainer >
+
+            <MapCon
+            style={{
+            transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+            }}>
                 <M1Con isColumn="column"> 
                     <M2Con id="3" style={{
                         borderRight: "solid 15px #CFBFBA",
@@ -223,6 +226,7 @@ export default function Condition2() {
                         </M4Con>
                     </M2Con>
                 </M1ConD>
+                </MapCon>
             </MapContainer>
         </Container>
     );
