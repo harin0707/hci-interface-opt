@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useTimer } from "../../hooks/useTimer";
+import { useTouchDrag } from "../../hooks/useTouchDrag";
 import { storeDataA } from "../../data/storedataA.js";
 import { storeDataB } from "../../data/storedataB.js";
 import { storeDataC } from "../../data/storedataC.js";
@@ -14,12 +15,14 @@ import {
     Btn,
     MapContainer,
 } from "../../styles/c1Style.js";
-import { M1Con, M1ConD, M2Con, M3Con, M4Con, MA, MB } from "../../styles/mapStyle";
+import { MapCon, M1Con, M1ConD, M2Con, M3Con, M4Con, MA, MB } from "../../styles/mapStyle";
 
 export default function Condition1() {
     const router = useRouter();
     const { id } = router.query;
     const { elapsedTime, isTimerRunning, startTimer, stopTimer } = useTimer();
+    const { scale, position, handleTouchStart, handleTouchMove, handleTouchEnd } =
+    useTouchDrag(); 
 
     const [clickCount, setClickCount] = useState(0); // 클릭 횟수 상태
 
@@ -74,7 +77,18 @@ export default function Condition1() {
             <Button onClick={startTimer} disabled={isTimerRunning}>
                 {isTimerRunning ? "실험 진행 중..." : "실험 시작"}
             </Button>
-            <MapContainer>
+            <MapContainer 
+            onTouchStart={(e) => handleTouchStart(e, "map-container")}
+            onTouchMove={(e) => handleTouchMove(e, "map-container")}
+            onTouchEnd={handleTouchEnd}
+            >
+                <MapCon
+                className="map-container"
+                style={{
+                    transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+                    transformOrigin: "center",
+                }}
+                >
                 <M1Con isColumn="column"> 
                     <M2Con id="3"
                     style={{
@@ -165,6 +179,7 @@ export default function Condition1() {
                         </M4Con>
                     </M2Con>
                 </M1ConD>
+                </MapCon>
             </MapContainer>
         </Container>
     );

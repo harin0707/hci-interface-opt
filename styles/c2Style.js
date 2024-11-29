@@ -53,12 +53,12 @@ export const MapContainer = styled.div`
     display: flex;
     width: 80vw;
     height: 70vh;
-    background-color: #FFD2B2;
+    background-color: #BFD1E2;
     transform-origin: center;
     pointer-events: auto;
     touch-action: manipulation;
 
-    background-color: #FFD2B2;
+    background-color: #BFD1E2;
     overflow: hidden;
     border: 2px solid #333;
 `;

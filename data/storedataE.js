@@ -1,6 +1,6 @@
 // 15-25
 export const storeDataE = [
-    { id: "E", name: "E", color: "purple", size: 25, bg: "#FFD2B2" },
+    { id: "E", name: "E", color: "purple", size: 25, bg: "#BFD1E2" },
     { id: "E-1", name: "롯데시네마", width: 15, height: 19, rotation: 3 },
     { id: "E-2", name: "CGV", width: 20, height: 25, rotation: 5 },
     { id: "E-3", name: "메가박스", width: 19, height: 24, rotation: 6 },

@@ -1,6 +1,6 @@
 // 40-60
 export const storeDataF = [
-    { id: "F", name: "F", color: "hotpink", size: 40, bg: "#FFD2B2" },
+    { id: "F", name: "F", color: "hotpink", size: 40, bg: "#BFD1E2" },
     { id: "F-1", name: "우아한정리", width: 40, height: 42, rotation: 3 },
     { id: "F-2", name: "바디프랜드", width: 40, height: 50, rotation: 6 },
     { id: "F-3", name: "셀리턴", width: 40, height: 40, rotation: 2 },

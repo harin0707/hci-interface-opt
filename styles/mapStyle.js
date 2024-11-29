@@ -9,7 +9,7 @@ height: 100%;
 display: flex;
 margin: 0;
 
-background-color: #FFD2B2;
+background-color: #BFD1E2;
 overflow: hidden;
 `
 

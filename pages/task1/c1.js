@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useTimer } from "../../hooks/useTimer";
+import { useTouchDrag } from "../../hooks/useTouchDrag";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { experimentIdState, taskState } from "../../atoms/atoms.js";
 import { storeDataA } from "../../data/storedataA.js";
@@ -19,9 +20,6 @@ import {
 import { MapCon, M1Con, M1ConD, M2Con, M3Con, M4Con, MA, MB } from "../../styles/mapStyle";
 
 
-
-
-
 export default function Condition1() {
     const router = useRouter();
     const { id } = router.query;
@@ -29,12 +27,13 @@ export default function Condition1() {
     const experimentId = useRecoilValue(experimentIdState);
     const [tasks, setTasks] = useRecoilState(taskState);
 
-    const [scale, setScale] = useState(1); // 확대/축소 배율
-    const [position, setPosition] = useState({ x: 0, y: 0 });
-    const [clickCount, setClickCount] = useState(0); // 클릭 횟수 상태
+
+    const [clickCount, setClickCount] = useState(0); // 클릭 횟수
 
     // 훅 사용
     const { elapsedTime, isTimerRunning, startTimer, stopTimer } = useTimer();
+    const { scale, position, handleTouchStart, handleTouchMove, handleTouchEnd } =
+    useTouchDrag(); 
 
     const taskId = 1;
     const conditionId = 1;
@@ -44,33 +43,6 @@ export default function Condition1() {
         name: "커피빈", // 찾아야 하는 매장 이름
         id: "A-8", // 찾아야 하는 매장 ID
     };
-    
-
-
-
-
-
-
-    // taskId가 1이고 conditionId가 1인 데이터 필터링
-    const conditionData =
-        tasks
-            ?.find((task) => task.taskId === taskId)
-            ?.conditions.find((condition) => condition.conditionId === conditionId) || {
-            totalClicks: 0,
-            timeSpent: 0,
-        };
-
-        useEffect(() => {
-            const handleRouteChange = () => {
-                // 라우트 변경 시 확대 비율 초기화
-                document.body.style.zoom = "1";
-            };
-    
-            router.events.on("routeChangeComplete", handleRouteChange);
-            return () => {
-                router.events.off("routeChangeComplete", handleRouteChange);
-            };
-        }, [router.events]);
     
 
 
@@ -141,69 +113,13 @@ export default function Condition1() {
         }
     };
 
-    const ZOOM_COOLDOWN = 2000; // 확대/축소 쿨다운 시간
-    const DRAG_COOLDOWN = 2000; // 드래그 쿨다운 시간
-    const [isZoomAllowed, setIsZoomAllowed] = useState(true); // 확대 쿨다운 상태
-    const [isDragAllowed, setIsDragAllowed] = useState(true); // 드래그 쿨다운 상태
-    const [dragging, setDragging] = useState(false); // 드래그 상태
-    const [startPos, setStartPos] = useState({ x: 0, y: 0 }); // 드래그 시작 위치
-
-    const handleDragStart = (e) => {
-        if (!e.target.closest(".map-container")) return; // MapContainer 내부에서만 작동
-        setDragging(true);
-        setStartPos({
-            x: e.touches[0]?.clientX,
-            y: e.touches[0]?.clientY,
-        });
+    const getTouchDistance = (touches) => {
+        const [touch1, touch2] = touches;
+        return Math.sqrt(
+            Math.pow(touch2.clientX - touch1.clientX, 2) +
+            Math.pow(touch2.clientY - touch1.clientY, 2)
+        );
     };
-    
-    const handleDragMove = (e) => {
-        if (!e.target.closest(".map-container") || !dragging) return; // MapContainer 내부에서만 작동
-    
-        const currentX = e.touches[0]?.clientX;
-        const currentY = e.touches[0]?.clientY;
-    
-        const deltaX = currentX - startPos.x;
-        const deltaY = currentY - startPos.y;
-    
-        setPosition((prev) => {
-            const maxOffsetX = (scale - 1) * 200; // MapContainer 너비의 절반 (400 / 2)
-            const maxOffsetY = (scale - 1) * 150; // MapContainer 높이의 절반 (300 / 2)
-    
-            return {
-                x: Math.max(-maxOffsetX, Math.min(prev.x + deltaX, maxOffsetX)),
-                y: Math.max(-maxOffsetY, Math.min(prev.y + deltaY, maxOffsetY)),
-            };
-        });
-    
-        setStartPos({ x: currentX, y: currentY });
-    };
-    
-
-    const handleZoomStart = (e) => {
-        if (!e.target.closest(".map-container")) return; // MapContainer 내부에서만 작동
-        if (e.touches.length === 2) {
-            const distance = getTouchDistance(e.touches);
-            setTouchStartDistance(distance);
-        }
-    };
-    
-    const handleZoom = (e) => {
-        if (!e.target.closest(".map-container")) return; // MapContainer 내부에서만 작동
-        if (e.touches.length === 2) {
-            const currentDistance = getTouchDistance(e.touches);
-            const scaleChange = currentDistance / touchStartDistance;
-    
-            setScale((prevScale) =>
-                Math.min(Math.max(prevScale * scaleChange, 0.5), 3) // 최소 0.5, 최대 3
-            );
-    
-            setTouchStartDistance(currentDistance); // 현재 거리 업데이트
-        }
-    };
-
-
-
 
 
     return (
@@ -220,25 +136,18 @@ export default function Condition1() {
             <Button onClick={startTimer} disabled={isTimerRunning}>
                 {isTimerRunning ? "실험 진행 중..." : "실험 시작"}
             </Button>
-            <MapContainer>
+            <MapContainer 
+            onTouchStart={(e) => handleTouchStart(e, "map-container")}
+            onTouchMove={(e) => handleTouchMove(e, "map-container")}
+            onTouchEnd={handleTouchEnd}
+            >
                 <MapCon
-                className = "map-container"
-                onMouseDown={handleDragStart}
-                onMouseMove={handleDragMove}
-                onTouchStart={(e) => {
-                    if (e.touches.length > 1) e.preventDefault();
-                    handleZoomStart(e);
-                    handleDragStart(e);
-                }}
-                onTouchMove={(e) => {
-                    if (e.touches.length > 1) e.preventDefault();
-                    handleZoom(e);
-                    handleDragMove(e);
-                }}
+                className="map-container"
                 style={{
                     transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
                     transformOrigin: "center",
-                    }}>
+                }}
+                >
                 <M1Con isColumn="column"> 
                     <M2Con id="3"
                     style={{
@@ -334,8 +243,3 @@ export default function Condition1() {
         </Container>
     );
 }
-
-
-
-
-

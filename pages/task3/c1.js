@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useTimer } from "../../hooks/useTimer";
+import { useTouchDrag } from "../../hooks/useTouchDrag";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { experimentIdState, taskState } from "../../atoms/atoms.js";
 import { storeDataA } from "../../data/storedataA.js";
@@ -16,12 +17,14 @@ import {
     Btn,
     MapContainer,
 } from "../../styles/c1Style.js";
-import { M1Con, M1ConD, M2Con, M3Con, M4Con, MA, MB } from "../../styles/mapStyle";
+import { MapCon,M1Con, M1ConD, M2Con, M3Con, M4Con, MA, MB } from "../../styles/mapStyle";
 
 export default function Condition1() {
     const router = useRouter();
     const { id } = router.query;
     const { elapsedTime, isTimerRunning, startTimer, stopTimer } = useTimer();
+    const { scale, position, handleTouchStart, handleTouchMove, handleTouchEnd } =
+    useTouchDrag(); 
 
     const experimentId = useRecoilValue(experimentIdState);
     const [tasks, setTasks] = useRecoilState(taskState);
@@ -37,15 +40,6 @@ export default function Condition1() {
         { name: "휘슬러", id: "F-21" }, // 두 번째 매장
         { name: "아리따움", id: "D-6" }, // 세 번째 매장
     ];
-
-    // taskId가 1이고 conditionId가 1인 데이터 필터링
-    const conditionData =
-        tasks
-            ?.find((task) => task.taskId === taskId)
-            ?.conditions.find((condition) => condition.conditionId === conditionId) || {
-            totalClicks: 0,
-            timeSpent: 0,
-        };
 
     // 전역 클릭 이벤트 추가
     useEffect(() => {
@@ -140,7 +134,19 @@ export default function Condition1() {
             <Button onClick={startTimer} disabled={isTimerRunning}>
                 {isTimerRunning ? "실험 진행 중..." : "실험 시작"}
             </Button>
-            <MapContainer>
+            
+            <MapContainer 
+            onTouchStart={(e) => handleTouchStart(e, "map-container")}
+            onTouchMove={(e) => handleTouchMove(e, "map-container")}
+            onTouchEnd={handleTouchEnd}
+            >
+                <MapCon
+                className="map-container"
+                style={{
+                    transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+                    transformOrigin: "center",
+                }}
+                >
                 <M1Con isColumn="column"> 
                     <M2Con id="3"
                     style={{
@@ -231,6 +237,7 @@ export default function Condition1() {
                         </M4Con>
                     </M2Con>
                 </M1ConD>
+                </MapCon>
             </MapContainer>
         </Container>
     );
