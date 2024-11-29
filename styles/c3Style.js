@@ -60,15 +60,22 @@ padding: 1px;
 display: flex;
 width: 80vw;
 height: 70vh;
-background-color: #FFD2B2;
+background-color: #BFD1E2;
 
 transform-origin: center;
 pointer-events: auto;
 touch-action: none;  
+overflow: hidden;
 `
 
 export const MapCon = styled.div`
+width: 100%;
+height: 100%;
+display: flex;
+margin: 0;
 
+background-color: #BFD1E2;
+overflow: hidden;
 `
 
 export const Btn = styled.button`

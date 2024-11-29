@@ -139,11 +139,12 @@ export default function Condition1() {
             <MapContainer 
             onTouchStart={(e) => handleTouchStart(e, "map-container")}
             onTouchMove={(e) => handleTouchMove(e, "map-container")}
+            onTouchEnd={handleTouchEnd}
             style={{
                 touchAction: "none",
 
             }}
-            onTouchEnd={handleTouchEnd}
+            
 
             >
                 <MapCon
