@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useTimer } from "../../hooks/useTimer";
+import { useMapControlBtn } from "../../hooks/useMapControlBtn.js";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { experimentIdState, taskState } from "../../atoms/atoms.js";
 import { storeDataA } from "../../data/storedataA.js";
@@ -29,6 +30,16 @@ export default function Condition2() {
     const router = useRouter();
     const { id } = router.query;
     const { elapsedTime, isTimerRunning, startTimer, stopTimer } = useTimer();
+    const [isAdminMode, setIsAdminMode] = useState(true); // 운영자 모드 상태 추가
+    const {
+        scale,
+        position,
+        isZooming,
+        handleZoomIn,
+        handleZoomOut,
+        handleMoveStart,
+        handleMoveStop,
+    } = useMapControlBtn(isAdminMode);
 
     const experimentId = useRecoilValue(experimentIdState);
     const [tasks, setTasks] = useRecoilState(taskState);
@@ -36,14 +47,6 @@ export default function Condition2() {
     const [clickCount, setClickCount] = useState(0); // 클릭 횟수 상태
     
 
-    const [scale, setScale] = useState(1); // 확대/축소 배율
-    const [isZooming, setIsZooming] = useState(false); // 확대/축소 버튼 사용 상태
-
-    const [position, setPosition] = useState({ x: 0, y: 0 }); // 지도 이동 위치
-    const [isMoving, setIsMoving] = useState(false); // 버튼 지속 상태
-    const [moveDirection, setMoveDirection] = useState(null); // 이동 방향
-
-    const [isAdminMode, setIsAdminMode] = useState(true); // 운영자 모드 상태 추가
     useEffect(() => {
         const handleTouchMove = (e) => {
             if (!isAdminMode && e.touches.length > 1) {
@@ -62,98 +65,6 @@ export default function Condition2() {
         console.log(isAdminMode);
     };
 
-    
-    // 두 손가락 터치 관련 상태
-    const [touchStartDistance, setTouchStartDistance] = useState(null);
-    
-    // 터치 확대/축소 계산 함수
-    const getTouchDistance = (touches) => {
-        const [touch1, touch2] = touches;
-        return Math.sqrt(
-            Math.pow(touch2.clientX - touch1.clientX, 2) +
-            Math.pow(touch2.clientY - touch1.clientY, 2)
-        );
-    };
-    
-    // 터치 시작 핸들러
-    const handleTouchStart = (e) => {
-        if (!isAdminMode) return; // 운영자 모드가 아니면 무시
-    
-        if (e.touches.length === 2) {
-            // 확대/축소 시작
-            const distance = getTouchDistance(e.touches);
-            setTouchStartDistance(distance);
-        } else if (e.touches.length === 1) {
-            // 드래그 시작
-            setDragging(true);
-            setStartPos({ x: e.touches[0].clientX, y: e.touches[0].clientY });
-        }
-    };
-    
-    // 터치 이동 핸들러
-    const handleTouchMove = (e) => {
-        if (!isAdminMode) return; // 운영자 모드가 아니면 무시
-    
-        if (e.touches.length === 2 && touchStartDistance) {
-            // 확대/축소 계산
-            const currentDistance = getTouchDistance(e.touches);
-            const scaleChange = currentDistance / touchStartDistance;
-            setScale((prevScale) => Math.min(Math.max(prevScale * scaleChange, 0.5), 3)); // 확대/축소 제한
-            setTouchStartDistance(currentDistance);
-        } else if (dragging && e.touches.length === 1) {
-            // 드래그 계산
-            const currentX = e.touches[0].clientX;
-            const currentY = e.touches[0].clientY;
-            setPosition((prevPos) => ({
-                x: prevPos.x + (currentX - startPos.x),
-                y: prevPos.y + (currentY - startPos.y),
-            }));
-            setStartPos({ x: currentX, y: currentY });
-        }
-    };
-    
-    // 터치 종료 핸들러
-    const handleTouchEnd = () => {
-        if (!isAdminMode) return; // 운영자 모드가 아니면 무시
-        setDragging(false); // 드래그 종료
-    };
-    
-
-
-    const handleMoveStart = (direction) => {
-        setMoveDirection(direction);
-        setIsMoving(true);
-    };
-
-    const handleMoveStop = () => {
-        setIsMoving(false);
-        setMoveDirection(null);
-    };
-
-    useEffect(() => {
-        if (!isMoving || !moveDirection) return;
-
-        const moveMap = () => {
-            setPosition((prev) => {
-                const moveDistance = 5; // 이동 거리
-                switch (moveDirection) {
-                    case "up":
-                        return { ...prev, y: prev.y - moveDistance };
-                    case "down":
-                        return { ...prev, y: prev.y + moveDistance };
-                    case "left":
-                        return { ...prev, x: prev.x - moveDistance };
-                    case "right":
-                        return { ...prev, x: prev.x + moveDistance };
-                    default:
-                        return prev;
-                }
-            });
-        };
-
-        const interval = setInterval(moveMap, 50); // 이동 속도 조정
-        return () => clearInterval(interval);
-    }, [isMoving, moveDirection]);
 
     const [currentTargetIndex, setCurrentTargetIndex] = useState(0); // 현재 탐색 중인 매장 인덱스
 
@@ -238,23 +149,6 @@ export default function Condition2() {
         }
     }}
     // 순서에 맞지 않는 매장은 무시
-
-
-
-     // 확대 버튼 핸들러
-    const handleZoomIn = () => {
-        setIsZooming(true);
-        setScale((prevScale) => Math.min(prevScale + 0.2, 3));
-        setTimeout(() => setIsZooming(false), 300); // 확대 후 상태 복원
-    };
-
-    // 축소 버튼 핸들러
-    const handleZoomOut = () => {
-        setIsZooming(true);
-        setScale((prevScale) => Math.max(prevScale - 0.2, 0.5));
-        setTimeout(() => setIsZooming(false), 300); // 축소 후 상태 복원
-    };
-
 
 
     return (
