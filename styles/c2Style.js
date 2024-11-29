@@ -55,6 +55,10 @@ export const MapContainer = styled.div`
     transform-origin: center;
     pointer-events: auto;
     touch-action: manipulation;
+
+    background-color: #FFD2B2;
+    overflow: hidden;
+    border: 2px solid #333;
 `;
 
 export const ZoomContainer = styled.div`

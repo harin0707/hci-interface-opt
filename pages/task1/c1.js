@@ -211,16 +211,7 @@ export default function Condition1() {
 
 
     return (
-        <Container
-        onMouseDown={handleDragStart}
-        onMouseMove={handleDragMove}
-        onMouseUp={handleDragEnd}
-        onTouchStart={handleZoom}
-        onTouchMove={handleZoom}
-        onTouchEnd={handleDragEnd}
-        style={{
-            transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-        }} >
+        <Container>
             <div style={{ fontWeight: "bold" }}> [조건 1] 자유로운 확대와 드래그</div>
             <Btn id='home' onClick={() => router.push('/')}> 홈 </Btn>
 
@@ -234,20 +225,23 @@ export default function Condition1() {
                 {isTimerRunning ? "실험 진행 중..." : "실험 시작"}
             </Button>
             <MapContainer
-
-            onTouchStart={(e) => {
-                handleZoomStart(e); // 확대 시작 이벤트
-            }}
-            onTouchMove={(e) => {
-                handleZoom(e); // 확대 동작 이벤트
-            }}
-            onTouchEnd={() => {
-                handleDragEnd(); // 드래그 종료
-            }}
-            style={{
-            transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-            overflow: "hidden", // 확대/축소 시 다른 영역을 숨김
-            }}>
+                onMouseDown={handleDragStart}
+                onMouseMove={handleDragMove}
+                onMouseUp={handleDragEnd}
+                onTouchStart={(e) => {
+                    e.preventDefault(); // 기본 터치 동작 방지
+                    handleZoomStart(e);
+                    handleDragStart(e);
+                }}
+                onTouchMove={(e) => {
+                    e.preventDefault(); // 기본 터치 동작 방지
+                    handleZoom(e);
+                    handleDragMove(e);
+                }}
+                onTouchEnd={handleDragEnd}
+                style={{
+                    transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+                }}>
                 <M1Con isColumn="column"> 
                     <M2Con id="3"
                     style={{
