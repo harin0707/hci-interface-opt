@@ -225,7 +225,6 @@ export default function Condition1() {
                 className = "map-container"
                 onMouseDown={handleDragStart}
                 onMouseMove={handleDragMove}
-                onMouseUp={handleDragEnd}
                 onTouchStart={(e) => {
                     if (e.touches.length > 1) e.preventDefault();
                     handleZoomStart(e);
@@ -236,7 +235,6 @@ export default function Condition1() {
                     handleZoom(e);
                     handleDragMove(e);
                 }}
-                onTouchEnd={handleDragEnd}
                 style={{
                     transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
                     transformOrigin: "center",
