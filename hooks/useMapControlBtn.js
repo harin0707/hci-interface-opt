@@ -23,13 +23,13 @@ export const useMapControlBtn = (isAdminMode) => {
         const moveDistance = 50; // 한 번에 이동할 거리
         setPosition((prev) => {
             switch (direction) {
-                case "up":
-                    return { ...prev, y: prev.y - moveDistance };
                 case "down":
+                    return { ...prev, y: prev.y - moveDistance };
+                case "up":
                     return { ...prev, y: prev.y + moveDistance };
-                case "left":
-                    return { ...prev, x: prev.x - moveDistance };
                 case "right":
+                    return { ...prev, x: prev.x - moveDistance };
+                case "left":
                     return { ...prev, x: prev.x + moveDistance };
                 default:
                     return prev;
